@@ -1,0 +1,3 @@
+[submodule "satispy"]
+	path = satispy
+	url = git@github.com:dhoepelman/satispy.git
