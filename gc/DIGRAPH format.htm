@@ -1,0 +1,438 @@
+
+<!-- saved from url=(0154)https://webcache.googleusercontent.com/search?q=cache:T_I6xV2xpfQJ:ftp://dimacs.rutgers.edu/pub/challenge/graph/doc/ccformat.tex+&cd=1&hl=nl&ct=clnk&gl=nl -->
+<html><script>navigator.CookiesOK="I explicitly accept all cookies";</script><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<!--<base href="ftp://dimacs.rutgers.edu/pub/challenge/graph/doc/ccformat.tex">--><base href="."><script>if(window.CookiesOK) window.CookiesOK("3.1.3");</script></head><body><div style="background:#fff;border:1px solid #999;margin:-1px -1px 0;padding:0;"><div style="background:#ddd;border:1px solid #999;color:#000;font:13px arial,sans-serif;font-weight:normal;margin:12px;padding:8px;text-align:left">Dit is de html-versie van het bestand <a href="ftp://dimacs.rutgers.edu/pub/challenge/graph/doc/ccformat.tex" style="text-decoration:underline;color:#00c">ftp://dimacs.rutgers.edu/pub/challenge/graph/doc/ccformat.tex</a>.<br> <b><font color="#0039b6">G</font> <font color="#c41200">o</font> <font color="#f3c518">o</font> <font color="#0039b6">g</font> <font color="#30a72f">l</font> <font color="#c41200">e</font></b> maakt automatisch een html-versie van documenten bij het indexeren van het web.</div></div><div style="position:relative">
+
+<h1>Clique and Coloring Problems<br>
+Graph Format</h1><title>Clique and Coloring Problems
+Graph Format</title>
+<h3></h3>
+ Last revision: May 08, 1993
+<p>
+
+<i> This paper outlines a suggested graph format.  If you
+have comments on this or other formats or you have information you
+think should be included, please send a note to <tt>
+challenge@dimacs.rutgers.edu</tt>.</i></p><p>
+</p><h2>Introduction</h2>
+One purpose of the DIMACS Challenge is to ease the effort required to
+test and compare algorithms and heuristics by providing a common
+testbed of instances and analysis tools.  To facilitate this effort, a
+standard format must be chosen for the problems addressed.  This
+document outlines a format for graphs that is suitable for those
+looking at graph coloring and finding cliques in graphs.  This format
+is a flexible format suitable for many types of graph and network
+problems.  This format was also the format chosen for the First
+Computational Challenge on network flows and matchings.<p>
+This document describes three problems:  unweighted clique, weighted
+clique, and graph coloring.  A separate format is used for
+satisfiability.</p><p>
+</p><h2>File Formats for Graph Problems</h2> <p>
+This section describes a standard file format for graph inputs and outputs. 
+There is no  requirement that participants follow these specifications;
+however, compatible implementations will be able to make full use of 
+DIMACS support tools.  (Some tools assume that output is appended
+to input in a single file.) </p><p>
+Participants are welcome to develop translation programs to convert
+instances to and from more convenient, or more compact, representations;
+the Unix <b> awk</b> facility is recommended as especially suitable
+for this task.   </p><p>
+All files contain ASCII characters.  Input and output files contain
+several types of <i> lines</i>, described below.  A line is terminated
+with an end-of-line character.  Fields in each line are separated by
+at least one blank space.  Each line begins with a one-character
+designator to identify the line type.</p><p>
+</p><h3>Input Files</h3> <p>
+An input file contains all the information about a graph needed to
+define either a clique problem or a coloring problem.  Some
+information may be included that is not relevant to one problem (for
+instance, node weights are not needed for coloring problem) so that
+information may be ignored.</p><p>
+In this format, nodes are numbered from 1 up to <i>n</i>.  There are <i>m</i>
+edges in the graph.</p><p>
+Files are assumed to be well-formed and internally consistent: node
+identifier values are valid, nodes are defined uniquely, exactly <i>m</i>
+edges are defined, and so forth.  A input checker will be made
+available to ensure compatibility with this standard.</p><p>
+</p><p></p><ul><p>
+</p><li> <b> Comments.</b> Comment lines give human-readable 
+information about the file and are ignored by programs.  Comment lines
+can appear anywhere in the file.  Each comment line begins with a
+lower-case character <b> c</b>.
+<pre> 
+c This is an example of a comment line.
+</pre> <p>
+</p></li><li> <b> Problem line.</b>  There is one problem line per input file.  The 
+problem line must appear before any node or arc descriptor lines.  For
+network instances, the problem line has the following format.
+<pre>p FORMAT NODES EDGES
+</pre> 
+The lower-case character <tt> p</tt> signifies that this is the problem
+line.  The <tt> FORMAT</tt> field is for consistency with the previous
+Challenge, and should contain the word “edge”.
+The <tt> NODES</tt> field contains an integer value
+specifying <i>n</i>, the number of nodes in the graph.  The <tt> EDGES</tt>
+field contains an integer value specifying <i>m</i>, the number of edges in
+the graph.<p>
+</p></li><li> <b> Node Descriptors.</b>   
+For this Challenge, a node descriptor is required only for the
+weighted clique problem.  These lines will give the weight assigned to
+a node in the clique.  There is one node descriptor line for each
+node, with the following format.  Nodes without a descriptor will take
+on a default value of 1.<p>
+</p><pre>n ID VALUE
+</pre><p>
+The lower-case character <tt> n</tt> signifies that this is a node
+descriptor line.  The <tt> ID</tt> field gives a node identification
+number, an integer between 1 and <i>n</i>.  The <tt> VALUE</tt> gives the
+objective value for having this node in the clique.  This value is
+assumed to be integer and can be either positive or negative (or zero).</p><p>
+</p></li><li> <b> Edge Descriptors.</b> There is one edge descriptor
+line for each edge the graph, each with the following format.  Each 
+edge <i>(v,w)</i> appears exactly once in the
+input file and is not repeated as <i>(w,v)</i>. <p>
+</p><pre>e W  V 
+</pre> 
+The lower-case character <tt> e</tt> signifies that this is an 
+edge descriptor line.  For an edge <i>(w,v)</i> the fields <tt> W</tt>  and 
+<tt> V</tt> specify its endpoints.  <p>
+</p></li><li> <b> Optional Descriptors.</b>  In addition to the required
+information, there can be additional pieces of information about a
+graph.  This will typically define the parameters used to generate the
+graph or otherwise define generator--specific information.  The
+following list may be added to as interesting problem generators are
+decided on:<p>
+</p><p></p><ul>
+<li>Geometric Descriptors.  One common method to generate or display
+graphs is to have the nodes be embedded in some space and to have the
+edges be included according to some function of the distance between
+nodes according to some metric.  The node information can be defined
+by a dimension descriptor and a vertex embedding descriptor.<p>
+</p><pre>d DIM METRIC
+</pre><p>
+ is the dimension descriptor.  DIM is an integer giving the
+number of dimensions of the space, while METRIC is a string
+representing the metric for the space.  METRIC is a string that can
+take a number of forms.  L<i>p</i> (i.e. L1, L2, L122, and so on) denotes
+the <i>ℓ<sub>p</sub></i> norm where the distance between two nodes embedded at
+<i>(x<sub>1</sub>,x<sub>2</sub>,…,x<sub>d</sub>)</i> and <i>(y<sub>1</sub>,y<sub>2</sub>,… y<sub>d</sub>)</i> is <i>(∑<sub>i=1</sub><sup>d</sup>
+|x<sub>i</sub>-y<sub>i</sub>|<sup>p</sup>)<sup>1/p</sup></i>.  The string LINF is used to denote the
+<i>ℓ<sub>∞</sub></i> norm.  L2S denotes the squared euclidean norm (which can
+be less susceptible to computer--differences in round--off and
+accuracy issues).</p><p>
+</p><pre>v  X1  X2  X3  . .. XD
+</pre> 
+The lower-case character <tt> v</tt> signifies that this is a vertex
+embedding descriptor line.  The fields <tt> X1, X2 . . .XD</tt> give the
+<i>d</i> coordinate values for the vertex.  Note that these lines must
+appear after the <tt> d</tt> descriptor.<p>
+</p></li><li>Parameter Descriptors.  The parameter descriptors are used to
+give other information about how the graph was generated.  The lines
+are generator--specific, and as such it is not expected that most
+codes will use most (or any) of them.  They are included only to aid
+those codes specifically designed to attack specially structured
+problems.  The general form of the parameter descriptor is:<p>
+</p><pre>x PARAM VALUE
+</pre> 
+The lower-case character <tt> x</tt> signifies that this is a parameter
+descriptor line.  The PARAM field is a string that gives the name of
+the parameter, while the VALUE field is a numeric value that gives the
+corresponding value.  The following PARAM values have been defined:<p>
+<table><tbody><tr><td>
+PARAM</td><td>Description
+</td></tr><tr><td>
+MINLENGTH</td><td>(Geometric Graphs) Edge included only if 
+</td></tr><tr><td>
+</td><td>length greater than or equal to VALUE
+</td></tr><tr><td>
+MAXLENGTH</td><td>(Geometric Graphs) Edge included only if 
+</td></tr><tr><td>
+</td><td>length less than or equal to VALUE
+</td></tr><tr><td>
+</td></tr></tbody></table></p><p>
+Note that this information is in addition to the required edge
+descriptors.</p><p>
+</p></li></ul><p></p>
+</li></ul><p></p><p>
+</p><h3>Output Files</h3>
+Every algorithm or heuristic should create an output file.  This
+output file should consist of one or more of the following lines,
+depending on the type of algorithm and problem being solved.<p>
+</p><p></p><ul><p>
+</p><li> <b> Solution Line</b><p>
+</p><pre>s TYPE SOLUTION
+</pre>
+The lower--case character <tt> s</tt> signifies that this is a solution 
+line. The <tt> TYPE</tt> field denotes the type of solution contained in
+the file.  This should be one of the following strings: “col”
+denotes a graph coloring, “clq” denotes a maximum weighted clique,
+and “cqu” denotes a maximum unweighted clique (one that has ignored
+the <tt> n</tt> descriptor lines).<p>
+The <tt> SOLUTION</tt> field contains an integer corresponding
+to the solution value.  This is the clique size for unweighted clique,
+clique value for weighted clique, or number of colors used for graph
+coloring.</p><p>
+</p></li><li> <b> Bound Line</b>
+<pre>b BOUND
+</pre><p>
+The lower--case character <tt> b</tt> signifies that this is a bound on
+the the solution.  The <tt> BOUND</tt> field contains an integer value
+that gives a bound on the solution value.  This bound is an upper
+bound on the maximum clique value for cliques and weighted clique and
+a lower bound on the number of colors needed for coloring the graph.</p><p>
+</p></li><li><b> Clique Line</b>
+<pre>v V
+</pre><p>
+The lower-case character <tt> v</tt> signifies that this is a clique vertex
+line.  The <tt> V</tt> field gives the node number for the node in the
+clique.  There will be one clique line for each node in the clique.</p><p>
+</p></li><li><b> Label Line</b>
+<pre>l V N
+</pre><p>
+The lower-case character <tt> l</tt> signifies that this is a label 
+line, generally used for graph coloring.  The <tt> V</tt> field gives the node number for the node in the
+clique while the <tt> N</tt> field gives the corresponding label.  There will be one label line for each node in the graph.</p><p>
+</p></li></ul><p></p><p>
+</p><p>
+</p><hr><big><b>LaTeX Original</b></big>
+<pre style="white-space:pre-wrap;word-wrap:break-word;">\documentstyle[12pt]{article}
+\title{Clique and Coloring Problems\\Graph Format}
+\author{}
+\date{Last revision: May 08, 1993}
+\begin{document}
+\maketitle
+{\narrower\it This paper outlines a suggested graph format.  If you
+have comments on this or other formats or you have information you
+think should be included, please send a note to {\tt
+challenge@dimacs.rutgers.edu}.}
+
+\section{Introduction}
+One purpose of the DIMACS Challenge is to ease the effort required to
+test and compare algorithms and heuristics by providing a common
+testbed of instances and analysis tools.  To facilitate this effort, a
+standard format must be chosen for the problems addressed.  This
+document outlines a format for graphs that is suitable for those
+looking at graph coloring and finding cliques in graphs.  This format
+is a flexible format suitable for many types of graph and network
+problems.  This format was also the format chosen for the First
+Computational Challenge on network flows and matchings.
+
+This document describes three problems:  unweighted clique, weighted
+clique, and graph coloring.  A separate format is used for
+satisfiability.
+
+
+\section{File Formats for Graph Problems} 
+
+This section describes a standard file format for graph inputs and outputs. 
+There is no  requirement that participants follow these specifications;
+however, compatible implementations will be able to make full use of 
+DIMACS support tools.  (Some tools assume that output is appended
+to input in a single file.) 
+
+Participants are welcome to develop translation programs to convert
+instances to and from more convenient, or more compact, representations;
+the Unix {\bf awk} facility is recommended as especially suitable
+for this task.   
+
+All files contain ASCII characters.  Input and output files contain
+several types of {\em lines}, described below.  A line is terminated
+with an end-of-line character.  Fields in each line are separated by
+at least one blank space.  Each line begins with a one-character
+designator to identify the line type.
+
+\subsection{Input Files} 
+
+An input file contains all the information about a graph needed to
+define either a clique problem or a coloring problem.  Some
+information may be included that is not relevant to one problem (for
+instance, node weights are not needed for coloring problem) so that
+information may be ignored.
+
+In this format, nodes are numbered from 1 up to $n$.  There are $m$
+edges in the graph.
+
+Files are assumed to be well-formed and internally consistent: node
+identifier values are valid, nodes are defined uniquely, exactly $m$
+edges are defined, and so forth.  A input checker will be made
+available to ensure compatibility with this standard.
+
+\begin{itemize}
+
+\item {\bf Comments.} Comment lines give human-readable 
+information about the file and are ignored by programs.  Comment lines
+can appear anywhere in the file.  Each comment line begins with a
+lower-case character {\bf c}.
+\begin{verbatim} 
+c This is an example of a comment line.
+\end{verbatim} 
+
+\item {\bf Problem line.}  There is one problem line per input file.  The 
+problem line must appear before any node or arc descriptor lines.  For
+network instances, the problem line has the following format.
+\begin{verbatim}
+p FORMAT NODES EDGES
+\end{verbatim} 
+The lower-case character {\tt p} signifies that this is the problem
+line.  The {\tt FORMAT} field is for consistency with the previous
+Challenge, and should contain the word ``edge''.
+The {\tt NODES} field contains an integer value
+specifying $n$, the number of nodes in the graph.  The {\tt EDGES}
+field contains an integer value specifying $m$, the number of edges in
+the graph.
+
+\item {\bf Node Descriptors.}   
+For this Challenge, a node descriptor is required only for the
+weighted clique problem.  These lines will give the weight assigned to
+a node in the clique.  There is one node descriptor line for each
+node, with the following format.  Nodes without a descriptor will take
+on a default value of 1.
+
+\begin{verbatim}
+n ID VALUE
+\end{verbatim}
+
+The lower-case character {\tt n} signifies that this is a node
+descriptor line.  The {\tt ID} field gives a node identification
+number, an integer between 1 and $n$.  The {\tt VALUE} gives the
+objective value for having this node in the clique.  This value is
+assumed to be integer and can be either positive or negative (or zero).
+
+
+\item {\bf Edge Descriptors.} There is one edge descriptor
+line for each edge the graph, each with the following format.  Each 
+edge $(v,w)$ appears exactly once in the
+input file and is not repeated as $(w,v)$. 
+
+\begin{verbatim}
+e W  V 
+\end{verbatim} 
+The lower-case character {\tt e} signifies that this is an 
+edge descriptor line.  For an edge $(w,v)$ the fields {\tt W}  and 
+{\tt V} specify its endpoints.  
+
+\item {\bf Optional Descriptors.}  In addition to the required
+information, there can be additional pieces of information about a
+graph.  This will typically define the parameters used to generate the
+graph or otherwise define generator--specific information.  The
+following list may be added to as interesting problem generators are
+decided on:
+
+\begin{itemize}
+\item{Geometric Descriptors.}  One common method to generate or display
+graphs is to have the nodes be embedded in some space and to have the
+edges be included according to some function of the distance between
+nodes according to some metric.  The node information can be defined
+by a dimension descriptor and a vertex embedding descriptor.
+
+\begin{verbatim}
+d DIM METRIC
+\end{verbatim}
+
+\noindent is the dimension descriptor.  DIM is an integer giving the
+number of dimensions of the space, while METRIC is a string
+representing the metric for the space.  METRIC is a string that can
+take a number of forms.  L$p$ (i.e. L1, L2, L122, and so on) denotes
+the $\ell_p$ norm where the distance between two nodes embedded at
+$(x_1,x_2,\ldots,x_d)$ and $(y_1,y_2,\ldots y_d)$ is $(\sum_{i=1}^d
+|x_i-y_i|^p)^{1/p}$.  The string LINF is used to denote the
+$\ell_\infty$ norm.  L2S denotes the squared euclidean norm (which can
+be less susceptible to computer--differences in round--off and
+accuracy issues).
+
+\begin{verbatim}
+v  X1  X2  X3  . .. XD
+\end{verbatim} 
+The lower-case character {\tt v} signifies that this is a vertex
+embedding descriptor line.  The fields {\tt X1, X2 . . .XD} give the
+$d$ coordinate values for the vertex.  Note that these lines must
+appear after the {\tt d} descriptor.
+
+\item{Parameter Descriptors.}  The parameter descriptors are used to
+give other information about how the graph was generated.  The lines
+are generator--specific, and as such it is not expected that most
+codes will use most (or any) of them.  They are included only to aid
+those codes specifically designed to attack specially structured
+problems.  The general form of the parameter descriptor is:
+
+\begin{verbatim}
+x PARAM VALUE
+\end{verbatim} 
+The lower-case character {\tt x} signifies that this is a parameter
+descriptor line.  The PARAM field is a string that gives the name of
+the parameter, while the VALUE field is a numeric value that gives the
+corresponding value.  The following PARAM values have been defined:
+
+\begin{tabular}{ll}\hline
+PARAM&amp;Description\\\hline
+MINLENGTH&amp;(Geometric Graphs) Edge included only if \\
+&amp;length greater than or equal to VALUE\\
+MAXLENGTH&amp;(Geometric Graphs) Edge included only if \\
+&amp;length less than or equal to VALUE\\\hline
+\end{tabular}
+
+Note that this information is in addition to the required edge
+descriptors.
+
+\end{itemize}
+\end{itemize}
+
+\subsection{Output Files}
+Every algorithm or heuristic should create an output file.  This
+output file should consist of one or more of the following lines,
+depending on the type of algorithm and problem being solved.
+
+\begin{itemize}
+
+\item {\bf Solution Line}
+
+\begin{verbatim}
+s TYPE SOLUTION
+\end{verbatim}
+The lower--case character {\tt s} signifies that this is a solution 
+line. The {\tt TYPE} field denotes the type of solution contained in
+the file.  This should be one of the following strings: ``col''
+denotes a graph coloring, ``clq'' denotes a maximum weighted clique,
+and ``cqu'' denotes a maximum unweighted clique (one that has ignored
+the {\tt n} descriptor lines).
+
+The {\tt SOLUTION} field contains an integer corresponding
+to the solution value.  This is the clique size for unweighted clique,
+clique value for weighted clique, or number of colors used for graph
+coloring.
+
+\item {\bf Bound Line}
+\begin{verbatim}
+b BOUND
+\end{verbatim}
+
+The lower--case character {\tt b} signifies that this is a bound on
+the the solution.  The {\tt BOUND} field contains an integer value
+that gives a bound on the solution value.  This bound is an upper
+bound on the maximum clique value for cliques and weighted clique and
+a lower bound on the number of colors needed for coloring the graph.
+
+\item{\bf Clique Line}
+\begin{verbatim}
+v V
+\end{verbatim}
+
+The lower-case character {\tt v} signifies that this is a clique vertex
+line.  The {\tt V} field gives the node number for the node in the
+clique.  There will be one clique line for each node in the clique.
+
+\item{\bf Label Line}
+\begin{verbatim}
+l V N
+\end{verbatim}
+
+The lower-case character {\tt l} signifies that this is a label 
+line, generally used for graph coloring.  The {\tt V} field gives the node number for the node in the
+clique while the {\tt N} field gives the corresponding label.  There will be one label line for each node in the graph.
+
+
+\end{itemize}
+
+\end{document}
+
+</pre></div></body></html>
