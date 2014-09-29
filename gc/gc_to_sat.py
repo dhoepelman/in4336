@@ -91,6 +91,6 @@ for instancefn in glob.glob(files):
         (numv, clauses) = GC_to_SAT(N,E,k)
         result = SAT_to_DIMACS_CNF(numv, clauses)
         #print(result)
-        outputf = open(outputdir + "/" + os.path.splitext(os.path.basename(instancefn))[0] + ".cnf", 'w')
+        outputf = open(outputdir + "/" + os.path.splitext(os.path.basename(instancefn))[0] + ".cnf", 'wb')
         outputf.write(result)
         outputf.close()
