@@ -5,7 +5,7 @@ import sys
 import glob
 import os.path
 
-# Aanroep: gc_to_sat.py k files
+# Aanroep: gc_to_sat.py k output-dir files
 # k = k van k-GC
 # files is een unix shell regex, bijv "*.col". Vergeet de quotes niet bij unix shells
 
@@ -91,6 +91,8 @@ for instancefn in glob.glob(files):
         (numv, clauses) = GC_to_SAT(N,E,k)
         result = SAT_to_DIMACS_CNF(numv, clauses)
         #print(result)
-        outputf = open(outputdir + "/" + os.path.splitext(os.path.basename(instancefn))[0] + ".cnf", 'wb')
+        outputfilen = "%s/gc-%s-%d.cnf" % (outputdir, os.path.splitext(os.path.basename(instancefn))[0], k)
+        outputf = open(outputfilen, 'wb')
         outputf.write(result)
         outputf.close()
+        print "Converted %s to %s" % (instancefn, outputfilen)
