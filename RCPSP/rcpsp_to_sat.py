@@ -1,16 +1,12 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-class activity:
-    pass
-    # i = Number
-    # es = Earliest start
-    # ls = Latest start
-    # ef = Earliest Finish
-    # lf = Latest Finish
-    # d = duration
+from rcpsp_functions import *
 
-Gives the distance between two activities
+
+
+'''
+# Gives the distance between two activities
 def distance(a1, a2):
     if a1.i == a2.i:
         return -a1.d
@@ -33,3 +29,17 @@ for a in activities:
     clauses.append(clause)
 
 # Cover clauses. Make sure that no activities can be in progress at the same time that exceed the consumption of a available rsource
+'''
+
+with open("test-instances/test1.sm") as instancef:
+    (resources, activities) = read_RCPSP_sm(instancef.read())
+
+    # Compute the shortest distances between each
+    graph = {}
+    for job in activities.values():
+        graph[job.i] = {}
+        for suc in job.successors:
+            graph[job.i][suc] = job.d
+
+    print repr(floydwarshall(graph)).replace("}, ","},\n")
+
