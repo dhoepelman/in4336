@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+from collections import deque
 
-class Activity(object):
+class Job(object):
     __slots__ = [
           "i"       # Number
         , "es"      # Earliest start
@@ -11,6 +12,7 @@ class Activity(object):
         , "d"       # duration
         , "usage"   # [x, x]
         , "successors" # [activityX, activityX]
+        , "predecessors" # [activityX, activityX]
     ]
 
     def __repr__(self):
@@ -24,7 +26,7 @@ class Activity(object):
         return str
 
 
-# Floyd-Warshall python implementation, taken from http://jlmedina123.wordpress.com/2014/05/17/floyd-warshall-algorithm-in-python/
+# Floyd-Warshall python implementation, adapted from http://jlmedina123.wordpress.com/2014/05/17/floyd-warshall-algorithm-in-python/
 def floydwarshall(graph):
     # Initialize dist and pred:
     # copy graph into dist, but add infinite where there is
@@ -35,8 +37,8 @@ def floydwarshall(graph):
         dist[u] = {}
         pred[u] = {}
         for v in graph:
-            dist[u][v] = 1000
-            pred[u][v] = -1
+            dist[u][v] = float("inf") #1000000
+            pred[u][v] = None #-1
         dist[u][u] = 0
         for neighbor in graph[u]:
             dist[u][neighbor] = graph[u][neighbor]
@@ -53,6 +55,43 @@ def floydwarshall(graph):
 
     return dist, pred
 
+# Calculate Earliest start/finish times (ES, EF), Latest Start/finish (LS,LF) times for all jobs
+# See section 2 LB1 from Klein and Scholl "Computing lower bounds by destructive improvement: An application to resource-constrained project scheduling"
+def criticalpath_bound(jobs):
+    # First job should be a supersource and has ES and EF time 0
+    jobs[1].es = 0
+    jobs[1].ef = 0
+
+    todo_forward_pass = deque(jobs[1].successors)
+    while todo_forward_pass:
+        j = todo_forward_pass.popleft()
+        job = jobs[j]
+        # Max if all predecessors already have earliest start, delay otherwise
+        earliest_start = max([jobs[i].ef if hasattr(jobs[i],"es") else float("inf") for i in job.predecessors])
+        if(earliest_start < float("inf")):
+            job.es = earliest_start
+            job.ef = earliest_start + job.d
+        # Else there is still a predecessor that hasn't been calculated yet, so j will get added later again
+        todo_forward_pass.extend(job.successors)
+
+    # Last finish for terminal dummy job is equal to last start, which is equal to earliest start
+    jobs[len(jobs)].ls = jobs[len(jobs)].es
+    jobs[len(jobs)].lf = jobs[len(jobs)].es
+
+    todo_backward_pass = deque(jobs[len(jobs)].predecessors)
+    while todo_backward_pass:
+        j = todo_backward_pass.popleft()
+        job = jobs[j]
+
+        last_finish = min([jobs[h].ls if hasattr(jobs[h],"ls") else -1 for h in job.successors])
+        if(last_finish >= 0):
+            job.lf = last_finish
+            job.ls = last_finish - job.d
+        # Else there is still a successor that hasn't been calculated yet, so j will get added later again
+        todo_backward_pass.extend(job.predecessors)
+
+    #for (i, job) in jobs.iteritems():
+    #    print "%d es=%d ef=%d ls=%d lf=%d" % (i,job.es,job.ef, job.ls, job.lf)
 
 def read_RCPSP_sm(filec):
     jobs = {}
@@ -63,10 +102,16 @@ def read_RCPSP_sm(filec):
     # Precendence relations, section 4
     lines = sections[4].split("\n")[3:-1]
     for line in [line.split() for line in lines]:
-        job = Activity()
+        job = Job()
         job.i = int(line[0])
+        job.predecessors = []
         job.successors = [int(x) for x in line[3:]]
         jobs[job.i] = job
+
+    # Fill up predecessors
+    for (i, job) in jobs.iteritems():
+        for successor in job.successors:
+            jobs[successor].predecessors.append(i)
 
     # Jobs, section 5
     lines = sections[5].split("\n")[4:-1]

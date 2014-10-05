@@ -12,34 +12,71 @@ def distance(a1, a2):
         return -a1.d
     # TODO
 
-# First group of clauses: consistency clauses
-# Either you cannot start at time t, or you have to be in progress for t + d for that particular acitivity
-for a in activities:
-    for t in xrange(a.es, a.ls+1):
-        for l in xrange(t, t+d):
-            clauses.append(-s_it, u_il)
 
 # TODO: Precendence clauses
 
-# Make sure that every activity starts
-for a in activities:
-    clause = []
-    for t in xrange(a.es, a.ls+1):
-        clause.add(s_it)
-    clauses.append(clause)
+
 
 # Cover clauses. Make sure that no activities can be in progress at the same time that exceed the consumption of a available rsource
 '''
 
-with open("test-instances/test1.sm") as instancef:
-    (resources, activities) = read_RCPSP_sm(instancef.read())
+with open("test-instances/test2.sm") as instancef:
+    (resources, jobs) = read_RCPSP_sm(instancef.read())
+
+    # Supplement the jobs with critical path bounds
+    criticalpath_bound(jobs)
 
     # Compute the shortest distances between each
-    graph = {}
-    for job in activities.values():
-        graph[job.i] = {}
-        for suc in job.successors:
-            graph[job.i][suc] = job.d
+    # Give the edges the weight of the negative duration. Thus the shorted path coincides with the longest path in the original graph
+    # Note: The longest-path problem is NP-Hard in general, this works only for a DAG like the precedence graph in RCPSP.
+    #       In a normal graph this will create cycles of negative length, thus rendering Floyd-Warshall useless
+    #graph = {}
+    #for job in jobs.values():
+    #    graph[job.i] = {}
+    #    for suc in job.successors:
+    #        graph[job.i][suc] = -job.d
+    #print repr(floydwarshall(graph)).replace("}, ","},\n")
 
-    print repr(floydwarshall(graph)).replace("}, ","},\n")
+    # Define all the necessary boolean variables
+    mapping = {}
+    cur = 1
+    for (i,job) in jobs.iteritems():
+        # Start variables
+        for t in xrange(job.es, job.ls+1):
+            mapping[('s',i,t)] = cur
+            cur = cur+1
+        # Process variables
+        for t in xrange(job.es, job.lf+1):
+            mapping[('u',i,t)] = cur
+            cur = cur+1
+
+    # The clauses
+    clauses = []
+
+    # First group of clauses: consistency clauses
+    # Either you cannot start at time t, or you have to be in progress for t + d for that particular acitivity
+    for (i,job) in jobs.iteritems():
+        for t in xrange(job.es, job.ls+1):
+            for l in xrange(t, t+job.d):
+                clauses.append([-mapping[('s',i,t)],mapping[('u',i,l)]])
+
+    # Second group: precedence clauses
+    for (i, job) in jobs.iteritems():
+        for j in job.successors:
+            job_pred = jobs[j]
+            generic_part = [mapping[('s',j,l)] for l in xrange(job_pred.es, job.es - job_pred.d + 1)]
+            # If i starts at t, all its predecessors start early enough to allow this start of i
+            for t in xrange(job.es, job.ls+1):
+                clause = [-mapping[('s',i,t)]]
+                clause.extend(generic_part)
+                clauses.append(clause)
+
+    # Third group: Make sure that every activity starts
+    for (i,job) in jobs.iteritems():
+        clauses.append([mapping[('s',i,t)] for t in xrange(job.es, job.ls+1)])
+
+
+
+
+
 
