@@ -4,7 +4,6 @@
 from rcpsp_functions import *
 
 
-
 '''
 # Gives the distance between two activities
 def distance(a1, a2):
@@ -20,11 +19,13 @@ def distance(a1, a2):
 # Cover clauses. Make sure that no activities can be in progress at the same time that exceed the consumption of a available rsource
 '''
 
-with open("test-instances/test2.sm") as instancef:
+with open("test-instances/test1.sm") as instancef:
     (resources, jobs) = read_RCPSP_sm(instancef.read())
 
     # Supplement the jobs with critical path bounds
     criticalpath_bound(jobs)
+
+    T = 100
 
     # Compute the shortest distances between each
     # Give the edges the weight of the negative duration. Thus the shorted path coincides with the longest path in the original graph
@@ -74,6 +75,52 @@ with open("test-instances/test2.sm") as instancef:
     # Third group: Make sure that every activity starts
     for (i,job) in jobs.iteritems():
         clauses.append([mapping[('s',i,t)] for t in xrange(job.es, job.ls+1)])
+
+    # The dreaded exponential clauses.
+    # Go trough all fucking combinations of jobs (2^|V| !!!)
+    to_check = jobs.keys()
+    # Don't include the supersource and supersink
+    to_check.remove(1)
+    to_check.remove(len(jobs))
+
+    def consumes_too_much_resources(set_of_jobs):
+        for (i,limit) in enumerate(resources):
+            if sum([jobs[job].usage[i] for job in set_of_jobs]) > limit:
+                #print "%s: %d > %d" % (set_of_jobs, sum([jobs[job].usage[i] for job in set_of_jobs]), limit)
+                return True
+        return False
+
+    # Precondition: set of jobs consumes too much resources
+    def is_minimal_cover(set_of_jobs):
+        for job in set_of_jobs:
+            if consumes_too_much_resources(set_of_jobs - frozenset([job])):
+                return False
+
+        return True
+
+    def add_minimal_cover_clause(set_of_jobs):
+        for t in xrange(0, T):
+            clause = []
+            for i in set_of_jobs:
+                # There is an error in the paper. t in [0,T-1] but u_it is defined for a much narrower range of t
+                if ('u',i,t) in mapping:
+                    clause.append(-mapping[('u',i,t)])
+            clauses.append(clause)
+
+    def find_all_minimal_covers(set_of_jobs):
+        if(consumes_too_much_resources(set_of_jobs)):
+            if(is_minimal_cover(set_of_jobs)):
+                add_minimal_cover_clause(set_of_jobs)
+            else:
+                for job in set_of_jobs:
+                    find_all_minimal_covers(set_of_jobs - frozenset([job]))
+
+
+    find_all_minimal_covers(frozenset(jobs.keys()))
+
+    print clauses
+
+
 
 
 
