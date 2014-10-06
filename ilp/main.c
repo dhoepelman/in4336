@@ -65,9 +65,9 @@ int main(int argc, char *argv[])
         fprintf(outfile, " + y%i", i);
     }
 
-    /**/
     j=1;
     fprintf(outfile, "\nSubject To\n");
+    // Zorg dat elke vertex precies één kleur heeft
     for(i=1; i<=vertices; i++) {
         fprintf(outfile, "\tv%i: x%i_%i", i, i, j);
         for(j=2; j<=k; j++) {
@@ -76,7 +76,10 @@ int main(int argc, char *argv[])
         fprintf(outfile, " = 1\n");
         j=1;
     }
+    
     l=1;
+    
+    // Zorg dat nodes geen kleur krijgen die niet gebruikt wordt
     for(i=1; i<=vertices; i++) {
         fprintf(outfile, "\n");
         for(j=1; j<=k; j++) {
@@ -87,6 +90,8 @@ int main(int argc, char *argv[])
     }
     l=1;
     fprintf(outfile, "\n");
+    
+    // Zorg dat nodes die met een edge verbonden zijn niet dezelfde kleur krijgen
     for(i=1; i<=edges; i++) {
         for(j=1; j<=k; j++) {
             fprintf(outfile, "\te%i: x%i_%i + x%i_%i <= 1\n", l, v1[i], j, v2[i], j);
@@ -94,6 +99,8 @@ int main(int argc, char *argv[])
         }
         fprintf(outfile, "\n");
     }
+    
+    // Zorg dat alle variabelen 0 of 1 zijn
     fprintf(outfile, "Bounds\n");
     for(i=1; i<=vertices; i++) {
         for(j=1; j<=k; j++) {
@@ -104,6 +111,8 @@ int main(int argc, char *argv[])
     for(i=1; i<=k; i++) {
             fprintf(outfile, "\t0 <= y%i <= 1\n", i);
     }
+    
+    // Zorg dat alle variabelen integeres zijn
     fprintf(outfile, "Integers\n\t");
     for(i=1; i<=vertices; i++) {
         for(j=1; j<=k; j++) {
