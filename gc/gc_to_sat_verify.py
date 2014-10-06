@@ -27,6 +27,8 @@ else:
 with open(solutionfn) as solutionf:
     solution = read_DIMARCS_CNF_solution(solutionf.readlines())
 
+
+
 colormap = SAT_solution_to_colormap(k, solution)
 print repr(colormap).replace(",", ",\n")
 

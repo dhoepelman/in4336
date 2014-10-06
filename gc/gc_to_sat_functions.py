@@ -104,7 +104,10 @@ def read_DIMARCS_CNF_solution(lines):
             for v in varz:
                 v = v.strip()
                 value = v[0] != '-'
-                solution[int(v.lstrip('-'))] = value
+                vn = int(v.lstrip('-'))
+                # The very last sign is a zero to indicate the end of the solution
+                if vn != 0:
+                    solution[vn] = value
 
     return solution
 
