@@ -38,16 +38,19 @@ valid = True
 
 # First check: Every node has a color
 if valid:
-	if len(colormap) != N:
-    		valid = False
-    		print "Not every node has a color"
+    if len(colormap) != N:
+        valid = False
+        print "Not every node has a color"
+        for i in xrange(1,N):
+            if i not in colormap:
+                print "Node %d is missing [%d,%d]" % (i,(i-1)*k+1, (i-1)*k+k)
 
 # Go through all edges and check that adjacent nodes do not have the same colors
 if valid:
-	for (v,w) in E:
- 	   	if colormap[v] == colormap[w]:
-        		valid = False
-	       		print "Nodes %d and %d are adjacent and have the same color %d" % (v,w,colormap[v])
+    for (v,w) in E:
+        if colormap[v] == colormap[w]:
+            valid = False
+            print "Nodes %d and %d are adjacent and have the same color %d" % (v,w,colormap[v])
 
 if not valid:
     print "Solution has problems"
