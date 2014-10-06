@@ -27,13 +27,14 @@ else:
 
 for instancefn in glob.glob(files):
     with open(instancefn) as instacef:
+        result = ""
         try:
             (N,M,E) = read_DIGRAPH(instacef.readlines())
+            (numv, clauses) = GC_to_SAT(N,E,k)
+            result = SAT_to_DIMACS_CNF(numv, clauses)
         except Exception as e:
             print "Error converting file %s" % instancefn
             print e
-        (numv, clauses) = GC_to_SAT(N,E,k)
-        result = SAT_to_DIMACS_CNF(numv, clauses)
         #print(result)
         outputfilen = "%s/gc-%s-%d.cnf" % (outputdir, os.path.splitext(os.path.basename(instancefn))[0], k)
         outputf = open(outputfilen, 'wb')
