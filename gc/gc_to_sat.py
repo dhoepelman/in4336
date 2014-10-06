@@ -27,7 +27,11 @@ else:
 
 for instancefn in glob.glob(files):
     with open(instancefn) as instacef:
-        (N,M,E) = read_DIGRAPH(instacef.readlines())
+        try:
+            (N,M,E) = read_DIGRAPH(instacef.readlines())
+        except Exception as e:
+            print "Error converting file %s" % instancefn
+            print e
         (numv, clauses) = GC_to_SAT(N,E,k)
         result = SAT_to_DIMACS_CNF(numv, clauses)
         #print(result)
