@@ -78,6 +78,8 @@ def mapping(k, node, color):
 # Reverse of mapping = (node-1) * k + color
 def reversemapping(k, mapping):
     color = mapping % k
+    if color == 0:  # Colour is in [1,k]
+        color = k
     # (node-1) * k = mapping - color
     # node = (mapping-color)/k + 1
     node = (mapping - color) / k + 1
