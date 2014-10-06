@@ -100,7 +100,7 @@ def read_DIMARCS_CNF_solution(lines):
     for line in lines:
         # Solution line example: v 1 -2 3 -4 5 6 0
         if len(line) > 0 and line.strip()[0] == 'v':
-            varz = line.split(" ")[1:-1]
+            varz = line.split(" ")[1:]
             for v in varz:
                 v = v.strip()
                 value = v[0] != '-'
