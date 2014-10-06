@@ -28,7 +28,7 @@ with open(solutionfn) as solutionf:
     solution = read_DIMARCS_CNF_solution(solutionf.readlines())
 
 colormap = SAT_solution_to_colormap(k, solution)
-print colormap
+print repr(colormap).replace(",", ",\n")
 
 # Read the problem file
 with open(problemfn) as problemf:
@@ -37,15 +37,17 @@ with open(problemfn) as problemf:
 valid = True
 
 # First check: Every node has a color
-if len(colormap) != N:
-    valid = False
-    print "Not every node has a color"
+if valid:
+	if len(colormap) != N:
+    		valid = False
+    		print "Not every node has a color"
 
 # Go through all edges and check that adjacent nodes do not have the same colors
-for (v,w) in E:
-    if colormap[v] == colormap[w]:
-        valid = False
-        print "Nodes %d and %d are adjacent and have the same color %d" % (v,w,colormap[v])
+if valid:
+	for (v,w) in E:
+ 	   	if colormap[v] == colormap[w]:
+        		valid = False
+	       		print "Nodes %d and %d are adjacent and have the same color %d" % (v,w,colormap[v])
 
 if not valid:
     print "Solution has problems"
