@@ -40,7 +40,7 @@ valid = True
 if valid:
     if len(colormap) != N:
         valid = False
-        print "Not every node has a color"
+        print "Not every node has a color (%d nodes, %d mappings)" % (N, len(colormap))
         for i in xrange(1,N):
             if i not in colormap:
                 print "Node %d is missing [%d,%d]" % (i,(i-1)*k+1, (i-1)*k+k)
