@@ -1,11 +1,13 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+from __future__ import print_function
+
 import sys
 import glob
 import os.path
 from gc_to_sat_functions import *
-from __future__ import print_function
+
 
 # Aanroep: gc_to_sat.py k output-dir files
 # Voorbeeld: gc_to_sat.py 100 . te-kleueren-graaf.sol
@@ -33,10 +35,8 @@ with open(filen) as instacef:
         (N,M,result) = gc_string_to_sat_string(instacef.readlines(), k)
 
         outputfilen = "%s/gc-%s-%d.cnf" % (outputdir, os.path.splitext(os.path.basename(filen))[0], k)
-        #outputf = open(outputfilen, 'wb')
-        #outputf.write(result)
-        #outputf.close()
-        print(result, file=outputfilen)
+        with open(outputfilen, 'wb') as outputfile:
+            print(result, file=outputfile)
         print("Converted %s to %s" % (filen, outputfilen))
     except Exception as e:
         print("Error converting file %s" % filen)
