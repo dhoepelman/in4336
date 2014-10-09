@@ -84,10 +84,12 @@ try:
             solverresult = subprocess.call("lingeling " + translationfn, shell=True, stdout=solutionf)
 
         # We're a bit screwed if the alarm signal happens exactly here before the next loop iteration, but what are the odds?
-        time_spent_solving += time.clock() - starttime
+        time_this_solving = time.clock() - starttime
+        time_spent_solving +=  time_this_solving
         time_spent_translating += time_this_translation
-        trace[guess]['solve'] = time_spent_solving
-        trace[guess]['total'] = time_spent_translating+time_spent_solving
+        trace[guess]['solve'] = time_this_solving
+        trace[guess]['this'] = time_this_translation+time_this_solving
+        trace[guess]['total'] = time_spent_solving+time_spent_translating
 
         if solverresult == 10:
             # Satisfiable
@@ -139,8 +141,11 @@ output += "%s,%d,%d,%d,%d,%d,%.2f,%.2f,%.2f,%d,%s" %\
 with open(resultfile, 'ab') as resultf:
 	print(output, file=resultf)
 
-print("Done!")
-print("Took %.2fs to solve instance %s with N=%d,M=%d. Solution=%d" % (time_spent_total, instancename, N, M, solution))
+if solution != -1:
+    print("Done!")
+    print("Took %.2fs to solve instance %s with N=%d,M=%d. Solution=%d" % (time_spent_total, instancename, N, M, solution))
+else:
+    print("Timeout")
 
 with open("%s/%s.json" % (tracedir, instancename),'wb') as tracef:
     print(json.dumps(trace, indent=4), file=tracef)
