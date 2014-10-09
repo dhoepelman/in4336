@@ -8,6 +8,7 @@ import sys
 import math
 import os
 import subprocess
+import time
 from gc_to_sat_functions import *
 
 totaltimestart = time.clock()
