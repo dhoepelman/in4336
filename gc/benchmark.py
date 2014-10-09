@@ -58,7 +58,7 @@ signal.alarm(timeout)
 try:
     while solution == -1:
         # Binary search for the solution
-        guess = math.ceil((upper_bound-lower_bound)/2.0)+lower_bound
+        guess = int(math.ceil((upper_bound-lower_bound)/2.0)+lower_bound)
         trace.append(guess)
 
         time = time.clock()
