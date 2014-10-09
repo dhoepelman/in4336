@@ -26,20 +26,19 @@ if(len(sys.argv) < 4):
 else:
     files = sys.argv[3]
 
-def gc_string_to_sat_string(instance):
-    (N,M,E) = read_DIGRAPH(instance)
-    (numv, clauses) = GC_to_SAT(N,E,k)
-    return SAT_to_DIMACS_CNF(numv, clauses)
+fileslist = glob.glob(files)
+if len(fileslist) == 0:
+    print "No files given"
 
-for instancefn in glob.glob(files):
+for instancefn in fileslist:
     with open(instancefn) as instacef:
         result = ""
         try:
-            result = gc_string_to_sat_string(instacef.readlines())
+            (N,M,result) = gc_string_to_sat_string(instacef.readlines())
         except Exception as e:
             print "Error converting file %s" % instancefn
             print e
-        #print(result)
+        print(result)
         outputfilen = "%s/gc-%s-%d.cnf" % (outputdir, os.path.splitext(os.path.basename(instancefn))[0], k)
         outputf = open(outputfilen, 'wb')
         outputf.write(result)

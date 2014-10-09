@@ -119,3 +119,8 @@ def SAT_solution_to_colormap(k, solution):
             (node, color) = reversemapping(k, variable)
             assignment[node] = color
     return assignment
+
+def gc_string_to_sat_string(instance, k):
+    (N,M,E) = read_DIGRAPH(instance)
+    (numv, clauses) = GC_to_SAT(N,E,k)
+    return (N, M, SAT_to_DIMACS_CNF(numv, clauses))

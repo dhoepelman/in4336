@@ -57,8 +57,8 @@ with open(instancefn) as instancef:
             time = time.clock()
             time_spent_translating += time.clock() - time
 
-            # We've found the smallest k! It's the upper bound
             if lower_bound == upper_bound-1:
+                # We've found the smallest k! It's the upper bound
                 solution = upper_bound
     except TimeoutException:
         # MEEH, Time's up!
