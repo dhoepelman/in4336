@@ -61,21 +61,21 @@ try:
         guess = int(math.ceil((upper_bound-lower_bound)/2.0)+lower_bound)
         trace.append(guess)
 
-        time = time.clock()
+        starttime = time.clock()
 
         id = "gc-%s-%d" % (instancename, guess)
         with open("%s/%s.cnf" % (translationdir, id), 'wb') as translationf:
             print(gc_string_to_sat_string(instance, guess), file = translationf)
 
-        time_this_translation = time.clock() - time
-        time = time.clock()
+        time_this_translation = starttime.clock() - starttime
+        starttime = time.clock()
 
         with open("%s/%s.cnf" % (solutiondir, id), 'wb') as solutionf:
             solverresult = subprocess.call(["lingeling",translationf], shell=True)
 
 
         # We're a bit screwed if the alarm signal happens exactly here before the next loop iteration, but what are the odds?
-        time_spent_solving += time.clock - time
+        time_spent_solving += time.clock() - starttime
         time_spent_translating += time_this_translation
 
         if solverresult == 10:
@@ -117,7 +117,7 @@ output += "%s,%d,%d,%d,%d,%d,%d,%d,%d,%.2f,%.2f,%.2f,%s\n" %\
          upper_bound,
          time_spent_translating,
          time_spent_solving,
-         time.clock() - totaltimestart,
+         starttime.clock() - totaltimestart,
          timeout,
          "\"%s\"" % ",".join([str(x) for x in trace])
         )
