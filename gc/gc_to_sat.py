@@ -22,25 +22,20 @@ else:
     outputdir = sys.argv[2]
 
 if(len(sys.argv) < 4):
-    files = raw_input('files: ')
+    filen = raw_input('file: ')
 else:
-    files = sys.argv[3]
+    filen = sys.argv[3]
 
-fileslist = glob.glob(files)
-if len(fileslist) == 0:
-    print "No files given"
+with open(filen) as instacef:
+    result = ""
+    try:
+        (N,M,result) = gc_string_to_sat_string(instacef.readlines(), k)
 
-for instancefn in fileslist:
-    with open(instancefn) as instacef:
-        result = ""
-        try:
-            (N,M,result) = gc_string_to_sat_string(instacef.readlines())
-        except Exception as e:
-            print "Error converting file %s" % instancefn
-            print e
-        print(result)
-        outputfilen = "%s/gc-%s-%d.cnf" % (outputdir, os.path.splitext(os.path.basename(instancefn))[0], k)
+        outputfilen = "%s/gc-%s-%d.cnf" % (outputdir, os.path.splitext(os.path.basename(filen))[0], k)
         outputf = open(outputfilen, 'wb')
         outputf.write(result)
         outputf.close()
-        print "Converted %s to %s" % (instancefn, outputfilen)
+        print "Converted %s to %s" % (filen, outputfilen)
+    except Exception as e:
+        print "Error converting file %s" % filen
+        print e
