@@ -32,7 +32,7 @@ else:
 with open(filen) as instacef:
     result = ""
     try:
-        (N,M,result) = gc_string_to_sat_string(instacef.readlines(), k)
+        result = gc_string_to_sat_string(instacef.readlines(), k)
 
         outputfilen = "%s/gc-%s-%d.cnf" % (outputdir, os.path.splitext(os.path.basename(filen))[0], k)
         with open(outputfilen, 'wb') as outputfile:
