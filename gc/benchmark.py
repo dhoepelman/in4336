@@ -64,14 +64,15 @@ try:
         starttime = time.clock()
 
         id = "gc-%s-%d" % (instancename, guess)
-        with open("%s/%s.cnf" % (translationdir, id), 'wb') as translationf:
+	translationfn = "%s/%s.cnf" % (translationdir, id)
+        with open(translationfn, 'wb') as translationf:
             print(gc_string_to_sat_string(instance, guess), file = translationf)
 
-        time_this_translation = starttime.clock() - starttime
+        time_this_translation = time.clock() - starttime
         starttime = time.clock()
 
         with open("%s/%s.cnf" % (solutiondir, id), 'wb') as solutionf:
-            solverresult = subprocess.call(["lingeling",translationf], shell=True)
+            solverresult = subprocess.call(["lingeling",translationfn], shell=True)
 
 
         # We're a bit screwed if the alarm signal happens exactly here before the next loop iteration, but what are the odds?
@@ -117,7 +118,7 @@ output += "%s,%d,%d,%d,%d,%d,%d,%d,%d,%.2f,%.2f,%.2f,%s\n" %\
          upper_bound,
          time_spent_translating,
          time_spent_solving,
-         starttime.clock() - totaltimestart,
+         time.clock() - totaltimestart,
          timeout,
          "\"%s\"" % ",".join([str(x) for x in trace])
         )
