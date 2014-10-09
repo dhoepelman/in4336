@@ -35,7 +35,7 @@ class TimeoutException(Exception):
     pass
 def timeout_handler(signum, frame):
     raise TimeoutException()
-signal.signal(signal.SIGALARM, timeout_handler)
+signal.signal(signal.SIGALRM, timeout_handler)
 
 if(len(sys.argv) < 2):
     instancefn = int(raw_input('File: '))
