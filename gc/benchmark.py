@@ -9,7 +9,7 @@ import math
 import os
 import subprocess
 import time
-import pprint
+import json
 import collections
 from gc_to_sat_functions import *
 
@@ -141,5 +141,5 @@ with open(resultfile, 'ab') as resultf:
 print("Done!")
 print("Took %.2fs to solve instance %s with N=%d,M=%d. Solution=%d" % (time_spent_total, instancename, N, M, solution))
 
-with open("%s/%s.py" % (tracedir, instancename),'wb') as tracef:
-    pprint.pprint(trace, stream=tracef)
+with open("%s/%s.json" % (tracedir, instancename),'wb') as tracef:
+    print(json.dumps(trace, indent=4), file=tracef)
