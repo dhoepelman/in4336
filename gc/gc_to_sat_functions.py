@@ -29,29 +29,29 @@ def SAT_to_DIMACS_CNF_file(N,E,k, outputfile):
     with open(outputfile,'wb') as f:
         f.write("p cnf %d %d\n" % (numv, numc))
 
-    # Voeg een clause per node to zodat elke node een of meer kleuren heeft: p_11 v p_12 v p_13 etc
-    for v in xrange(1,N+1):
-        clause = []
-        for i in xrange(1,k+1):
-            clause.append(mapping(k,v,i))
-        f.write(clause_to_str(clause))
+        # Voeg een clause per node to zodat elke node een of meer kleuren heeft: p_11 v p_12 v p_13 etc
+        for v in xrange(1,N+1):
+            clause = []
+            for i in xrange(1,k+1):
+                clause.append(mapping(k,v,i))
+            f.write(clause_to_str(clause))
 
-    # Voeg clauses toe zodat elke node maximaal één kleur heeft
-    # For v in V
-    for v in xrange(1,N+1):
-        # For 1 ≤ i < j ≤ k
-        for j in xrange(1,k+1):
-            for i in xrange(1,j):
-                # not (v heeft kleur i en v heeft kleur j)
-                # => not(v heeft kleur i) of not(v heeft kleur j)
-                f.write(clause_to_str([-mapping(k,v,i), -mapping(k,v,j)]))
+        # Voeg clauses toe zodat elke node maximaal één kleur heeft
+        # For v in V
+        for v in xrange(1,N+1):
+            # For 1 ≤ i < j ≤ k
+            for j in xrange(1,k+1):
+                for i in xrange(1,j):
+                    # not (v heeft kleur i en v heeft kleur j)
+                    # => not(v heeft kleur i) of not(v heeft kleur j)
+                    f.write(clause_to_str([-mapping(k,v,i), -mapping(k,v,j)]))
 
-    # Voeg clauses toe zodat adjacent nodes niet dezelfde kleur hebben
-    for (v,w) in E:
-        for i in xrange(1,k+1):
-            # not (v heeft kleur i en w heeft kleur i)
-            # => not(v heeft kleur i) of not(w heeft kleur i)
-            f.write(clause_to_str([-mapping(k,v, i), -mapping(k,w,i)]))
+        # Voeg clauses toe zodat adjacent nodes niet dezelfde kleur hebben
+        for (v,w) in E:
+            for i in xrange(1,k+1):
+                # not (v heeft kleur i en w heeft kleur i)
+                # => not(v heeft kleur i) of not(w heeft kleur i)
+                f.write(clause_to_str([-mapping(k,v, i), -mapping(k,w,i)]))
 
 def mapping(k, node, color):
     # Unieke mapping van (node, kleur) naar een SAT variabele nummer
