@@ -91,7 +91,8 @@ try:
             if os.path.isfile(translationfn):
                 os.remove(translationfn)
             # We might be here because of TimeoutException/Keyboardinterrupt, kill the child process if it still lives
-            solverprocess.kill()
+            if solverprocess.poll() == None:
+                solverprocess.kill()
 
         # We're a bit screwed if the alarm signal happens exactly here before the next loop iteration, but what are the odds?
         time_this_solving = time.time() - starttime
