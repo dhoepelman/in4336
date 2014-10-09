@@ -102,7 +102,9 @@ try:
             print("Found solution: %d" % solution)
         else:
             print("New bounds: (%d,%.0f guess was %d" % (lower_bound, upper_bound, guess))
-
+except KeyboardInterrupt:
+    # User wants to cancel
+    pass
 except TimeoutException:
     # MEEH, Time's up!
     pass
