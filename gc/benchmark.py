@@ -55,13 +55,15 @@ trace = []
 # Your time starts... NOW!
 signal.alarm(timeout)
 
+print("Starting to solve %s with N=%d,M=%d" % (instancename, N, M))
+
 try:
     while solution == -1:
         # Binary search for the solution
         guess = int(math.ceil((upper_bound-lower_bound)/2.0)+lower_bound)
         trace.append(guess)
 
-        print("Now guessing %d within (%d,%f]" % (guess, lower_bound,upper_bound))
+        print("Now guessing %d within (%d,%.0f]" % (guess, lower_bound,upper_bound))
         starttime = time.clock()
 
         id = "gc-%s-%d" % (instancename, guess)
@@ -94,7 +96,7 @@ try:
             solution = upper_bound
             print("Found solution: %d" % solution)
         else:
-            print("New bounds: (%d,%f] guess was %d" % (lower_bound, upper_bound, guess))
+            print("New bounds: (%d,%.0f guess was %d" % (lower_bound, upper_bound, guess))
 
 except TimeoutException:
     # MEEH, Time's up!
@@ -112,7 +114,8 @@ if not os.path.isfile(resultfile):
     output = "sep=,\n"
     output += "Instance,N,M,Solution,LB,UB,Translation Time,Solving Time,Total Time,Time Limit,Trace\n"
 
-output += "%s,%d,%d,%d,%d,%d,%d,%d,%d,%.2f,%.2f,%.2f,%s\n" %\
+time_spent_total = time.clock() - totaltimestart
+output += "%s,%d,%d,%d,%d,%d,%.2f,%.2f,%.2f,%d,%s\n" %\
         (instancename,
          N,
          M,
@@ -121,7 +124,13 @@ output += "%s,%d,%d,%d,%d,%d,%d,%d,%d,%.2f,%.2f,%.2f,%s\n" %\
          upper_bound,
          time_spent_translating,
          time_spent_solving,
-         time.clock() - totaltimestart,
+         time_spent_total,
          timeout,
          "\"%s\"" % ",".join([str(x) for x in trace])
         )
+
+with open(resultfile, 'ab') as resultf:
+	print(output, file=resultf)
+
+print("Done!")
+print("Took %.2fs to solve instance %s with N=%d,M=%d. Solution=%d" % (time_spent_total, instancename, N, M, solution))
