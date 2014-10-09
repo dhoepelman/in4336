@@ -9,6 +9,7 @@ import math
 import os
 import subprocess
 import time
+import collections
 from gc_to_sat_functions import *
 
 totaltimestart = time.clock()
@@ -19,6 +20,7 @@ outputdir = "benchmark"
 solutiondir = outputdir+"/solutions"
 translationdir = outputdir+"/translations"
 resultfile = outputdir+"/results_sat.csv"
+tracedir = outputdir+"/trace"
 
 # Timeout in seconds for the SAT solver
 timeout = 3600
@@ -50,7 +52,7 @@ with open(instancefn) as instancef:
 
 upper_bound = N
 
-trace = []
+trace = collections.OrderedDict()
 
 # Your time starts... NOW!
 signal.alarm(timeout)
@@ -61,7 +63,7 @@ try:
     while solution == -1:
         # Binary search for the solution
         guess = int(math.ceil((upper_bound-lower_bound)/2.0)+lower_bound)
-        trace.append(guess)
+        trace[guess] = {}
 
         print("Now guessing %d within (%d,%.0f]" % (guess, lower_bound,upper_bound))
         starttime = time.clock()
@@ -72,6 +74,7 @@ try:
             print(gc_string_to_sat_string(instance, guess), file = translationf)
 
         time_this_translation = time.clock() - starttime
+        trace[guess]['trans'] = time_this_translation
 
         print("Translation complete, now starting to solve")
 
@@ -83,6 +86,8 @@ try:
         # We're a bit screwed if the alarm signal happens exactly here before the next loop iteration, but what are the odds?
         time_spent_solving += time.clock() - starttime
         time_spent_translating += time_this_translation
+        trace[guess]['solve'] = time_spent_solving
+        trace[guess]['total'] = time_spent_translating+time_spent_solving
 
         if solverresult == 10:
             # Satisfiable
@@ -126,7 +131,7 @@ output += "%s,%d,%d,%d,%d,%d,%.2f,%.2f,%.2f,%d,%s\n" %\
          time_spent_solving,
          time_spent_total,
          timeout,
-         "\"%s\"" % ",".join([str(x) for x in trace])
+         "\"%s\"" % ",".join([str(x) for x in trace.keys()])
         )
 
 with open(resultfile, 'ab') as resultf:
@@ -134,3 +139,6 @@ with open(resultfile, 'ab') as resultf:
 
 print("Done!")
 print("Took %.2fs to solve instance %s with N=%d,M=%d. Solution=%d" % (time_spent_total, instancename, N, M, solution))
+
+with open("%s/%s.py" % (tracedir, instancename),'wb') as tracef:
+    print(repr(trace), file=tracef)
