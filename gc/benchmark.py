@@ -38,9 +38,9 @@ def timeout_handler(signum, frame):
 signal.signal(signal.SIGALRM, timeout_handler)
 
 if(len(sys.argv) < 2):
-    instancefn = int(raw_input('File: '))
+    instancefn = raw_input('File: ')
 else:
-    instancefn = int(sys.argv[1])
+    instancefn = sys.argv[1]
 
 instancename = os.path.splitext(os.path.basename(instancefn))[0]
 with open(instancefn) as instancef:
