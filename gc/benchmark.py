@@ -9,6 +9,7 @@ import math
 import os
 import subprocess
 import time
+import pprint
 import collections
 from gc_to_sat_functions import *
 
@@ -141,4 +142,4 @@ print("Done!")
 print("Took %.2fs to solve instance %s with N=%d,M=%d. Solution=%d" % (time_spent_total, instancename, N, M, solution))
 
 with open("%s/%s.py" % (tracedir, instancename),'wb') as tracef:
-    print(repr(trace), file=tracef)
+    pprint.pformat(trace, stream=tracef)
