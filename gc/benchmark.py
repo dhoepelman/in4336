@@ -13,7 +13,7 @@ import json
 import collections
 from gc_to_sat_functions import *
 
-totaltimestart = time.clock()
+totaltimestart = time.time()
 
 # Folder to keep results in
 outputdir = "benchmark"
@@ -67,25 +67,25 @@ try:
         trace[guess] = {}
 
         print("Now guessing %d within (%d,%.0f]" % (guess, lower_bound,upper_bound))
-        starttime = time.clock()
+        starttime = time.time()
 
         id = "gc-%s-%d" % (instancename, guess)
         translationfn = "%s/%s.cnf" % (translationdir, id)
         try:
             gc_string_to_sat_file(instance, translationfn, guess)
 
-            time_this_translation = time.clock() - starttime
+            time_this_translation = time.time() - starttime
             trace[guess]['trans'] = time_this_translation
 
             print("Translation complete, now starting to solve")
 
-            starttime = time.clock()
+            starttime = time.time()
 
             with open("%s/%s.cnf" % (solutiondir, id), 'wb') as solutionf:
                 solverresult = subprocess.call("lingeling " + translationfn, shell=True, stdout=solutionf)
 
             # We're a bit screwed if the alarm signal happens exactly here before the next loop iteration, but what are the odds?
-            time_this_solving = time.clock() - starttime
+            time_this_solving = time.time() - starttime
             time_spent_solving +=  time_this_solving
             time_spent_translating += time_this_translation
             trace[guess]['solve'] = time_this_solving
@@ -128,7 +128,7 @@ if not os.path.isfile(resultfile):
     output = "sep=,\n"
     output += "Instance,N,M,Solution,LB,UB,Translation Time,Solving Time,Total Time,Time Limit,Trace\n"
 
-time_spent_total = time.clock() - totaltimestart
+time_spent_total = time.time() - totaltimestart
 output += "%s,%d,%d,%d,%d,%d,%.2f,%.2f,%.2f,%d,%s" %\
         (instancename,
          N,
