@@ -26,7 +26,7 @@ def SAT_to_DIMACS_CNF_file(N,E,k, outputfile):
     # Clause per node, per kleurenpaar. Gauss' trick toepassen
     numc += N * (k * (k-1) / 2)
 
-    with open(outputfile,'wb', buffering=10*(1024**2)) as f:
+    with open(outputfile,'wb') as f:
         f.write("p cnf %d %d\n" % (numv, numc))
 
         # Voeg een clause per node to zodat elke node een of meer kleuren heeft: p_11 v p_12 v p_13 etc
