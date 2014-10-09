@@ -32,11 +32,9 @@ else:
 with open(filen) as instacef:
     result = ""
     try:
-        result = gc_string_to_sat_string(instacef.readlines(), k)
-
         outputfilen = "%s/gc-%s-%d.cnf" % (outputdir, os.path.splitext(os.path.basename(filen))[0], k)
-        with open(outputfilen, 'wb') as outputfile:
-            print(result, file=outputfile)
+
+        gc_string_to_sat_file(instacef.readlines(), outputfilen, k)
         print("Converted %s to %s" % (filen, outputfilen))
     except Exception as e:
         print("Error converting file %s" % filen)
