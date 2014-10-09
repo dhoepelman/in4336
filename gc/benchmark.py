@@ -142,4 +142,4 @@ print("Done!")
 print("Took %.2fs to solve instance %s with N=%d,M=%d. Solution=%d" % (time_spent_total, instancename, N, M, solution))
 
 with open("%s/%s.py" % (tracedir, instancename),'wb') as tracef:
-    pprint.pformat(trace, stream=tracef)
+    pprint.pprint(trace, stream=tracef)
