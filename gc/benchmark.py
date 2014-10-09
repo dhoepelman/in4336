@@ -71,8 +71,7 @@ try:
 
         id = "gc-%s-%d" % (instancename, guess)
         translationfn = "%s/%s.cnf" % (translationdir, id)
-        with open(translationfn, 'wb') as translationf:
-            print(gc_string_to_sat_string(instance, guess), file = translationf)
+        gc_string_to_sat_file(instance, translationfn, guess)
 
         time_this_translation = time.clock() - starttime
         trace[guess]['trans'] = time_this_translation

@@ -70,6 +70,43 @@ def GC_to_SAT(N,E,k):
 
     return (numv, clauses)
 
+def SAT_to_DIMACS_CNF_file(N,E,k, outputfile):
+    # We have a variable for every node and color combination
+    numv = N * k
+    # Clause per node
+    numc = N
+    # Clause per (edge,kleur) combinatie
+    numc += len(E)*k
+    # Clause per node, per kleurenpaar. Gauss' trick toepassen
+    numc += N * (k * (k-1) / 2)
+
+    with open(outputfile,'wb') as f:
+        f.write("p cnf %d %d\n" % (numv, numc))
+
+    # Voeg een clause per node to zodat elke node een of meer kleuren heeft: p_11 v p_12 v p_13 etc
+    for v in xrange(1,N+1):
+        clause = []
+        for i in xrange(1,k+1):
+            clause.append(mapping(k,v,i))
+        f.write(clause_to_str(clause))
+
+    # Voeg clauses toe zodat elke node maximaal één kleur heeft
+    # For v in V
+    for v in xrange(1,N+1):
+        # For 1 ≤ i < j ≤ k
+        for j in xrange(1,k+1):
+            for i in xrange(1,j):
+                # not (v heeft kleur i en v heeft kleur j)
+                # => not(v heeft kleur i) of not(v heeft kleur j)
+                f.write(clause_to_str([-mapping(k,v,i), -mapping(k,v,j)]))
+
+    # Voeg clauses toe zodat adjacent nodes niet dezelfde kleur hebben
+    for (v,w) in E:
+        for i in xrange(1,k+1):
+            # not (v heeft kleur i en w heeft kleur i)
+            # => not(v heeft kleur i) of not(w heeft kleur i)
+            f.write(clause_to_str([-mapping(k,v, i), -mapping(k,w,i)]))
+
 def mapping(k, node, color):
     # Unieke mapping van (node, kleur) naar een SAT variabele nummer
     return (node-1) * k + color
@@ -85,12 +122,15 @@ def reversemapping(k, mapping):
     node = (mapping - color) / k + 1
     return (node, color)
 
+def clause_to_str(clause):
+    return " ".join([str(i) for i in clause]) + " 0 \n"
+
 def SAT_to_DIMACS_CNF(numv, clauses):
     #header: p cnf num_variables num_clauses
     result = "p cnf %d %d\n" % (numv, len(clauses))
     for clause in clauses:
         # Clause: variable variable variable 0 \n
-        result += " ".join([str(i) for i in clause]) + " 0 \n"
+        result += clause_to_str(clause)
 
     return result
 
@@ -124,3 +164,7 @@ def gc_string_to_sat_string(instance, k):
     (N,M,E) = read_DIGRAPH(instance)
     (numv, clauses) = GC_to_SAT(N,E,k)
     return SAT_to_DIMACS_CNF(numv, clauses)
+
+def gc_string_to_sat_file(instance, outputfile, k):
+    (N,M,E) = read_DIGRAPH(instance)
+    SAT_to_DIMACS_CNF_file(N,E,k,outputfile)
