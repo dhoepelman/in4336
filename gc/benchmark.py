@@ -61,19 +61,22 @@ try:
         guess = int(math.ceil((upper_bound-lower_bound)/2.0)+lower_bound)
         trace.append(guess)
 
+        print("Now guessing %d within (%d,%f]" % (guess, lower_bound,upper_bound))
         starttime = time.clock()
 
         id = "gc-%s-%d" % (instancename, guess)
-	translationfn = "%s/%s.cnf" % (translationdir, id)
+        translationfn = "%s/%s.cnf" % (translationdir, id)
         with open(translationfn, 'wb') as translationf:
             print(gc_string_to_sat_string(instance, guess), file = translationf)
 
         time_this_translation = time.clock() - starttime
+
+        print("Translation complete, now starting to solve")
+
         starttime = time.clock()
 
         with open("%s/%s.cnf" % (solutiondir, id), 'wb') as solutionf:
-            solverresult = subprocess.call(["lingeling",translationfn], shell=True)
-
+            solverresult = subprocess.call("lingeling " + translationfn, shell=True, stdout=solutionf)
 
         # We're a bit screwed if the alarm signal happens exactly here before the next loop iteration, but what are the odds?
         time_spent_solving += time.clock() - starttime
@@ -91,7 +94,7 @@ try:
             solution = upper_bound
             print("Found solution: %d" % solution)
         else:
-            print("New bounds: (%d,%d] guess was %d" % (lower_bound, upper_bound, guess))
+            print("New bounds: (%d,%f] guess was %d" % (lower_bound, upper_bound, guess))
 
 except TimeoutException:
     # MEEH, Time's up!
