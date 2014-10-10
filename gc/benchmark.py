@@ -87,12 +87,12 @@ try:
                 solverprocess = subprocess.Popen("lingeling " + translationfn, shell=True, stdout=solutionf)
                 solverresult = solverprocess.wait()
         finally:
-            # Delete the translation file, since it can become several gigs
-            if os.path.isfile(translationfn):
-                os.remove(translationfn)
             # We might be here because of TimeoutException/Keyboardinterrupt, kill the child process if it still lives
             if solverprocess.poll() == None:
                 solverprocess.kill()
+            # Delete the translation file, since it can become several gigs
+            if os.path.isfile(translationfn):
+                os.remove(translationfn)
 
         # We're a bit screwed if the alarm signal happens exactly here before the next loop iteration, but what are the odds?
         time_this_solving = time.time() - starttime
