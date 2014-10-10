@@ -88,8 +88,11 @@ try:
                 solverresult = solverprocess.wait()
         finally:
             # We might be here because of TimeoutException/Keyboardinterrupt, kill the child process if it still lives
-            if solverprocess.poll() == None:
+            # Polling doesn't seem to work to check if alive... Fuck it just catch the exception if it's already killed
+            try:
                 solverprocess.kill()
+            except:
+                pass
             # Delete the translation file, since it can become several gigs
             if os.path.isfile(translationfn):
                 os.remove(translationfn)
