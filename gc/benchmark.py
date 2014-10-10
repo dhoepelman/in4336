@@ -24,7 +24,7 @@ resultfile = outputdir+"/results_sat.csv"
 tracedir = outputdir+"/trace"
 
 # Timeout in seconds for the SAT solver
-timeout = 3600
+timeout = 1800
 
 # Statistics we would like to keep
 instancename = ""
