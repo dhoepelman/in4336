@@ -142,11 +142,12 @@ for proc in procs:
 for proc in procs:
     try:
         signal.alarm(10)
-        os.waitpid(proc)
+        os.waitpid(proc, 0)
     except TimeoutException:
         # Orphan process. I give up
+        signal.alarm(0)
         pass
-
+signal.alarm(0)
 
 # Report in addition: N
 
