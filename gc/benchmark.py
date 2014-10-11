@@ -84,7 +84,7 @@ try:
         try:
             with open("%s/%s.cnf" % (solutiondir, id), 'wb') as solutionf:
                 #solverresult = subprocess.call("lingeling " + translationfn, shell=True, stdout=solutionf)
-                solverprocess = subprocess.Popen("lingeling " + translationfn, shell=True, stdout=solutionf)
+                solverprocess = subprocess.Popen(["lingeling ", translationfn], stdout=solutionf)
                 solverresult = solverprocess.wait()
         finally:
             # We might be here because of TimeoutException/Keyboardinterrupt, kill the child process if it still lives
