@@ -87,7 +87,7 @@ try:
         try:
             with open("%s/%s.cnf" % (solutiondir, id), 'wb') as solutionf:
                 #solverresult = subprocess.call("lingeling " + translationfn, shell=True, stdout=solutionf)
-                solverprocess = subprocess.Popen(["lingeling ", translationfn], stdout=solutionf)
+                solverprocess = subprocess.Popen("lingeling " + translationfn, shell=True, stdout=solutionf)
                 procs.append(solverprocess.pid)
                 solverresult = solverprocess.wait()
         finally:
