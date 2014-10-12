@@ -133,6 +133,8 @@ except TimeoutException:
 # Cancel timeout
 signal.alarm(0)
 
+time.sleep(10)
+
 # Perform a genocide on the child processes
 for proc in procs:
     try:
