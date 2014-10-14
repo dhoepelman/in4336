@@ -95,6 +95,7 @@ try:
             # Polling doesn't seem to work to check if alive... Fuck it just catch the exception if it's already killed
             try:
                 solverprocess.terminate()
+                subprocess.call("killall lingeling")
             except:
                 pass
             # Delete the translation file, since it can become several gigs
@@ -144,6 +145,7 @@ for proc in procs:
 for proc in procs:
     try:
         signal.alarm(10)
+        subprocess.call("killall lingeling")
         os.waitpid(proc, 0)
     except TimeoutException:
         # Orphan process. I give up
