@@ -1,22 +1,12 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-def read_DIGRAPH(lines):
-    # List of edges
-    E = []
-    for line in lines:
-        vals = line.split(" ")
-        if vals[0] == 'p':
-            # Number of nodes
-            N = int(vals[2])
-            # Number of edges
-            M = int(vals[3])
-        elif vals[0] == 'e':
-            # Add this edge
-            E.append((int(vals[1]), int(vals[2])))
-    return (N,M,E)
+import sys
+import glob
+import os.path
+from gc_to_sat_functions import read_DIGRAPH
 
-def GC_to_LP_file(N,E,k,outputfile):
+def GC_to_ILP(N,E):
     objfunction = ""
     subjectto = []
     bounds = []
@@ -27,9 +17,9 @@ def GC_to_LP_file(N,E,k,outputfile):
     # xi_k : node i heeft kleur k wel/niet
 
     # Objective function: minimaliseer het aantal kleuren
-    objfunction = " + ".join(["y"+str(i) for i in xrange(1,N)])
+    objfunction = " + ".join(["y"+str(i) for i in xrange(0,N)])
 
-    # Zorg dat elke vertex precies Ã©Ã©n kleur heeft
+    # Zorg dat elke vertex precies één kleur heeft
     for i in xrange(1,N+1):
         subjectto.append(" + ".join(["x%d%d"%(i,k) for k in xrange(1,N+1)]) + " = 1")
 
@@ -68,18 +58,24 @@ def to_ilp(objfunction, subjectto, bounds, integers):
     result += "\nEnd"
     return result
 
-def gc_string_to_ilp_file(instance, outputfile, k):
-    (N,M,E) = read_DIGRAPH(instance)
-<<<<<<< HEAD
-    (objfunction, subjectto, bounds, integers) = GC_to_LP_file(N,E,k,outputfile)
-	
-    outputf = open(outputfile, 'wb')
-    outputf.write(to_ilp(objfunction, subjectto, bounds, integers))
-    outputf.close()
-=======
-	(objfunction, subjectto, bounds, integers) = GC_to_LP_file(N,E,k,outputfile)
-	
-	outputf = open(outputfile, 'wb')
-    outputf.write(to_ilp(objfunction, subjectto, bounds, integers))
-    outputf.close()
->>>>>>> e53373fa6b8ef9f1fa1f5f0d251fada3eba5efbb
+if(len(sys.argv) < 2):
+    outputdir = raw_input("Output dir: ");
+else:
+    outputdir = sys.argv[1]
+
+if(len(sys.argv) < 3):
+    files = raw_input('files: ')
+else:
+    files = sys.argv[2]
+
+for instancefn in glob.glob(files):
+    with open(instancefn) as instacef:
+        (N,M,E) = read_DIGRAPH(instacef.readlines())
+        (objfunction, subjectto, bounds, integers) = GC_to_ILP(N,E)
+
+        outputfilen = "%s/gc-%s.lp" % (outputdir, os.path.splitext(os.path.basename(instancefn))[0])
+        outputf = open(outputfilen, 'wb')
+        outputf.write(to_ilp(objfunction, subjectto, bounds, integers))
+        outputf.close()
+
+        print("Converted %s to %s") % (instancefn, outputfilen)

@@ -93,16 +93,6 @@ try:
         #trace[guess]['this'] = time_this_translation+time_this_solving
         #trace[guess]['total'] = time_spent_solving+time_spent_translating
 
-#            if solverresult == 10:
-#                # Satisfiable
-#                upper_bound = guess
-#            elif solverresult == 20:
-#                # Unsatisfiable
-#                lower_bound = guess
-
-#            if lower_bound == upper_bound-1:
-                # We've found the smallest k! It's the upper bound
-#                solution = upper_bound
         print("Found solution: %d" % solution)
 #            else:
 #                print("New bounds: (%d,%.0f guess was %d" % (lower_bound, upper_bound, guess))
@@ -110,6 +100,7 @@ try:
         # Delete the translation file, since it can become several gigs
         if os.path.isfile(translationfn):
             os.remove(translationfn)
+
 except KeyboardInterrupt:
     # User wants to cancel
     pass
