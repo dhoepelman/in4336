@@ -16,7 +16,7 @@ from gc_to_ilp_functions import *
 totaltimestart = time.time()
 
 # Folder to keep results in
-outputdir = "benchmark"
+outputdir = "benchmark-ilp"
 # Solution folder
 solutiondir = outputdir+"/solutions"
 translationdir = outputdir+"/translations"
