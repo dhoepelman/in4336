@@ -17,9 +17,9 @@ def GC_to_ILP(N,E):
     # xi_k : node i heeft kleur k wel/niet
 
     # Objective function: minimaliseer het aantal kleuren
-    objfunction = " + ".join(["y"+str(i) for i in xrange(1,N)])
+    objfunction = " + ".join(["y"+str(i) for i in xrange(0,N)])
 
-    # Zorg dat elke vertex precies Ã©Ã©n kleur heeft
+    # Zorg dat elke vertex precies één kleur heeft
     for i in xrange(1,N+1):
         subjectto.append(" + ".join(["x%d%d"%(i,k) for k in xrange(1,N+1)]) + " = 1")
 
@@ -78,4 +78,4 @@ for instancefn in glob.glob(files):
         outputf.write(to_ilp(objfunction, subjectto, bounds, integers))
         outputf.close()
 
-        print "Converted %s to %s" % (instancefn, outputfilen)
+        print("Converted %s to %s") % (instancefn, outputfilen)
