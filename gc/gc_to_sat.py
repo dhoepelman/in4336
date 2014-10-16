@@ -1,10 +1,13 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+from __future__ import print_function
+
 import sys
 import glob
 import os.path
 from gc_to_sat_functions import *
+
 
 # Aanroep: gc_to_sat.py k output-dir files
 # Voorbeeld: gc_to_sat.py 100 . te-kleueren-graaf.sol
@@ -22,26 +25,17 @@ else:
     outputdir = sys.argv[2]
 
 if(len(sys.argv) < 4):
-    files = raw_input('files: ')
+    filen = raw_input('file: ')
 else:
-    files = sys.argv[3]
+    filen = sys.argv[3]
 
-def gc_string_to_sat_string(instance):
-    (N,M,E) = read_DIGRAPH(instance)
-    (numv, clauses) = GC_to_SAT(N,E,k)
-    return SAT_to_DIMACS_CNF(numv, clauses)
+with open(filen) as instacef:
+    result = ""
+    try:
+        outputfilen = "%s/gc-%s-%d.cnf" % (outputdir, os.path.splitext(os.path.basename(filen))[0], k)
 
-for instancefn in glob.glob(files):
-    with open(instancefn) as instacef:
-        result = ""
-        try:
-            result = gc_string_to_sat_string(instacef.readlines())
-        except Exception as e:
-            print "Error converting file %s" % instancefn
-            print e
-        #print(result)
-        outputfilen = "%s/gc-%s-%d.cnf" % (outputdir, os.path.splitext(os.path.basename(instancefn))[0], k)
-        outputf = open(outputfilen, 'wb')
-        outputf.write(result)
-        outputf.close()
-        print "Converted %s to %s" % (instancefn, outputfilen)
+        gc_string_to_sat_file(instacef.readlines(), outputfilen, k)
+        print("Converted %s to %s" % (filen, outputfilen))
+    except Exception as e:
+        print("Error converting file %s" % filen)
+        print(e)

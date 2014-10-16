@@ -16,59 +16,42 @@ def read_DIGRAPH(lines):
             E.append((int(vals[1]), int(vals[2])))
     return (N,M,E)
 
-'''
-Eigenschappen van onze vertaling:
-variabelen: N * k
-
-clausules = M*k + N * (k+1)
-
-Grootte clausulen:
-
-Elke node heeft minimaal één kleur: p_1,1 p_1,2 p_1,3
-n : k
-
-# Elke node heeft maximaal één kleur
-# niet(p1,1 en p1,2)
-# niet(p1,2 en p1,3)
-N * k^2 : 2
-
-# De nodes van een edge hebben niet dezelfde kleur
-# Voor edge (1,2)
-# niet(p1,1 en p2,1)
-# niet(p1,2 en p2,2)
-M * k : 2
-'''
-
-def GC_to_SAT(N,E,k):
+def SAT_to_DIMACS_CNF_file(N,E,k, outputfile):
     # We have a variable for every node and color combination
     numv = N * k
-    clauses = []
+    # Clause per node
+    numc = N
+    # Clause per (edge,kleur) combinatie
+    numc += len(E)*k
+    # Clause per node, per kleurenpaar. Gauss' trick toepassen
+    numc += N * (k * (k-1) / 2)
 
-    # Voeg een clause per node to zodat elke node een of meer kleuren heeft: p_11 v p_12 v p_13 etc
-    for v in xrange(1,N+1):
-        clause = []
-        for i in xrange(1,k+1):
-            clause.append(mapping(k,v,i))
-        clauses.append(clause)
+    with open(outputfile,'wb') as f:
+        f.write("p cnf %d %d\n" % (numv, numc))
 
-    # Voeg clauses toe zodat elke node maximaal één kleur heeft
-    # For v in V
-    for v in xrange(1,N+1):
-        # For 1 ≤ i < j ≤ k
-        for j in xrange(1,k+1):
-            for i in xrange(1,j):
-                # not (v heeft kleur i en v heeft kleur j)
-                # => not(v heeft kleur i) of not(v heeft kleur j)
-                clauses.append([-mapping(k,v,i), -mapping(k,v,j)])
+        # Voeg een clause per node to zodat elke node een of meer kleuren heeft: p_11 v p_12 v p_13 etc
+        for v in xrange(1,N+1):
+            clause = []
+            for i in xrange(1,k+1):
+                clause.append(mapping(k,v,i))
+            f.write(clause_to_str(clause))
 
-    # Voeg clauses toe zodat adjacent nodes niet dezelfde kleur hebben
-    for (v,w) in E:
-        for i in xrange(1,k+1):
-            # not (v heeft kleur i en w heeft kleur i)
-            # => not(v heeft kleur i) of not(w heeft kleur i)
-            clauses.append([-mapping(k,v, i), -mapping(k,w,i)])
+        # Voeg clauses toe zodat elke node maximaal één kleur heeft
+        # For v in V
+        for v in xrange(1,N+1):
+            # For 1 ≤ i < j ≤ k
+            for j in xrange(1,k+1):
+                for i in xrange(1,j):
+                    # not (v heeft kleur i en v heeft kleur j)
+                    # => not(v heeft kleur i) of not(v heeft kleur j)
+                    f.write(clause_to_str([-mapping(k,v,i), -mapping(k,v,j)]))
 
-    return (numv, clauses)
+        # Voeg clauses toe zodat adjacent nodes niet dezelfde kleur hebben
+        for (v,w) in E:
+            for i in xrange(1,k+1):
+                # not (v heeft kleur i en w heeft kleur i)
+                # => not(v heeft kleur i) of not(w heeft kleur i)
+                f.write(clause_to_str([-mapping(k,v, i), -mapping(k,w,i)]))
 
 def mapping(k, node, color):
     # Unieke mapping van (node, kleur) naar een SAT variabele nummer
@@ -85,14 +68,8 @@ def reversemapping(k, mapping):
     node = (mapping - color) / k + 1
     return (node, color)
 
-def SAT_to_DIMACS_CNF(numv, clauses):
-    #header: p cnf num_variables num_clauses
-    result = "p cnf %d %d\n" % (numv, len(clauses))
-    for clause in clauses:
-        # Clause: variable variable variable 0 \n
-        result += " ".join([str(i) for i in clause]) + " 0 \n"
-
-    return result
+def clause_to_str(clause):
+    return " ".join([str(i) for i in clause]) + " 0 \n"
 
 def read_DIMARCS_CNF_solution(lines):
     solution = {}
@@ -119,3 +96,7 @@ def SAT_solution_to_colormap(k, solution):
             (node, color) = reversemapping(k, variable)
             assignment[node] = color
     return assignment
+
+def gc_string_to_sat_file(instance, outputfile, k):
+    (N,M,E) = read_DIGRAPH(instance)
+    SAT_to_DIMACS_CNF_file(N,E,k,outputfile)
