@@ -65,6 +65,8 @@ procs = []
 
 try:
     while solution == -1:
+        subprocess.call("killall lingeling")
+
         # Binary search for the solution
         guess = int(math.ceil((upper_bound-lower_bound)/2.0)+lower_bound)
         trace[guess] = {}
@@ -95,7 +97,6 @@ try:
             # Polling doesn't seem to work to check if alive... Fuck it just catch the exception if it's already killed
             try:
                 solverprocess.terminate()
-                subprocess.call("killall lingeling")
             except:
                 pass
             # Delete the translation file, since it can become several gigs
@@ -122,7 +123,7 @@ try:
             solution = upper_bound
             print("Found solution: %d" % solution)
         else:
-            print("New bounds: (%d,%.0f guess was %d" % (lower_bound, upper_bound, guess))
+            print("New bounds: (%d,%.0f) guess was %d" % (lower_bound, upper_bound, guess))
 except KeyboardInterrupt:
     # User wants to cancel
     pass
@@ -136,6 +137,7 @@ signal.alarm(0)
 
 time.sleep(10)
 
+subprocess.call("killall lingeling")
 # Perform a genocide on the child processes
 for proc in procs:
     try:
