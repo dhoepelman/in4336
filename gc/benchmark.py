@@ -65,7 +65,11 @@ procs = []
 
 try:
     while solution == -1:
-        subprocess.call("killall lingeling")
+        try:
+            subprocess.call("killall lingeling")
+        except:
+            # Might be nog lingeling processes
+            pass
 
         # Binary search for the solution
         guess = int(math.ceil((upper_bound-lower_bound)/2.0)+lower_bound)
