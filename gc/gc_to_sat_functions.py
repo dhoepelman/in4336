@@ -100,3 +100,21 @@ def SAT_solution_to_colormap(k, solution):
 def gc_string_to_sat_file(instance, outputfile, k):
     (N,M,E) = read_DIGRAPH(instance)
     SAT_to_DIMACS_CNF_file(N,E,k,outputfile)
+
+# A dictgraph represents a graph as a dictionary with the neighbors of a graph as a list
+def to_dictgraph(V, E):
+    g = {}
+    for v in V:
+        g[v] = []
+    for (u,w) in E:
+        g[u].append(w)
+        g[w].append(u)
+    return g
+
+# The highest node degree in a given graph
+def highest_degree(V,E):
+    g = to_dictgraph(V,E)
+    return max(map(len, g.values()))
+
+def maximum_k(V,E):
+    return highest_degree(V,E)+1
