@@ -51,7 +51,8 @@ with open(instancefn) as instancef:
 
 (N,M,E) = read_DIGRAPH(instance)
 
-upper_bound = min(N,maximum_k(xrange(1,N+1),E))
+max_k = maximum_k(xrange(1,N+1),E)
+upper_bound = min(N,max_k)
 
 trace = collections.OrderedDict()
 
@@ -165,16 +166,17 @@ output = ""
 if not os.path.isfile(resultfile):
     # So excel knows what separator to use
     output = "sep=,\n"
-    output += "Instance,N,M,Solution,LB,UB,Translation Time,Solving Time,Total Time,Time Limit,Trace\n"
+    output += "Instance,N,M,Solution,LB,UB,Highest Degree,Translation Time,Solving Time,Total Time,Time Limit,Trace\n"
 
 time_spent_total = time.time() - totaltimestart
-output += "%s,%d,%d,%d,%d,%d,%.2f,%.2f,%.2f,%d,%s" %\
+output += "%s,%d,%d,%d,%d,%d,%d,%.2f,%.2f,%.2f,%d,%s" %\
         (instancename,
          N,
          M,
          solution,
          lower_bound,
          upper_bound,
+         max_k,
          time_spent_translating,
          time_spent_solving,
          time_spent_total,
