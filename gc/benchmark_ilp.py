@@ -11,7 +11,7 @@ import subprocess
 import time
 import json
 import collections
-from gc_to_sat_functions import *
+from gc_to_ilp_functions import *
 
 totaltimestart = time.time()
 
@@ -20,11 +20,12 @@ outputdir = "benchmark"
 # Solution folder
 solutiondir = outputdir+"/solutions"
 translationdir = outputdir+"/translations"
-resultfile = outputdir+"/results_sat.csv"
+resultfile = outputdir+"/results_ilp.csv"
 tracedir = outputdir+"/trace"
 
-# Timeout in seconds for the SAT solver
-timeout = 3600
+# Timeout in seconds for the ILP solver
+#timeout = 3600
+timeout = 1800
 
 # Statistics we would like to keep
 instancename = ""
@@ -61,54 +62,54 @@ signal.alarm(timeout)
 print("Starting to solve %s with N=%d,M=%d" % (instancename, N, M))
 
 try:
-    while solution == -1:
-        # Binary search for the solution
-        guess = int(math.ceil((upper_bound-lower_bound)/2.0)+lower_bound)
-        trace[guess] = {}
+    # Binary search for the solution
+    #guess = int(math.ceil((upper_bound-lower_bound)/2.0)+lower_bound)
+    #trace[guess] = {}
 
-        print("Now guessing %d within (%d,%.0f]" % (guess, lower_bound,upper_bound))
+    #print("Now guessing %d within (%d,%.0f]" % (guess, lower_bound,upper_bound))
+    starttime = time.time()
+
+    id = "gc-%s" % instancename
+    translationfn = "%s/%s.lp" % (translationdir, id)
+    resultfn = "%s/%.sol" % (translationdir, id)
+
+    try:
+        gc_string_to_ilp_file(instance, translationfn, N)
+        time_this_translation = time.time() - starttime
+        #trace[guess]['trans'] = time_this_translation
+
+        print("Translation complete, now starting to solve")
+
         starttime = time.time()
 
-        id = "gc-%s-%d" % (instancename, guess)
-        translationfn = "%s/%s.cnf" % (translationdir, id)
-        try:
-            gc_string_to_sat_file(instance, translationfn, guess)
+        with open("%s/%s.lp" % (solutiondir, id), 'wb') as solutionf:
+            solverresult = subprocess.call("gurobi_cl ResultFile="+resultfn+" "+translationfn, shell=True, stdout=solutionf)
 
-            time_this_translation = time.time() - starttime
-            trace[guess]['trans'] = time_this_translation
+        # We're a bit screwed if the alarm signal happens exactly here before the next loop iteration, but what are the odds?
+        time_this_solving = time.time() - starttime
+        time_spent_solving +=  time_this_solving
+        time_spent_translating += time_this_translation
+        #trace[guess]['solve'] = time_this_solving
+        #trace[guess]['this'] = time_this_translation+time_this_solving
+        #trace[guess]['total'] = time_spent_solving+time_spent_translating
 
-            print("Translation complete, now starting to solve")
+#            if solverresult == 10:
+#                # Satisfiable
+#                upper_bound = guess
+#            elif solverresult == 20:
+#                # Unsatisfiable
+#                lower_bound = guess
 
-            starttime = time.time()
-
-            with open("%s/%s.cnf" % (solutiondir, id), 'wb') as solutionf:
-                solverresult = subprocess.call("lingeling " + translationfn, shell=True, stdout=solutionf)
-
-            # We're a bit screwed if the alarm signal happens exactly here before the next loop iteration, but what are the odds?
-            time_this_solving = time.time() - starttime
-            time_spent_solving +=  time_this_solving
-            time_spent_translating += time_this_translation
-            trace[guess]['solve'] = time_this_solving
-            trace[guess]['this'] = time_this_translation+time_this_solving
-            trace[guess]['total'] = time_spent_solving+time_spent_translating
-
-            if solverresult == 10:
-                # Satisfiable
-                upper_bound = guess
-            elif solverresult == 20:
-                # Unsatisfiable
-                lower_bound = guess
-
-            if lower_bound == upper_bound-1:
+#            if lower_bound == upper_bound-1:
                 # We've found the smallest k! It's the upper bound
-                solution = upper_bound
-                print("Found solution: %d" % solution)
-            else:
-                print("New bounds: (%d,%.0f guess was %d" % (lower_bound, upper_bound, guess))
-        finally:
-            # Delete the translation file, since it can become several gigs
-            if os.path.isfile(translationfn):
-                os.remove(translationfn)
+#                solution = upper_bound
+        print("Found solution: %d" % solution)
+#            else:
+#                print("New bounds: (%d,%.0f guess was %d" % (lower_bound, upper_bound, guess))
+    finally:
+        # Delete the translation file, since it can become several gigs
+        if os.path.isfile(translationfn):
+            os.remove(translationfn)
 except KeyboardInterrupt:
     # User wants to cancel
     pass
