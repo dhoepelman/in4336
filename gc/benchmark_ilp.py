@@ -82,20 +82,17 @@ try:
 
         starttime = time.time()
 
-        with open("%s/%s.lp" % (solutiondir, id), 'wb') as solutionf:
-            solverresult = subprocess.call("gurobi_cl ResultFile="+resultfn+" "+translationfn, shell=True, stdout=solutionf)
+        solverresult = subprocess.call("gurobi_cl ResultFile="+resultfn+" "+translationfn, shell=True)
 
         # We're a bit screwed if the alarm signal happens exactly here before the next loop iteration, but what are the odds?
         time_this_solving = time.time() - starttime
         time_spent_solving +=  time_this_solving
         time_spent_translating += time_this_translation
-        #trace[guess]['solve'] = time_this_solving
-        #trace[guess]['this'] = time_this_translation+time_this_solving
-        #trace[guess]['total'] = time_spent_solving+time_spent_translating
 
-        print("Found solution: %d" % solution)
+#        print("Found solution: %d" % solution)
 #            else:
 #                print("New bounds: (%d,%.0f guess was %d" % (lower_bound, upper_bound, guess))
+	timeout = False
     finally:
         # Delete the translation file, since it can become several gigs
         if os.path.isfile(translationfn):
@@ -106,6 +103,7 @@ except KeyboardInterrupt:
     pass
 except TimeoutException:
     # MEEH, Time's up!
+    timeout = True
     pass
 
 # Done!
@@ -118,31 +116,24 @@ output = ""
 if not os.path.isfile(resultfile):
     # So excel knows what separator to use
     output = "sep=,\n"
-    output += "Instance,N,M,Solution,LB,UB,Translation Time,Solving Time,Total Time,Time Limit,Trace\n"
+    output += "Instance,N,M,Solution,Translation Time,Solving Time,Total Time,Time Limit,Trace\n"
 
 time_spent_total = time.time() - totaltimestart
-output += "%s,%d,%d,%d,%d,%d,%.2f,%.2f,%.2f,%d,%s" %\
+output += "%s,%d,%d,%.2f,%.2f,%.2f,%d" %\
         (instancename,
          N,
          M,
-         solution,
-         lower_bound,
-         upper_bound,
          time_spent_translating,
          time_spent_solving,
          time_spent_total,
-         timeout,
-         "\"%s\"" % ",".join([str(x) for x in trace.keys()])
+         timeout
         )
 
 with open(resultfile, 'ab') as resultf:
 	print(output, file=resultf)
 
-if solution != -1:
+if timeout == False:
     print("Done!")
     print("Took %.2fs to solve instance %s with N=%d,M=%d. Solution=%d" % (time_spent_total, instancename, N, M, solution))
 else:
     print("Timeout")
-
-with open("%s/%s.json" % (tracedir, instancename),'wb') as tracef:
-    print(json.dumps(trace, indent=4), file=tracef)
