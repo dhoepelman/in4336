@@ -49,9 +49,9 @@ instancename = os.path.splitext(os.path.basename(instancefn))[0]
 with open(instancefn) as instancef:
     instance = instancef.readlines()
 
-(N,M,_) = read_DIGRAPH(instance)
+(N,M,E) = read_DIGRAPH(instance)
 
-upper_bound = N
+upper_bound = maximum_k(xrange(1,N+1),E)
 
 trace = collections.OrderedDict()
 
