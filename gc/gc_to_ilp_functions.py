@@ -27,7 +27,7 @@ def GC_to_LP_file(N,E,k,outputfile):
     # xi_k : node i heeft kleur k wel/niet
 
     # Objective function: minimaliseer het aantal kleuren
-    objfunction = " + ".join(["y"+str(i) for i in xrange(1,N)])
+    objfunction = " + ".join(["y"+str(i) for i in xrange(1,N+1)])
 
     # Zorg dat elke vertex precies één kleur heeft
     for i in xrange(1,N+1):
@@ -70,16 +70,16 @@ def to_ilp(objfunction, subjectto, bounds, integers):
 
 def gc_string_to_ilp_file(instance, outputfile, k):
     (N,M,E) = read_DIGRAPH(instance)
-<<<<<<< HEAD
+    
     (objfunction, subjectto, bounds, integers) = GC_to_LP_file(N,E,k,outputfile)
 	
     outputf = open(outputfile, 'wb')
     outputf.write(to_ilp(objfunction, subjectto, bounds, integers))
     outputf.close()
-=======
-	(objfunction, subjectto, bounds, integers) = GC_to_LP_file(N,E,k,outputfile)
+
+    (objfunction, subjectto, bounds, integers) = GC_to_LP_file(N,E,k,outputfile)
 	
-	outputf = open(outputfile, 'wb')
+    outputf = open(outputfile, 'wb')
     outputf.write(to_ilp(objfunction, subjectto, bounds, integers))
     outputf.close()
->>>>>>> e53373fa6b8ef9f1fa1f5f0d251fada3eba5efbb
+
