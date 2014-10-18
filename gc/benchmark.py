@@ -141,9 +141,6 @@ except TimeoutException:
 signal.alarm(0)
 
 
-subprocess.call("killall lingeling")
-subprocess.call("pkill lingeling")
-
 # Report in addition: N
 
 output = ""
@@ -179,3 +176,13 @@ else:
 
 with open("%s/%s.json" % (tracedir, instancename),'wb') as tracef:
     print(json.dumps(trace, indent=4), file=tracef)
+
+try:
+	subprocess.call("killall lingeling")
+except:
+	pass
+try:
+	subprocess.call("pkill lingeling")
+except:
+	pass
+

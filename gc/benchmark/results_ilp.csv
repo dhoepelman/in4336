@@ -1,0 +1,8 @@
+sep=,
+Instance,N,M,Solution,LB,UB,Translation Time,Solving Time,Total Time,Time Limit,Trace
+1-Fulllns_3,30,100,-1,0,30,0.01,0.02,0.03,1800,""
+1-Fulllns_3,30,100,-1,0,30,0.01,0.02,0.04,1800,""
+1-Fulllns_3,30,100,-1,0,30,0.01,0.02,0.03,1800,""
+1-Insertions_4,67,232,0.17,0.34,0.52,0
+1-Insertions_4,67,232,0.17,0.31,0.48,0
+1-Fulllns_3,30,100,0.05,0.04,0.09,0
