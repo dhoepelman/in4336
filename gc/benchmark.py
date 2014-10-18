@@ -140,25 +140,9 @@ except TimeoutException:
 # Cancel timeout
 signal.alarm(0)
 
-time.sleep(10)
 
 subprocess.call("killall lingeling")
-# Perform a genocide on the child processes
-for proc in procs:
-    try:
-        os.kill(proc, signal.SIGKILL)
-    except:
-        pass
-for proc in procs:
-    try:
-        signal.alarm(10)
-        subprocess.call("killall lingeling")
-        os.waitpid(proc, 0)
-    except TimeoutException:
-        # Orphan process. I give up
-        signal.alarm(0)
-        pass
-signal.alarm(0)
+subprocess.call("pkill lingeling")
 
 # Report in addition: N
 
