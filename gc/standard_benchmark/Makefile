@@ -1,6 +1,6 @@
 # Change the following to match your compiler and options
 CC=gcc
-CFLAGS=-O
+CFLAGS=-O3
 
 all: dfmax results.out
 

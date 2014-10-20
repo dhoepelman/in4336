@@ -15,13 +15,13 @@ int main(int argc, char *argv[])
 {
     int k;
 
-    k = atoi(argv[1]);
+    //k = atoi(argv[1]);
 
     FILE *infile;
     char str[60];
 
     /* opening file for reading */
-    infile=fopen("c:\\Users\\Cherise\\Desktop\\1-Fulllns_3.col", "r");
+    infile=fopen("1-Fulllns_3.col", "r");
     if(infile == NULL) {
       perror("Error opening file");
       return(-1);
@@ -38,8 +38,9 @@ int main(int argc, char *argv[])
     while (fscanf(infile, "%s", str) != EOF) {
         //printf("%s", str);
         if(str[0] == 'p') {
-            fscanf(infile, "%s %d %d", &str2, &vertices, &edges);
+            fscanf(infile, "%s %d %d", str2, &vertices, &edges);
             printf("str2=%s, vertices=%d, edges=%d\n",str2,vertices,edges);
+	    k = vertices;
         }
         else if(str[0] == 'e')
         {

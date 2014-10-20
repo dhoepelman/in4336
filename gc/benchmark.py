@@ -16,7 +16,7 @@ from gc_to_sat_functions import *
 totaltimestart = time.time()
 
 # Folder to keep results in
-outputdir = "benchmark"
+outputdir = "benchmark-sat"
 # Solution folder
 solutiondir = outputdir+"/solutions"
 translationdir = outputdir+"/translations"
@@ -49,9 +49,10 @@ instancename = os.path.splitext(os.path.basename(instancefn))[0]
 with open(instancefn) as instancef:
     instance = instancef.readlines()
 
-(N,M,_) = read_DIGRAPH(instance)
-
-upper_bound = N
+(N,M,E) = read_DIGRAPH(instance)
+V = xrange(1,N+1)
+max_k = maximum_k(V,E)
+upper_bound = max_k
 
 trace = collections.OrderedDict()
 
@@ -65,6 +66,12 @@ procs = []
 
 try:
     while solution == -1:
+        try:
+            subprocess.call("killall lingeling")
+        except:
+            # Might be nog lingeling processes
+            pass
+
         # Binary search for the solution
         guess = int(math.ceil((upper_bound-lower_bound)/2.0)+lower_bound)
         trace[guess] = {}
@@ -95,7 +102,6 @@ try:
             # Polling doesn't seem to work to check if alive... Fuck it just catch the exception if it's already killed
             try:
                 solverprocess.terminate()
-                subprocess.call("killall lingeling")
             except:
                 pass
             # Delete the translation file, since it can become several gigs
@@ -122,7 +128,7 @@ try:
             solution = upper_bound
             print("Found solution: %d" % solution)
         else:
-            print("New bounds: (%d,%.0f guess was %d" % (lower_bound, upper_bound, guess))
+            print("New bounds: (%d,%.0f) guess was %d" % (lower_bound, upper_bound, guess))
 except KeyboardInterrupt:
     # User wants to cancel
     pass
@@ -134,24 +140,8 @@ except TimeoutException:
 # Cancel timeout
 signal.alarm(0)
 
-time.sleep(10)
 
-# Perform a genocide on the child processes
-for proc in procs:
-    try:
-        os.kill(proc, signal.SIGKILL)
-    except:
-        pass
-for proc in procs:
-    try:
-        signal.alarm(10)
-        subprocess.call("killall lingeling")
-        os.waitpid(proc, 0)
-    except TimeoutException:
-        # Orphan process. I give up
-        signal.alarm(0)
-        pass
-signal.alarm(0)
+# killall lingeling
 
 # Report in addition: N
 
@@ -159,16 +149,17 @@ output = ""
 if not os.path.isfile(resultfile):
     # So excel knows what separator to use
     output = "sep=,\n"
-    output += "Instance,N,M,Solution,LB,UB,Translation Time,Solving Time,Total Time,Time Limit,Trace\n"
+    output += "Instance,N,M,Solution,LB,UB,Highest Degree,Translation Time,Solving Time,Total Time,Time Limit,Trace\n"
 
 time_spent_total = time.time() - totaltimestart
-output += "%s,%d,%d,%d,%d,%d,%.2f,%.2f,%.2f,%d,%s" %\
+output += "%s,%d,%d,%d,%d,%d,%d,%.2f,%.2f,%.2f,%d,%s" %\
         (instancename,
          N,
          M,
          solution,
          lower_bound,
          upper_bound,
+         max_k,
          time_spent_translating,
          time_spent_solving,
          time_spent_total,
@@ -187,3 +178,13 @@ else:
 
 with open("%s/%s.json" % (tracedir, instancename),'wb') as tracef:
     print(json.dumps(trace, indent=4), file=tracef)
+
+try:
+	subprocess.call("killall lingeling")
+except:
+	pass
+try:
+	subprocess.call("pkill lingeling")
+except:
+	pass
+

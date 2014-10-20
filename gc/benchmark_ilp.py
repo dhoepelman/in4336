@@ -16,7 +16,7 @@ from gc_to_ilp_functions import *
 totaltimestart = time.time()
 
 # Folder to keep results in
-outputdir = "benchmark"
+outputdir = "benchmark-ilp"
 # Solution folder
 solutiondir = outputdir+"/solutions"
 translationdir = outputdir+"/translations"
@@ -24,7 +24,6 @@ resultfile = outputdir+"/results_ilp.csv"
 tracedir = outputdir+"/trace"
 
 # Timeout in seconds for the ILP solver
-#timeout = 3600
 timeout = 1800
 
 # Statistics we would like to keep
@@ -50,9 +49,10 @@ instancename = os.path.splitext(os.path.basename(instancefn))[0]
 with open(instancefn) as instancef:
     instance = instancef.readlines()
 
-(N,M,_) = read_DIGRAPH(instance)
+(N,M,E) = read_DIGRAPH(instance)
 
-upper_bound = N
+max_k = maximum_k(xrange(1,N+1),E)
+upper_bound = min(N, max_k)
 
 trace = collections.OrderedDict()
 
@@ -62,61 +62,54 @@ signal.alarm(timeout)
 print("Starting to solve %s with N=%d,M=%d" % (instancename, N, M))
 
 try:
-    while solution == -1:
-        # Binary search for the solution
-        #guess = int(math.ceil((upper_bound-lower_bound)/2.0)+lower_bound)
-        #trace[guess] = {}
+    starttime = time.time()
 
-        #print("Now guessing %d within (%d,%.0f]" % (guess, lower_bound,upper_bound))
+    id = "gc-%s" % instancename
+    translationfn = "%s/%s.lp" % (translationdir, id)
+    resultfn = "%s/%s.sol" % (solutiondir, id)
+
+    try:
+        gc_string_to_ilp_file(instance,N,E,upper_bound,translationfn)
+        time_this_translation = time.time() - starttime
+        #trace[guess]['trans'] = time_this_translation
+
+        print("Translation complete, now starting to solve")
+
         starttime = time.time()
 
-        id = "gc-%s" % instancename
-        translationfn = "%s/%s.lp" % (translationdir, id)
-		resultfn = "%s/%.sol" % (translationdir, id)
-		
         try:
-            gc_string_to_ilp_file(instance, translationfn, N)
+            solverresult = subprocess.call("gurobi_cl ResultFile="+resultfn+" "+translationfn, shell=True)
+        finally:
+            try:
+                subprocess.call("killall gurobi_cl")
+            except:
+                pass
 
-            time_this_translation = time.time() - starttime
-            #trace[guess]['trans'] = time_this_translation
+        with open(resultfn, 'r') as resultf:
+            solution = int(resultf.readline().split("=")[1].trim())
 
-            print("Translation complete, now starting to solve")
+        # We're a bit screwed if the alarm signal happens exactly here before the next loop iteration, but what are the odds?
+        time_this_solving = time.time() - starttime
+        time_spent_solving +=  time_this_solving
+        time_spent_translating += time_this_translation
 
-            starttime = time.time()
-
-            with open("%s/%s.lp" % (solutiondir, id), 'wb') as solutionf:
-                solverresult = subprocess.call("gurobi ResulFile=" +resultfn+ " " +translationfn, shell=True, stdout=solutionf)
-
-            # We're a bit screwed if the alarm signal happens exactly here before the next loop iteration, but what are the odds?
-            time_this_solving = time.time() - starttime
-            time_spent_solving +=  time_this_solving
-            time_spent_translating += time_this_translation
-            #trace[guess]['solve'] = time_this_solving
-            #trace[guess]['this'] = time_this_translation+time_this_solving
-            #trace[guess]['total'] = time_spent_solving+time_spent_translating
-
-#            if solverresult == 10:
-#                # Satisfiable
-#                upper_bound = guess
-#            elif solverresult == 20:
-#                # Unsatisfiable
-#                lower_bound = guess
-
-#            if lower_bound == upper_bound-1:
-                # We've found the smallest k! It's the upper bound
-#                solution = upper_bound
-            print("Found solution: %d" % solution)
+#        print("Found solution: %d" % solution)
 #            else:
 #                print("New bounds: (%d,%.0f guess was %d" % (lower_bound, upper_bound, guess))
-        finally:
-            # Delete the translation file, since it can become several gigs
-            if os.path.isfile(translationfn):
-                os.remove(translationfn)
+	timeout = False
+    finally:
+        # Delete the translation file, since it can become several gigs
+        if os.path.isfile(translationfn):
+            os.remove(translationfn)
+
 except KeyboardInterrupt:
     # User wants to cancel
+    solution = -1
     pass
 except TimeoutException:
     # MEEH, Time's up!
+    timeout = True
+    solution = -1
     pass
 
 # Done!
@@ -129,31 +122,35 @@ output = ""
 if not os.path.isfile(resultfile):
     # So excel knows what separator to use
     output = "sep=,\n"
-    output += "Instance,N,M,Solution,LB,UB,Translation Time,Solving Time,Total Time,Time Limit,Trace\n"
+    output += "Instance,N,M,Max K,Solution,Translation Time,Solving Time,Total Time,Time Limit,Trace\n"
 
 time_spent_total = time.time() - totaltimestart
-output += "%s,%d,%d,%d,%d,%d,%.2f,%.2f,%.2f,%d,%s" %\
+output += "%s,%d,%d,%d,%d,%.2f,%.2f,%.2f,%d" %\
         (instancename,
          N,
          M,
+         Max_K,
          solution,
-         lower_bound,
-         upper_bound,
          time_spent_translating,
          time_spent_solving,
          time_spent_total,
-         timeout,
-         "\"%s\"" % ",".join([str(x) for x in trace.keys()])
+         timeout
         )
 
 with open(resultfile, 'ab') as resultf:
 	print(output, file=resultf)
 
-if solution != -1:
+if timeout == False:
     print("Done!")
     print("Took %.2fs to solve instance %s with N=%d,M=%d. Solution=%d" % (time_spent_total, instancename, N, M, solution))
 else:
     print("Timeout")
 
-with open("%s/%s.json" % (tracedir, instancename),'wb') as tracef:
-    print(json.dumps(trace, indent=4), file=tracef)
+try:
+	subprocess.call("killall -9 gurobi_cl")
+except:
+	pass
+try:
+	subprocess.call("pkill -9 gurobi_cl")
+except:
+	pass
