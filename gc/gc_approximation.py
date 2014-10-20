@@ -60,7 +60,6 @@ def Color_IRC(G):
     spilled = []
     k=1
     while True:
-        print G2
         # Check if there is a node with degree lower than k, and simplify the graph if there is
         restart = False
         for v in G2.keys():
