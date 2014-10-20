@@ -103,5 +103,9 @@ if __name__ == "__main__":
     V = xrange(1,N+1)
     G = to_dictgraph(V,E)
     max_k = maximum_k(V,E)
+
+    greedy = Color_Greedy(G)
+    IRC = Color_IRC(G)
+
     print "Instance\tN\tM\tDeg+1\tGreedy\tIRC"
-    print "%s\t%d\t%d\t%d\t%d\t%d" % (id[:10].ljust(10, " "), N, M, max_k, 0,0)
+    print "%s\t%d\t%d\t%d\t%d\t%d" % (id[:10].ljust(10, " "), N, M, max_k, greedy,IRC)
