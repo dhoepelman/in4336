@@ -1,5 +1,9 @@
-from gc_to_sat_functions import  to_dictgraph
-from copy import copy
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+from gc_to_sat_functions import read_DIGRAPH, to_dictgraph, maximum_k
+import sys
+import os
 
 def Color_Greedy(G):
     """
@@ -90,3 +94,19 @@ def Color_IRC(G):
     assert not G2
 
     return (k, colormap)
+
+if __name__ == "__main__":
+    if len(sys.argv) < 2:
+        print "Specify filename"
+    instancefn = sys.argv[1]
+
+    with open(instancefn, 'r') as instancef:
+        (N,M,E) = read_DIGRAPH(instancef.readlines())
+
+    id = os.path.splitext(os.path.basename(instancefn))[0]
+
+    V = xrange(1,N+1)
+    G = to_dictgraph(V,E)
+    max_k = maximum_k(V,E)
+    print "Instance\tN\tM\tDeg+1\tGreedy\tIRC"
+    print "%s\t%d\t%d\t%d\t%d\t%d" % (id[:10].ljust(10, " "), N, M, max_k, 0,0)

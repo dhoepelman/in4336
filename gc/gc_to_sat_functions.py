@@ -101,20 +101,26 @@ def gc_string_to_sat_file(instance, outputfile, k):
     (N,M,E) = read_DIGRAPH(instance)
     SAT_to_DIMACS_CNF_file(N,E,k,outputfile)
 
-# A dictgraph represents a graph as a dictionary with the neighbors of a graph as a list
+# A dictgraph represents a graph as a dictionary with the neighbors of a graph as a set
 def to_dictgraph(V, E):
     g = {}
     for v in V:
-        g[v] = []
+        g[v] = set()
     for (u,w) in E:
-        g[u].append(w)
-        g[w].append(u)
+        g[u].add(w)
+        g[w].add(u)
     return g
 
 # The highest node degree in a given graph
 def highest_degree(V,E):
     g = to_dictgraph(V,E)
+    print g
+    print map(len, g.values())
+    max2 = max(map(len, g.values()))
+    print max2
     return max(map(len, g.values()))
 
 def maximum_k(V,E):
+    #ret = highest_degree(V,E)+1
+    #print ret
     return highest_degree(V,E)+1

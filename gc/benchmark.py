@@ -141,6 +141,8 @@ except TimeoutException:
 signal.alarm(0)
 
 
+# killall lingeling
+
 # Report in addition: N
 
 output = ""
