@@ -3,7 +3,7 @@
 
 def read_DIGRAPH(lines):
     # List of edges
-    E = []
+    E = set()
     for line in lines:
         vals = line.split(" ")
         if vals[0] == 'p':
