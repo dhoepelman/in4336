@@ -32,7 +32,7 @@ def Color_IRC(G):
         del G[v]
         # Delete all edges pointing to this node
         for edges in G.values():
-            edges.remove(v)
+            edges.discard(v)
 
     def coalesce(G,v,w,newnode):
         # Make a new node with combined edges
@@ -60,28 +60,44 @@ def Color_IRC(G):
     spilled = []
     k=1
     while True:
+        print G2
         # Check if there is a node with degree lower than k, and simplify the graph if there is
+        restart = False
         for v in G2.keys():
             if len(G2[v]) < k:
-                stack.push(v)
+                print "Simplify %d" % v
+                stack.append(v)
                 delete(G2, v)
+                restart = True
+            break
+        if restart:
             continue
         # Check if any of the edges can be coalesced. This is the case if the number of neighbours of the new node is less than k
         for v in G2.keys():
             for w in G2[v]:
                 if len(G2[v] | G2[w]) < k:
                     # Coalesce v and w
-                    stack.push(v)
-                    stack.push(w)
+                    print "Coalesce %d and %d into %d" % (v,w,newnode)
+                    stack.append(v)
+                    stack.append(w)
                     coalesced[newnode] = (v,w)
                     coalesce(G2, v, w, newnode)
                     newnode = newnode + 1
-                    continue
+                    restart = True
+                    break
+            if restart:
+                break
+        if restart:
+            continue
         # Spill a node
         for v in G2.keys():
-            spilled.add(v)
+            print "Spill %d" % v
+            spilled.append(v)
             delete(G2,v)
             k=k+1
+            restart = True
+            break
+        if restart:
             continue
         # Done!
         break
@@ -104,8 +120,8 @@ if __name__ == "__main__":
     G = to_dictgraph(V,E)
     max_k = maximum_k(V,E)
 
-    greedy = Color_Greedy(G)
-    IRC = Color_IRC(G)
+    (greedy,_) = Color_Greedy(G)
+    (IRC,_) = Color_IRC(G)
 
     print "Instance\tN\tM\tDeg+1\tGreedy\tIRC"
     print "%s\t%d\t%d\t%d\t%d\t%d" % (id[:10].ljust(10, " "), N, M, max_k, greedy,IRC)
