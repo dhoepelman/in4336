@@ -71,7 +71,7 @@ try:
 
     id = "gc-%s" % instancename
     translationfn = "%s/%s.lp" % (translationdir, id)
-    resultfn = "%s/%s.sol" % (translationdir, id)
+    resultfn = "%s/%s.sol" % (solutiondir, id)
 
     try:
         gc_string_to_ilp_file(instance, translationfn, N)
@@ -83,6 +83,9 @@ try:
         starttime = time.time()
 
         solverresult = subprocess.call("gurobi_cl ResultFile="+resultfn+" "+translationfn, shell=True)
+
+        with open(resultfn, 'r') as resultf:
+            solution = int(resultf.readline().split("=")[1].trim())
 
         # We're a bit screwed if the alarm signal happens exactly here before the next loop iteration, but what are the odds?
         time_this_solving = time.time() - starttime
@@ -119,10 +122,11 @@ if not os.path.isfile(resultfile):
     output += "Instance,N,M,Solution,Translation Time,Solving Time,Total Time,Time Limit,Trace\n"
 
 time_spent_total = time.time() - totaltimestart
-output += "%s,%d,%d,%.2f,%.2f,%.2f,%d" %\
+output += "%s,%d,%d,$d,%.2f,%.2f,%.2f,%d" %\
         (instancename,
          N,
          M,
+         solution,
          time_spent_translating,
          time_spent_solving,
          time_spent_total,
