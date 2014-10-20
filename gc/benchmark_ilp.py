@@ -71,7 +71,7 @@ try:
 
     id = "gc-%s" % instancename
     translationfn = "%s/%s.lp" % (translationdir, id)
-    resultfn = "%s/%.sol" % (translationdir, id)
+    resultfn = "%s/%s.sol" % (translationdir, id)
 
     try:
         gc_string_to_ilp_file(instance, translationfn, N)

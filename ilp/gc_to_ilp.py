@@ -17,7 +17,7 @@ def GC_to_ILP(N,E):
     # xi_k : node i heeft kleur k wel/niet
 
     # Objective function: minimaliseer het aantal kleuren
-    objfunction = " + ".join(["y"+str(i) for i in xrange(0,N)])
+    objfunction = " + ".join(["y"+str(i) for i in xrange(1,N+1)])
 
     # Zorg dat elke vertex precies één kleur heeft
     for i in xrange(1,N+1):
