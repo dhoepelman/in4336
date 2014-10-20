@@ -50,9 +50,9 @@ with open(instancefn) as instancef:
     instance = instancef.readlines()
 
 (N,M,E) = read_DIGRAPH(instance)
-
-max_k = maximum_k(xrange(1,N+1),E)
-upper_bound = min(N,max_k)
+V = xrange(1,N+1)
+max_k = maximum_k(V,E)
+upper_bound = max_k
 
 trace = collections.OrderedDict()
 
@@ -140,6 +140,8 @@ except TimeoutException:
 # Cancel timeout
 signal.alarm(0)
 
+
+# killall lingeling
 
 # Report in addition: N
 

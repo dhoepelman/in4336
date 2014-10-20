@@ -21,25 +21,25 @@ def GC_to_ILP(N,E):
 
     # Zorg dat elke vertex precies één kleur heeft
     for i in xrange(1,N+1):
-        subjectto.append(" + ".join(["x%d%d"%(i,k) for k in xrange(1,N+1)]) + " = 1")
+        subjectto.append(" + ".join(["x%d_%d"%(i,k) for k in xrange(1,N+1)]) + " = 1")
 
     # Zorg dat nodes geen kleur krijgen die niet gebruikt wordt
     for i in xrange(1,N+1):
         for k in xrange(1,N+1):
-            subjectto.append("x%d%d - y%d <= 0" % (i,k,k))
+            subjectto.append("x%d_%d - y%d <= 0" % (i,k,k))
 
     # Zorg dat nodes die met een edge verbonden zijn niet dezelfde kleur krijgen
     for (v,w) in E:
         for k in xrange(1,N+1):
-            subjectto.append("x%d%d - x%d%d <= 1" % (v,k,w,k))
+            subjectto.append("x%d_%d + x%d_%d <= 1" % (v,k,w,k))
 
     # Zorg dat alle variabelen 0 of 1 zijn
     for k in xrange(1,N+1):
         bounds.append("0 <= y%d <= 1" % k)
         integers.append("y%d" % k)
         for x in xrange(1,N+1):
-            bounds.append("0 <= x%d%d <= 1" % (x,k))
-            integers.append("x%d%d" % (x,k))
+            bounds.append("0 <= x%d_%d <= 1" % (x,k))
+            integers.append("x%d_%d" % (x,k))
 
     return (objfunction, subjectto, bounds, integers)
 
