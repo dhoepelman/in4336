@@ -51,7 +51,7 @@ with open(instancefn) as instancef:
 
 (N,M,E) = read_DIGRAPH(instance)
 V = xrange(1,N+1)
-mak_k = maximum_k(V,E)
+max_k = maximum_k(V,E)
 upper_bound = max_k
 
 trace = collections.OrderedDict()
