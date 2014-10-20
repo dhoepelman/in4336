@@ -50,9 +50,9 @@ with open(instancefn) as instancef:
     instance = instancef.readlines()
 
 (N,M,E) = read_DIGRAPH(instance)
-
-max_k = maximum_k(xrange(1,N+1),E)
-upper_bound = min(N,max_k)
+V = xrange(1,N+1)
+mak_k = maximum_k(V,E)
+upper_bound = max_k
 
 trace = collections.OrderedDict()
 

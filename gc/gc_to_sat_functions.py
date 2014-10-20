@@ -114,10 +114,10 @@ def to_dictgraph(V, E):
 # The highest node degree in a given graph
 def highest_degree(V,E):
     g = to_dictgraph(V,E)
-    print g
-    print map(len, g.values())
-    max2 = max(map(len, g.values()))
-    print max2
+    #print g
+    #print map(len, g.values())
+    #max2 = max(map(len, g.values()))
+    #print max2
     return max(map(len, g.values()))
 
 def maximum_k(V,E):

@@ -4,6 +4,7 @@
 from gc_to_sat_functions import read_DIGRAPH, to_dictgraph, maximum_k
 import sys
 import os
+import copy
 
 def Color_Greedy(G):
     """
@@ -26,12 +27,6 @@ def Color_Greedy(G):
     return (k,colormap)
 
 def Color_IRC(G):
-    def to_dictsetgraph(G):
-        G2 = {}
-        for v,vedges in G.iteritems:
-            G2[v] = set(vedges)
-        return G2
-
     def delete(G, v):
         # Delete the node
         del G[v]
@@ -58,7 +53,7 @@ def Color_IRC(G):
                 edges.add(newnode)
 
     newnode = len(G)
-    G2 = to_dictsetgraph(G)
+    G2 = copy.deepcopy(G)
     colormap = {}
     stack = []
     coalesced = {}
