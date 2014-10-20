@@ -82,7 +82,13 @@ try:
 
         starttime = time.time()
 
-        solverresult = subprocess.call("gurobi_cl ResultFile="+resultfn+" "+translationfn, shell=True)
+        try:
+            solverresult = subprocess.call("gurobi_cl ResultFile="+resultfn+" "+translationfn, shell=True)
+        finally:
+            try:
+                subprocess.call("killall gurobi_cl")
+            except:
+                pass
 
         with open(resultfn, 'r') as resultf:
             solution = int(resultf.readline().split("=")[1].trim())
@@ -141,3 +147,12 @@ if timeout == False:
     print("Took %.2fs to solve instance %s with N=%d,M=%d. Solution=%d" % (time_spent_total, instancename, N, M, solution))
 else:
     print("Timeout")
+
+try:
+	subprocess.call("killall -9 lingeling")
+except:
+	pass
+try:
+	subprocess.call("pkill -9 lingeling")
+except:
+	pass
