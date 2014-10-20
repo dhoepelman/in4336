@@ -64,7 +64,7 @@ def Color_IRC(G):
         restart = False
         for v in G2.keys():
             if len(G2[v]) < k:
-                print "Simplify %d" % v
+                #print "Simplify %d" % v
                 stack.append(v)
                 delete(G2, v)
                 restart = True
@@ -76,7 +76,7 @@ def Color_IRC(G):
             for w in G2[v]:
                 if len(G2[v] | G2[w]) < k:
                     # Coalesce v and w
-                    print "Coalesce %d and %d into %d" % (v,w,newnode)
+                    #print "Coalesce %d and %d into %d" % (v,w,newnode)
                     stack.append(v)
                     stack.append(w)
                     coalesced[newnode] = (v,w)
@@ -90,7 +90,7 @@ def Color_IRC(G):
             continue
         # Spill a node
         for v in G2.keys():
-            print "Spill %d" % v
+            #print "Spill %d" % v
             spilled.append(v)
             delete(G2,v)
             k=k+1
