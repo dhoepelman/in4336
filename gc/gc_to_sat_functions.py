@@ -13,7 +13,7 @@ def read_DIGRAPH(lines):
             M = int(vals[3])
         elif vals[0] == 'e':
             # Add this edge
-            E.append((int(vals[1]), int(vals[2])))
+            E.add((int(vals[1]), int(vals[2])))
     return (N,M,E)
 
 def SAT_to_DIMACS_CNF_file(N,E,k, outputfile):
