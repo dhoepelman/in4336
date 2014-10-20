@@ -24,7 +24,6 @@ resultfile = outputdir+"/results_ilp.csv"
 tracedir = outputdir+"/trace"
 
 # Timeout in seconds for the ILP solver
-#timeout = 3600
 timeout = 1800
 
 # Statistics we would like to keep
@@ -50,9 +49,10 @@ instancename = os.path.splitext(os.path.basename(instancefn))[0]
 with open(instancefn) as instancef:
     instance = instancef.readlines()
 
-(N,M,_) = read_DIGRAPH(instance)
+(N,M,E) = read_DIGRAPH(instance)
 
-upper_bound = N
+max_k = maximum_k(xrange(1,N+1),E)
+upper_bound = min(N, max_k)
 
 trace = collections.OrderedDict()
 
@@ -62,11 +62,6 @@ signal.alarm(timeout)
 print("Starting to solve %s with N=%d,M=%d" % (instancename, N, M))
 
 try:
-    # Binary search for the solution
-    #guess = int(math.ceil((upper_bound-lower_bound)/2.0)+lower_bound)
-    #trace[guess] = {}
-
-    #print("Now guessing %d within (%d,%.0f]" % (guess, lower_bound,upper_bound))
     starttime = time.time()
 
     id = "gc-%s" % instancename
@@ -74,7 +69,7 @@ try:
     resultfn = "%s/%s.sol" % (solutiondir, id)
 
     try:
-        gc_string_to_ilp_file(instance, translationfn, N)
+        gc_string_to_ilp_file(instance,N,E,upper_bound,translationfn)
         time_this_translation = time.time() - starttime
         #trace[guess]['trans'] = time_this_translation
 
@@ -127,13 +122,14 @@ output = ""
 if not os.path.isfile(resultfile):
     # So excel knows what separator to use
     output = "sep=,\n"
-    output += "Instance,N,M,Solution,Translation Time,Solving Time,Total Time,Time Limit,Trace\n"
+    output += "Instance,N,M,Max K,Solution,Translation Time,Solving Time,Total Time,Time Limit,Trace\n"
 
 time_spent_total = time.time() - totaltimestart
-output += "%s,%d,%d,$d,%.2f,%.2f,%.2f,%d" %\
+output += "%s,%d,%d,%d,%d,%.2f,%.2f,%.2f,%d" %\
         (instancename,
          N,
          M,
+         Max_K,
          solution,
          time_spent_translating,
          time_spent_solving,
@@ -151,10 +147,10 @@ else:
     print("Timeout")
 
 try:
-	subprocess.call("killall -9 lingeling")
+	subprocess.call("killall -9 gurobi_cl")
 except:
 	pass
 try:
-	subprocess.call("pkill -9 lingeling")
+	subprocess.call("pkill -9 gurobi_cl")
 except:
 	pass

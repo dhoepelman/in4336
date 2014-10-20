@@ -68,8 +68,7 @@ def to_ilp(objfunction, subjectto, bounds, integers):
     result += "\nEnd"
     return result
 
-def gc_string_to_ilp_file(instance, outputfile, k):
-    (N,M,E) = read_DIGRAPH(instance)
+def gc_string_to_ilp_file(instance, N, E, k, outputfile):
     
     (objfunction, subjectto, bounds, integers) = GC_to_LP_file(N,E,k,outputfile)
 	
@@ -77,9 +76,20 @@ def gc_string_to_ilp_file(instance, outputfile, k):
     outputf.write(to_ilp(objfunction, subjectto, bounds, integers))
     outputf.close()
 
-    (objfunction, subjectto, bounds, integers) = GC_to_LP_file(N,E,k,outputfile)
-	
-    outputf = open(outputfile, 'wb')
-    outputf.write(to_ilp(objfunction, subjectto, bounds, integers))
-    outputf.close()
+# A dictgraph represents a graph as a dictionary with the neighbors of a graph as a list
+def to_dictgraph(V, E):
+    g = {}
+    for v in V:
+        g[v] = []
+    for (u,w) in E:
+        g[u].append(w)
+        g[w].append(u)
+    return g
 
+# The highest node degree in a given graph
+def highest_degree(V,E):
+    g = to_dictgraph(V,E)
+    return max(map(len, g.values()))
+
+def maximum_k(V,E):
+    return highest_degree(V,E)+1
