@@ -109,10 +109,12 @@ try:
 
 except KeyboardInterrupt:
     # User wants to cancel
+    solution = -1
     pass
 except TimeoutException:
     # MEEH, Time's up!
     timeout = True
+    solution = -1
     pass
 
 # Done!
