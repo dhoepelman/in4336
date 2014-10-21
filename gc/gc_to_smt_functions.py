@@ -1,0 +1,178 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+def read_DIGRAPH(lines):
+    # List of edges
+    E = set()
+    for line in lines:
+        vals = line.split(" ")
+        if vals[0] == 'p':
+            # Number of nodes
+            N = int(vals[2])
+            # Number of edges
+            M = int(vals[3])
+        elif vals[0] == 'e':
+            # Add this edge
+            E.add((int(vals[1]), int(vals[2])))
+    return (N,M,E)
+
+def GC_to_SMT_file(N,E,k,outputfile):
+    # We have a variable for every node and color combination
+    numv = N * k
+    # Clause per node
+    numc = N
+    # Clause per (edge,kleur) combinatie
+    numc += len(E)*k
+    # Clause per node, per kleurenpaar. Gauss' trick toepassen
+    numc += N * (k * (k-1) / 2)
+	
+	constants = ""
+
+    with open(outputfile,'wb') as f:
+		# Declare all constants for each variabele (one for every node and color combination)
+		for v in xrange(1,N+1):
+            for i in xrange(1,k+1):
+                constants += "(declare-const p%d_%d Bool)\n" % (v,i)			
+		f.write(constants)	
+
+		# Define a function f the will solve the clauses that form the graph coloring problem
+		f.write("(define-fun f () Bool\n\t")
+		
+		# Couple all clauses with an AND operator
+        operator = []
+		for x in xrange(1,numc+1):
+		    operator.append("(and ")
+        operator.append("\n\t")
+        f.write(operator_to_str(operator))
+			
+        # Global variabel 'number_of_clauses' die het aantal clauses bijhoud
+        # dat gebruik zullen worden voor de sluithaakjes voor het AND'en van twee clauses
+        number_of_clauses = 0
+        
+        # Voeg een clause per node toe zodat elke node een of meer kleuren heeft: p_11 v p_12 v p_13 etc
+        operator = []
+		variable = []
+		for v in xrange(1,N+1):
+            for i in xrange(1,k+1):
+				operator.append("(or ")
+				if i % 2:
+					variable.append(" p%d_%d" % (v, i))
+				else
+					variable.append(" p%d_%d)" % (v, i)
+            # Schrijf de clause met operator naar het SMT bestand
+			f.write(operator_to_str(operator))
+			f.write(variable_to_str(variable)+"\n\t")
+            # Verhoog het aantal clauses tot nu toe en voeg waar nodig een sluithaakje
+            number_of_clauses+=1
+            # Sluit haakje af voor het AND'en van twee clauses
+            if not(number_of_clauses % 2):
+                f.write(")\n\t")
+			
+        # Voeg clauses toe zodat elke node maximaal één kleur heeft
+		f.write("\n\t")
+        for v in xrange(1,N+1):
+            for j in xrange(1,k+1):
+                for i in xrange(1,j):
+                    # not (v heeft kleur i en v heeft kleur j)
+                    # => not(v heeft kleur i) of not(v heeft kleur j)
+                    f.write("(not (and p%d_%d p%d_%d))\n\t" % (v,i,v,j))
+                    # Verhoog het aantal clauses tot nu toe en voeg waar nodig een sluithaakje
+                    number_of_clauses+=1
+                    # Sluit haakje af voor het AND'en van twee clauses
+                    if not(number_of_clauses % 2):
+                        f.write(")\n\t")
+                    
+
+        # Voeg clauses toe zodat adjacent nodes niet dezelfde kleur hebben
+        for (v,w) in E:
+            for i in xrange(1,k+1):
+                # not (v heeft kleur i en w heeft kleur i)
+                # => not(v heeft kleur i) of not(w heeft kleur i)
+				f.write("(not (and p%d_%d p%d_%d))\n" % (v,i,w,i))
+                # Verhoog het aantal clauses tot nu toe en voeg waar nodig een sluithaakje
+                number_of_clauses+=1
+                # Sluit haakje af voor het AND'en van twee clauses
+                if not(number_of_clauses % 2):
+                    f.write(")\n\t")
+        
+        # Voeg de functie toe in de interne stack van Z3
+        f.write("(assert f)\n\t")
+        # Voeg het volgende command toe om de satisfiability te checken
+        f.write("(check-sat)\n\t")
+        # Voeg het volgende command toe om het model dat de functie satisfiable maakt weer te geven
+        #f.write("(check-model)\n\t")
+
+def mapping(k, node, color):
+    # Unieke mapping van (node, kleur) naar een SAT variabele nummer
+    return (node-1) * k + color
+
+# Translate a mapped sat variable back to the GC (node, color) combination
+# Reverse of mapping = (node-1) * k + color
+def reversemapping(k, mapping):
+    color = mapping % k
+    if color == 0:  # Colour is in [1,k]
+        color = k
+    # (node-1) * k = mapping - color
+    # node = (mapping-color)/k + 1
+    node = (mapping - color) / k + 1
+    return (node, color)
+
+def operator_to_str(operator):
+    return "".join([str(i) for i in operator])
+	
+def variable_to_str(variable):
+    return "".join([str(i) for i in variable])
+
+def read_DIMARCS_CNF_solution(lines):
+    solution = {}
+
+    for line in lines:
+        # Solution line example: v 1 -2 3 -4 5 6 0
+        if len(line) > 0 and line.strip()[0] == 'v':
+            varz = line.split(" ")[1:]
+            for v in varz:
+                v = v.strip()
+                value = v[0] != '-'
+                vn = int(v.lstrip('-'))
+                # The very last sign is a zero to indicate the end of the solution
+                if vn != 0:
+                    solution[vn] = value
+
+    return solution
+
+def SAT_solution_to_colormap(k, solution):
+    assignment = {}
+
+    for variable, value in solution.iteritems():
+        if value:
+            (node, color) = reversemapping(k, variable)
+            assignment[node] = color
+    return assignment
+
+def gc_string_to_smt_file(instance, outputfile, k):
+    (N,M,E) = read_DIGRAPH(instance)
+    GC_to_SMT_file(N,E,k,outputfile)
+
+# A dictgraph represents a graph as a dictionary with the neighbors of a graph as a set
+def to_dictgraph(V, E):
+    g = {}
+    for v in V:
+        g[v] = set()
+    for (u,w) in E:
+        g[u].add(w)
+        g[w].add(u)
+    return g
+
+# The highest node degree in a given graph
+def highest_degree(V,E):
+    g = to_dictgraph(V,E)
+    #print g
+    #print map(len, g.values())
+    #max2 = max(map(len, g.values()))
+    #print max2
+    return max(map(len, g.values()))
+
+def maximum_k(V,E):
+    #ret = highest_degree(V,E)+1
+    #print ret
+    return highest_degree(V,E)+1
