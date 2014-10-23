@@ -9,14 +9,13 @@ import math
 import os
 import subprocess
 import time
-import json
 import collections
 from gc_to_ilp_functions import *
 
 totaltimestart = time.time()
 
 # Folder to keep results in
-outputdir = "benchmark-ilp"
+outputdir = "benchmark-ilp-new"
 # Solution folder
 solutiondir = outputdir+"/solutions"
 translationdir = outputdir+"/translations"
@@ -86,7 +85,7 @@ try:
                 pass
 
         with open(resultfn, 'r') as resultf:
-            solution = int(resultf.readline().split("=")[1].trim())
+            solution = int(resultf.readline().split("=")[1])
 
         # We're a bit screwed if the alarm signal happens exactly here before the next loop iteration, but what are the odds?
         time_this_solving = time.time() - starttime
@@ -129,7 +128,7 @@ output += "%s,%d,%d,%d,%d,%.2f,%.2f,%.2f,%d" %\
         (instancename,
          N,
          M,
-         Max_K,
+         max_k,
          solution,
          time_spent_translating,
          time_spent_solving,
