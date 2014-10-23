@@ -55,9 +55,9 @@ def Color_IRC(G):
     newnode = len(G)
     G2 = copy.deepcopy(G)
     colormap = {}
-    stack = []
-    coalesced = {}
-    spilled = []
+    #stack = []
+    #coalesced = {}
+    #spilled = []
     k=1
     while True:
         # Check if there is a node with degree lower than k, and simplify the graph if there is
@@ -65,7 +65,7 @@ def Color_IRC(G):
         for v in G2.keys():
             if len(G2[v]) < k:
                 #print "Simplify %d" % v
-                stack.append(v)
+                #stack.append(v)
                 delete(G2, v)
                 restart = True
             break
@@ -77,9 +77,9 @@ def Color_IRC(G):
                 if len(G2[v] | G2[w]) < k:
                     # Coalesce v and w
                     #print "Coalesce %d and %d into %d" % (v,w,newnode)
-                    stack.append(v)
-                    stack.append(w)
-                    coalesced[newnode] = (v,w)
+                    #stack.append(v)
+                    #stack.append(w)
+                    #coalesced[newnode] = (v,w)
                     coalesce(G2, v, w, newnode)
                     newnode = newnode + 1
                     restart = True
@@ -91,7 +91,7 @@ def Color_IRC(G):
         # Spill a node
         for v in G2.keys():
             #print "Spill %d" % v
-            spilled.append(v)
+            #spilled.append(v)
             delete(G2,v)
             k=k+1
             restart = True
@@ -122,5 +122,5 @@ if __name__ == "__main__":
     (greedy,_) = Color_Greedy(G)
     (IRC,_) = Color_IRC(G)
 
-    print "Instance\tN\tM\tDeg+1\tGreedy\tIRC"
+    #print "Instance\tN\tM\tDeg+1\tGreedy\tIRC"
     print "%s\t%d\t%d\t%d\t%d\t%d" % (id[:10].ljust(10, " "), N, M, max_k, greedy,IRC)
