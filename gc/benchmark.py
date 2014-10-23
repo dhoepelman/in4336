@@ -54,7 +54,7 @@ with open(instancefn) as instancef:
 V = xrange(1,N+1)
 max_k = maximum_k(V,E)
 
-greedy = Color_Greedy(to_dictgraph(V,E))
+(greedy,_) = Color_Greedy(to_dictgraph(V,E))
 
 upper_bound = greedy
 
