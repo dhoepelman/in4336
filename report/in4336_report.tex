@@ -47,7 +47,7 @@ This possibility makes it feasible to make highly-optimized solving algorithms c
 
 For most popular problems multiple solvers exists, and benchmarks are available or contests are held to compare them.
 However comparisons between problems are rarer and in this project we will do such a comparison.
-We want to see if some problems are more suitable to encode other problems in or if the choise of problem to encode to makes little impact.
+We want to see if some problems are more suitable to encode other problems in or if the choice of problem to encode to makes little impact.
 
 Another question is whether translations into intermediary problems add significant overhead.
 While we know that polynomial transformations do not increase the complexity of a NP-Hard problem, it might still have a practical impact in how fast a problem instance can be solved or what the largest solvable problem instance is.
@@ -64,7 +64,7 @@ We formulated the following research question for this project:
 	\end{enumerate}
 \end{enumerate}
 
-In answering our research questions we will focus on solvers for \emph{Integer Linear Programming}, \emph{Satisfiability} (SAT) and \emph{Satisfiability Modulo Theories} (SMT).
+In answering our research questions we will focus on solvers for \emph{Integer Linear Programming} (ILP), \emph{Satisfiability} (SAT) and \emph{Satisfiability Modulo Theories} (SMT).
 
 As problems to encode we took \emph{Resource Constrained Project Scheduling Problem} (RCPSP) and \emph{Graph Coloring} (GC).
 
@@ -72,7 +72,7 @@ As problems to encode we took \emph{Resource Constrained Project Scheduling Prob
 
 \subsection{Graph Coloring}
 
-The graph coloring problem is one of the Karp's 21 original NP-Complete problems. \cite{karp1972reducibility}
+The graph coloring problem is one of the Karp's 21 original NP-Complete problems \cite{karp1972reducibility}.
 Graph coloring exists in several variants, but they are all easily reducible to the vertex coloring problem. We chose the optimization variant of the vertex coloring problem which is informally defined as given an undirected graph $G = (V,E)$, find the minimal number of colors $k$ needed to color each vertex so that no adjacent vertex shares a color. More formally:
 \begin{subequations}
 \begin{align*}
@@ -85,6 +85,17 @@ Graph coloring exists in several variants, but they are all easily reducible to 
 
 \subsubsection{SAT}
 \subsubsection{ILP}
+The combinatorial problem of graph coloring can also be formulated in 0-1 ILP. An advantage of using ILP is that it can solve optimization problems. The formulation of the graph coloring problem in 0-1 ILP can be done by taking the set of nodes V = {1,...,\emph{n}} and the number of colors \emph{k} = |V| = \emph{n}. Then, each color is represented by a binary variable \emph{$y_k$}, with \emph{k} = 1,...,\emph{n}, that indicatate whether color \emph{k} is used (\emph{$y_k$} = 1) or not (\emph{$y_k$} = 0). An objective function is formed by adding up these variables ($\sum\limits_{k=1}^n \emph{$y_k$}$) to obtain the minimum number of these variable equal to zero. Furthermore, a binary variable \emph{$x_{i_k}$} is used for each node-color combination to indicate whether node \emph{i} has received a color \emph{k} (\emph{$x_{ik}$} = 1) or not (\emph{$x_{ik}$} = 0). The resulting 0-1 ILP in formal description:
+\begin{subequations}
+\begin{align*}
+        & min \sum\limits_{k=1}^n \emph{$y_k$} & \emph{s.t.} & & (1) & & \sum\limits_{k=1}^n \emph{$x_{ik}$} = 1 & & \emph{i} = 1,...,\emph{n} \\
+        &  & & & (2) & & \emph{$x_{ik}$} - \emph{$y_k$} \leq 0 & & \emph{i,k} = 1,...,\emph{n} \\
+        &  & & & (3) & &  \emph{$x_{ik}$} + \emph{$x_{jk}$} \leq 1 & & (i,j) \in E, \emph{k} = 1,...,\emph{n} \\
+        &  & & & (4) & & 0 \leq \emph{$x_{ik}$}, \emph{$y_k$} \leq 1 & & \\
+        &  & & & (5) & & \emph{$x_{ik}$}, \emph{$y_k$} \in \mathbb{Z} & &
+\end{align*}
+\end{subequations}
+
 \subsubsection{SMT}
 
 \subsection{RCPSP}
