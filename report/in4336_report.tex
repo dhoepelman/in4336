@@ -35,84 +35,73 @@ Luis Garcia\\
 
 \end{abstract}
 
-\section{Introduction and motivation}
+% Lingeling was chosen because it performed well in a large number of categories in the recent SAT Competition 2014 (http://www.satcompetition.org/2014/) contest
 
-Solvers for NP-Hard problems can be used to solve instances of other NP-Hard problems by polynomially transforming the other problem instance.
-This makes it feasible to make highly-optimized solving algorithms, solvers, for certain relatively general NP-Hard problems.
-To make the distinction between the problem we are trying to solve and the problem for which a solver exists clearer, we will call these NP-Hard problems for which solvers exist "formalisms".
-Examples of these are SAT or ILP.
+\section{Introduction}
 
-For most popular formalisms multiple solvers exists, and benchmarks are available or contests are held to compare them.
-However comparisons between formalisms are much rarer, and in this project we will do such a comparison.
-With this we want to see if some formalisms are more suited to some problems, or if the choice of formalism has little impact.
+Solvers for NP-Hard problems can be used to solve instances of other NP-Hard problems by polynomially transforming the other problem instance. This is called an encoding.
+This possibility makes it feasible to make highly-optimized solving algorithms called solvers for certain relatively general NP-Hard problems.
+
+For most popular problems multiple solvers exists, and benchmarks are available or contests are held to compare them.
+However comparisons between problems are rarer and in this project we will do such a comparison.
+We want to see if some problems are more suitable to encode other problems in or if the choise of problem to encode to makes little impact.
 
 Another question is whether translations into intermediary problems add significant overhead.
 While we know that polynomial transformations do not increase the complexity of a NP-Hard problem, it might still have a practical impact in how fast a problem instance can be solved or what the largest solvable problem instance is.
-With this we want to see if translating the problem into a formalisms can be viably done in easier steps, or if it is better to translate the problem directly into the formalism.
+With this we want to see if encodings can be viably done in smaller easier steps, or if it is better to encode the problem directly into the target problem.
 
-\section{Research Questions}
+We formulated the following research question for this project:
 
 \begin{enumerate}
-\item[RQ1]{Is there a speed difference between formalisms when solving an identical translated problem instance?}
+\item[RQ1]{Is there a speed difference between formalisms when solving an identical problem instance?}
 \item[RQ2]{Are intermediate transformations viable?}
 	\begin{enumerate}
 	\item[RQ2.1]{Does an intermediate transformation significantly decrease the speed with which problem instances can be solved?}
 	\item[RQ2.2]{Does an intermediate transformation decrease the size of the largest possible problem instances which can be solved?}
 	\end{enumerate}
-\item[RQ3]{How much faster are approximate algorithms at what cost to solution quality?}
-	\begin{enumerate}
-	\item[RQ3.1]{How does this chance with intermediate transformations?}
-	\end{enumerate}
 \end{enumerate}
 
+In answering our research questions we will focus on solvers for \emph{Integer Linear Programming}, \emph{Satisfiability} (SAT) and \emph{Satisfiability Modulo Theories} (SMT).
 
-\section{Project Approach}
+As problems to encode we took \emph{Resource Constrained Project Scheduling Problem} (RCPSP) and \emph{Graph Coloring} (GC).
 
-In answering our research questions we will focus on the formalisms \emph{Mixed Integer Linear Programming} (MILP), \emph{Satisfiability} (SAT) and \emph{Satisfiability Modulo Theories} (SMT) as advised by our project supervisor (Matthijs Spaan).
-If available we will also include dedicated solvers for the problems.
-For approximation algorithms we will focus on greedy algorithms and linear programming relaxations.
+\section{Encodings}
 
-For our problems we will take the \emph{Resource Constrained Project Scheduling Problem} (RCPSP) and \emph{Graph Coloring} (GC).
-For RCPSP we will use the PSLIB benchmark as instances.
-For GC we will try to find a common benchmark in the literature.
-We will also translate the RCPSP instances into GC instances to help us answer RQ2.
+\subsection{Graph Coloring}
 
-We will start by searching the literature for all the translations we wish to do.
-We will get these working on a solver for the appropriate formalism.
-After this we will find appropriate LP-relaxation and greedy algorithms.
-We will then (try) to solve as many problem instances as possible for each translation and use the results to answer our research questions.
+\subsection{SAT}
+\subsection{ILP}
+\subsection{SMT}
 
-\newpage
+\subsection{RCPSP}
 
-\subsection{Project planning}
+\subsection{SAT}
+\subsection{ILP}
 
-\begin{tabular}{| p{1.3cm} | p{6.0cm} |}
-\hline
-Week & Goal \\ \hline
-2 (21-09) & Read up on ILP, SAT and SMT \\
- & For each solver be able to solve a simple problem instance. \\
- & Search literature for translations from GC, RCPSP to solvers \\ \hline
-3 (28-09) & Search literature for translation from RCPSP to GC \\ 
- & Able to solve RCPSP and GC instances on solvers \\
- & Able to translate RCPSP instance into GC instance \\ \hline
-4 (05-10) & Prepare mid-term presentation \\
- & Run RCPSP and GC benchmarks on solvers \\
- & Search literature for greedy and LP-relaxation algorithms for GC and RCPSP. \\ \hline
-5 (12-10) & Run RCPSP and GC benchmarks on approximation algorithms \\ \hline
- & Think and reflect on intermediate results \\
- & Adjust project and project planning on progress so far and results \\ \hline
-6 (19-10) & T.B.D. \\ \hline
-7 (26-10) & T.B.D. \\
- & Write report \\ \hline
-8 (02-11) & Submit report \\
- & Prepare final presentation \\ \hline
-9 & Final presentation \\ \hline
-\end{tabular}
+\section{Experimental Setup}
+
+\section{Results}
 
 \section{Related Work}
 
+%TODO: Deze referenties in de tekst verwerken of anders onzichtbaar opnemen in de 
+\cite{alves2013resource}
+\cite{abio2014encoding}
+\cite{wu2013exploiting}
+\cite{velev2009exploiting}
+\cite{horbach2010boolean}
+\cite{klein1999computing}
+\cite{mingozzi1998exact}
+\cite{sharma2011polynomial}
+\cite{ramani2004breaking}
+\cite{schutt2011explaining}
+\cite{wille2008using}
+\cite{malaguti2010survey}
+\cite{cs395tGCtoSAT}
+
 \section{Conclusion}
 
-
+\bibliographystyle{acm}
+\bibliography{in4336_report}
 
 \end{document}
