@@ -66,7 +66,7 @@ procs = []
 
 try:
     # To use Z3, set the path of z3 with the 'setpath' script
-    subprocess.call("source setpath.sh", shell=True)
+    # subprocess.call("source setpath.sh", shell=True)
 
     while solution == -1:
         try:
