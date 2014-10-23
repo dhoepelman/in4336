@@ -8,7 +8,7 @@
 \def\@copyrightspace{\relax}
 \makeatother
 
-
+%\numberwithin{equation}{subsection}
 
 \begin{document}
 
@@ -64,9 +64,20 @@ We formulated the following research question for this project:
 	\end{enumerate}
 \end{enumerate}
 
-In answering our research questions we will focus on solvers for \emph{Integer Linear Programming}, \emph{Satisfiability} (SAT) and \emph{Satisfiability Modulo Theories} (SMT).
+In answering our research questions we will focus on solvers for \emph{Integer Linear Programming} (ILP), \emph{Satisfiability} (SAT) and \emph{Satisfiability Modulo Theories} (SMT).
 
 As problems to encode we took \emph{Resource Constrained Project Scheduling Problem} (RCPSP) and \emph{Graph Coloring} (GC).
+
+\section {Target problems}
+
+\subsubsection*{Satisfiability (SAT)}
+
+The satisfiability problem is informally defined as given a boolean formula in conjunctive normal form (CNF), find an assignment that makes the formula true. A formula is in CNF if it is a conjunction of clauses ($C_1 \wedge C_2 \wedge \ldots \wedge C_n$) where each clause is a disjunction of literals ($l_1 \lor l_2 \lor \ldots \lor l_n$) where each literal is a variable or the negation of a variable ($p$ or $\neg p$). All propositional formulas can be converted to CNF.
+A SAT solver will find either a valid assignment for the given formula, or will report that it is unsatisfiable.
+
+\subsubsection*{Integer Linear Programming (ILP)}
+
+\subsubsection*{Satisfiability Modulo Theories (SMT)}
 
 \section{Encodings}
 
@@ -83,14 +94,41 @@ Graph coloring exists in several variants, but they are all easily reducible to 
 \end{align*}
 \end{subequations}
 
-\subsubsection{SAT}
-\subsubsection{ILP}
-\subsubsection{SMT}
+\subsubsection*{SAT}
+
+Satisfiability is a decision problem. This makes it impossible to directly encode the decision version of GC. Our approaches to get around this are detailed in section \ref{subsec:OptToDec}. For now it means that when encoding GC in SAT $k$ is a parameter of the translation.
+
+We adopted the encoding from \cite{cs395tGCtoSAT}. We define a variable for every node and color combination $p_{vi} (v \in V, i \in [1,k])$. If node $v$ has color $i$ then $p_{vi}$, otherwise $\neg p_{vi}$. The following clauses ensure that the assignment will be valid for the GC instance:
+
+\setcounter{equation}{1}
+\begin{subequations}
+\begin{align}
+        & \bigvee_{1 \leq i \leq k} p_{vi}& v \in V\\
+        & \neg p_{vi} \lor \neg p_{vj} & v \in V, 1 \leq i < j \leq k \\
+        & \neg p_{vi} \lor \neg p_{wi} & v \in V, 1 \leq i \leq k
+\end{align}
+\end{subequations}
+
+Clauses of type 2a ensures that every node has one or more colors. Clauses of type 2b ensures every node has at most one color. Clauses of type 2c ensure that nodes that share an edge do not have the same color.
+
+This encoding has $O(|V| k)$ variables and $O(|E|+|V| k^2)$ clauses.
+
+There is an alternative encoding defined in TODO. . We did not have time to implement and test this encoding.
+
+\subsubsection*{ILP}
+\subsubsection*{SMT}
 
 \subsection{RCPSP}
 
-\subsubsection{SAT}
-\subsubsection{ILP}
+\subsubsection*{Bounds}
+
+Both encodings need upper and lower bounds.
+
+\subsubsection*{SAT}
+\subsubsection*{ILP}
+
+\subsection{Optimization problems with decision solvers}
+\label{subsec:OptToDec}
 
 \section{Experimental Setup}
 
