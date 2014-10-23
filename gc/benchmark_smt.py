@@ -65,6 +65,9 @@ print("Starting to solve %s with N=%d,M=%d" % (instancename, N, M))
 procs = []
 
 try:
+    # To use Z3, set the path of z3 with the 'setpath' script
+    # subprocess.call("source setpath.sh", shell=True)
+
     while solution == -1:
         try:
             subprocess.call("killall z3")
@@ -81,6 +84,7 @@ try:
 
         id = "gc-%s-%d" % (instancename, guess)
         translationfn = "%s/%s.smt" % (translationdir, id)
+        resultfn = "%s/solutions.txt" % (outputdir)
 
         gc_string_to_smt_file(instance, translationfn, guess)
 
@@ -92,18 +96,25 @@ try:
         starttime = time.time()
 
         try:
-            with open("%s/%s.cnf" % (solutiondir, id), 'wb') as solutionf:
-                #solverresult = subprocess.call("lingeling " + translationfn, shell=True, stdout=solutionf)
-                solverprocess = subprocess.Popen("lingeling " + translationfn, shell=True, stdout=solutionf)
-                procs.append(solverprocess.pid)
-                solverresult = solverprocess.wait()
+            #with open("%s/%s.smt" % (solutiondir, id), 'wb') as solutionf:
+            solverresult = subprocess.call("z3 -m -smt2 " + translationfn + " > " + resultfn, shell=True)
+            #solverprocess = subprocess.Popen("z3 -m -smt2 " + translationfn, shell=True, stdout=solutionf)
+            #procs.append(solverprocess.pid)
+            #solverresult = solverprocess.wait()
         finally:
             # We might be here because of TimeoutException/Keyboardinterrupt, kill the child process if it still lives
             # Polling doesn't seem to work to check if alive... Fuck it just catch the exception if it's already killed
             try:
-                solverprocess.terminate()
+                #solverprocess.terminate()
+                subprocess.call("killall z3")
             except:
                 pass
+
+            # Reading the solution file 'solutions.txt' which contains 'sat' or 'unsat'
+            solution_sat_unsat = ""
+            with open(resultfn, 'r') as resultf:
+               solution_sat_unsat = resultf.readline()
+
             # Delete the translation file, since it can become several gigs
             if os.path.isfile(translationfn):
                 os.remove(translationfn)
@@ -116,13 +127,12 @@ try:
         trace[guess]['this'] = time_this_translation+time_this_solving
         trace[guess]['total'] = time_spent_solving+time_spent_translating
 
-        if solverresult == 10:
+        if solverresult != 0:
             # Satisfiable
             upper_bound = guess
-        elif solverresult == 20:
+        elif solverresult == 0:
             # Unsatisfiable
             lower_bound = guess
-
         if lower_bound == upper_bound-1:
             # We've found the smallest k! It's the upper bound
             solution = upper_bound
@@ -131,9 +141,11 @@ try:
             print("New bounds: (%d,%.0f) guess was %d" % (lower_bound, upper_bound, guess))
 except KeyboardInterrupt:
     # User wants to cancel
+    solution = -1
     pass
 except TimeoutException:
     # MEEH, Time's up!
+    solution = -1
     pass
 
 # Done!
@@ -141,7 +153,7 @@ except TimeoutException:
 signal.alarm(0)
 
 
-# killall lingeling
+# killall z3
 
 # Report in addition: N
 
@@ -176,15 +188,12 @@ if solution != -1:
 else:
     print("Timeout")
 
-with open("%s/%s.json" % (tracedir, instancename),'wb') as tracef:
-    print(json.dumps(trace, indent=4), file=tracef)
-
 try:
-	subprocess.call("killall lingeling")
+	subprocess.call("killall z3")
 except:
 	pass
 try:
-	subprocess.call("pkill lingeling")
+	subprocess.call("pkill z3")
 except:
 	pass
 

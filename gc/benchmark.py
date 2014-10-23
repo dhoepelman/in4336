@@ -12,6 +12,7 @@ import time
 import json
 import collections
 from gc_to_sat_functions import *
+from gc_approximation import Color_Greedy
 
 totaltimestart = time.time()
 
@@ -52,7 +53,10 @@ with open(instancefn) as instancef:
 (N,M,E) = read_DIGRAPH(instance)
 V = xrange(1,N+1)
 max_k = maximum_k(V,E)
-upper_bound = max_k
+
+(greedy,_) = Color_Greedy(to_dictgraph(V,E))
+
+upper_bound = greedy
 
 trace = collections.OrderedDict()
 
@@ -149,10 +153,10 @@ output = ""
 if not os.path.isfile(resultfile):
     # So excel knows what separator to use
     output = "sep=,\n"
-    output += "Instance,N,M,Solution,LB,UB,Highest Degree,Translation Time,Solving Time,Total Time,Time Limit,Trace\n"
+    output += "Instance,N,M,Solution,LB,UB,Highest Degree,Greedy,Translation Time,Solving Time,Total Time,Time Limit,Trace\n"
 
 time_spent_total = time.time() - totaltimestart
-output += "%s,%d,%d,%d,%d,%d,%d,%.2f,%.2f,%.2f,%d,%s" %\
+output += "%s,%d,%d,%d,%d,%d,%d,%d,%.2f,%.2f,%.2f,%d,%s" %\
         (instancename,
          N,
          M,
@@ -160,6 +164,7 @@ output += "%s,%d,%d,%d,%d,%d,%d,%.2f,%.2f,%.2f,%d,%s" %\
          lower_bound,
          upper_bound,
          max_k,
+         greedy,
          time_spent_translating,
          time_spent_solving,
          time_spent_total,

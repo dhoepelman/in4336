@@ -26,79 +26,84 @@ def GC_to_SMT_file(N,E,k,outputfile):
     # Clause per node, per kleurenpaar. Gauss' trick toepassen
     numc += N * (k * (k-1) / 2)
 	
-	constants = ""
+    constants = ""
 
     with open(outputfile,'wb') as f:
-		# Declare all constants for each variabele (one for every node and color combination)
-		for v in xrange(1,N+1):
+        # Declare all constants for each variabele (one for every node and color combination)
+        for v in xrange(1,N+1):
             for i in xrange(1,k+1):
                 constants += "(declare-const p%d_%d Bool)\n" % (v,i)			
-		f.write(constants)	
+	f.write(constants)	
 
-		# Define a function f the will solve the clauses that form the graph coloring problem
-		f.write("(define-fun f () Bool\n\t")
-		
-		# Couple all clauses with an AND operator
+        # Define a function f the will solve the clauses that form the graph coloring problem
+        f.write("(define-fun f () Bool\n\t")
+	
+        # Couple all clauses with an AND operator
         operator = []
-		for x in xrange(1,numc+1):
-		    operator.append("(and ")
+        for x in xrange(1,numc):
+            operator.append("(and ")
         operator.append("\n\t")
         f.write(operator_to_str(operator))
 			
         # Global variabel 'number_of_clauses' die het aantal clauses bijhoud
         # dat gebruik zullen worden voor de sluithaakjes voor het AND'en van twee clauses
         number_of_clauses = 0
-        
+
         # Voeg een clause per node toe zodat elke node een of meer kleuren heeft: p_11 v p_12 v p_13 etc
         operator = []
-		variable = []
-		for v in xrange(1,N+1):
-            for i in xrange(1,k+1):
-				operator.append("(or ")
-				if i % 2:
-					variable.append(" p%d_%d" % (v, i))
-				else
-					variable.append(" p%d_%d)" % (v, i)
+        variable = []
+        for v in xrange(1,N+1):
+            variable.append("p%d_1" % v)
+            for i in xrange(2,k+1):
+                operator.append("(or ")
+                variable.append(" p%d_%d)" % (v, i))
             # Schrijf de clause met operator naar het SMT bestand
-			f.write(operator_to_str(operator))
-			f.write(variable_to_str(variable)+"\n\t")
+            f.write(operator_to_str(operator))
+            f.write(variable_to_str(variable))
             # Verhoog het aantal clauses tot nu toe en voeg waar nodig een sluithaakje
             number_of_clauses+=1
             # Sluit haakje af voor het AND'en van twee clauses
-            if not(number_of_clauses % 2):
+            if number_of_clauses > 1:
                 f.write(")\n\t")
-			
+            else:
+                f.write("\n\t")
+            # Empty the operator and variable list for reuse
+            operator = []
+            variable = []
+
         # Voeg clauses toe zodat elke node maximaal één kleur heeft
-		f.write("\n\t")
         for v in xrange(1,N+1):
             for j in xrange(1,k+1):
                 for i in xrange(1,j):
                     # not (v heeft kleur i en v heeft kleur j)
                     # => not(v heeft kleur i) of not(v heeft kleur j)
-                    f.write("(not (and p%d_%d p%d_%d))\n\t" % (v,i,v,j))
+                    f.write("(not (and p%d_%d p%d_%d))" % (v,i,v,j))
                     # Verhoog het aantal clauses tot nu toe en voeg waar nodig een sluithaakje
                     number_of_clauses+=1
                     # Sluit haakje af voor het AND'en van twee clauses
-                    if not(number_of_clauses % 2):
+                    if number_of_clauses > 1:
                         f.write(")\n\t")
-                    
+                    else:
+                        f.write("\n\t")
 
         # Voeg clauses toe zodat adjacent nodes niet dezelfde kleur hebben
         for (v,w) in E:
             for i in xrange(1,k+1):
                 # not (v heeft kleur i en w heeft kleur i)
                 # => not(v heeft kleur i) of not(w heeft kleur i)
-				f.write("(not (and p%d_%d p%d_%d))\n" % (v,i,w,i))
+                f.write("(not (and p%d_%d p%d_%d))" % (v,i,w,i))
                 # Verhoog het aantal clauses tot nu toe en voeg waar nodig een sluithaakje
                 number_of_clauses+=1
                 # Sluit haakje af voor het AND'en van twee clauses
-                if not(number_of_clauses % 2):
+                if number_of_clauses > 1:
                     f.write(")\n\t")
+                else:
+                    f.write("\n\t")
         
-        # Voeg de functie toe in de interne stack van Z3
-        f.write("(assert f)\n\t")
+        # Voeg de functie toe in de interne stack van Z3: sluit eerst de functie definitie met een sluithaakje
+        f.write(")\n(assert f)\n")
         # Voeg het volgende command toe om de satisfiability te checken
-        f.write("(check-sat)\n\t")
+        f.write("(check-sat)\n")
         # Voeg het volgende command toe om het model dat de functie satisfiable maakt weer te geven
         #f.write("(check-model)\n\t")
 
