@@ -1,11 +1,14 @@
 \documentclass{sig-alternate}
 
 \usepackage[ampersand]{easylist}
+\usepackage{amsmath}
 
 \usepackage{etoolbox}
 \makeatletter
 \def\@copyrightspace{\relax}
 \makeatother
+
+
 
 \begin{document}
 
@@ -68,6 +71,17 @@ As problems to encode we took \emph{Resource Constrained Project Scheduling Prob
 \section{Encodings}
 
 \subsection{Graph Coloring}
+
+The graph coloring problem is one of the Karp's 21 original NP-Complete problems. \cite{karp1972reducibility}
+Graph coloring exists in several variants, but they are all easily reducible to the vertex coloring problem. We chose the optimization variant of the vertex coloring problem which is informally defined as given an undirected graph $G = (V,E)$, find the minimal number of colors $k$ needed to color each vertex so that no adjacent vertex shares a color. More formally:
+\begin{subequations}
+\begin{align*}
+        & G = (V,E) & E \subseteq V^2\\
+        & map : V \rightarrow [1,k] & k \in \mathbb{N} \\
+        & map(v) \neq map(w) & (v,w) \in E \\
+        & VC = min\{k | map : V \rightarrow [1,k]\}
+\end{align*}
+\end{subequations}
 
 \subsection{SAT}
 \subsection{ILP}
