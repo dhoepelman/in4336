@@ -1,0 +1,39 @@
+c Lingeling SAT Solver
+c 
+c Version azf 92032848c138b2f33629ad24394d60a3787a1046
+c 
+c Copyright (C) 2010-2014 Armin Biere JKU Linz Austria.
+c All rights reserved.
+c 
+c released Don Mai 22 22:08:00 CEST 2014
+c compiled Mon Oct  6 05:55:43 PDT 2014
+c 
+c gcc (Ubuntu 4.8.2-19ubuntu1) 4.8.2
+c -Wall -O3 -DNDBLSCR -DNLGLOG -DNDEBUG -DNCHKSOL -DNLGLPICOSAT -DNLGLDRUPLIG
+c -DNLGLYALSAT
+c Linux ubuntu 3.13.0-32-generic x86_64
+c 
+c reading input file benchmark-sat/translations/gc-4-Insertions_4-4.cnf
+c no embedded options
+c found 'p cnf 1900 10505' header
+c read 1900 variables, 10505 clauses, 21960 literals in 0.00 seconds
+c 
+c  seconds         irredundant          redundant clauses agility   height
+c          variables clauses conflicts large ternary binary    glue         MB
+c 
+c S    0.0    1900    10505         0       0      0     0   0  0.0   0.0    0
+c S    1.0    1425     7180     18684    7243      0  1425  13 13.5 139.8    2
+c S    2.0    1425     7180     40508    9351      0  1425  14 15.8 140.9    3
+c S    5.0    1425     7180    102079   16399      0  1425  14 17.2 140.6    5
+c S   10.0    1425     7180    202368   22512      0  1425  14 19.0 141.0    7
+c S   20.0    1425     7180    393601   28904      0  1425  23 21.4 141.9    8
+c S   30.1    1425     7180    579367   36626      0  1425  20 24.0 141.9   11
+c S   40.0    1425     7180    723820   55536      0  1425  13 23.6 141.5   13
+c S   50.0    1425     7180    872756   63164      0  1425  15 24.1 141.5   18
+c S   60.0    1425     7180   1007114   47045      0  1425  22 23.9 141.6   11
+c S  120.1    1425     7180   1791604   82380      0  1425  22 26.2 142.3   27
+c S  180.0    1425     7180   2491228  109210      0  1425  20 28.5 142.1   42
+c S  240.1    1425     7180   3108502  119852      0  1425  14 29.9 141.8   29
+c S  300.0    1425     7180   3671703  104190      0  1425  20 29.6 141.8   21
+c S  600.0    1425     7180   6302439  130524      0  1425  16 35.7 142.4   23
+c S  900.1    1425     7180   8494717  191148      0  1425  13 35.6 141.7   44

@@ -1,0 +1,38 @@
+c Lingeling SAT Solver
+c 
+c Version azf 92032848c138b2f33629ad24394d60a3787a1046
+c 
+c Copyright (C) 2010-2014 Armin Biere JKU Linz Austria.
+c All rights reserved.
+c 
+c released Don Mai 22 22:08:00 CEST 2014
+c compiled Mon Oct  6 05:55:43 PDT 2014
+c 
+c gcc (Ubuntu 4.8.2-19ubuntu1) 4.8.2
+c -Wall -O3 -DNDBLSCR -DNLGLOG -DNDEBUG -DNCHKSOL -DNLGLPICOSAT -DNLGLDRUPLIG
+c -DNLGLYALSAT
+c Linux ubuntu 3.13.0-32-generic x86_64
+c 
+c reading input file benchmark-sat/translations/gc-zeroin.i.1-28.cnf
+c no embedded options
+c found 'p cnf 5908 194769' header
+c read 5908 variables, 194769 clauses, 395024 literals in 0.00 seconds
+c 
+c  seconds         irredundant          redundant clauses agility   height
+c          variables clauses conflicts large ternary binary    glue         MB
+c 
+c S    0.0    5908   194769         0       0      0     0   0  0.0   0.0    5
+c P    1.0    3447   114845      1001     932      0 45441   8 28.2 240.6    7
+c P    2.0    3447   114845      1001     932      0 45441   8 28.2 240.6    7
+c S   13.8    3402   114800      3002    1832      0 44226   7 32.7 179.3   68
+c P   20.0    3402   114800     63002   12785      0 44226   6 45.7 146.4   14
+c S   30.0    3402   114800    175416   19675      0 44226   5 47.4 145.0   23
+c S   40.0    3402   114800    302314   16385      0 44226   7 60.6 148.8   24
+c S   50.0    3402   114800    412224   27185      0 44226   7 56.5 148.3   35
+c S   60.0    3402   114800    526044   30656      0 44226   5 53.9 149.1   42
+c S  120.0    3402   114800   1208193   46318      0 44226   3 53.8 151.4   78
+c S  180.0    3402   114800   1756957   73025      0 44226   3 55.3 155.1   93
+c S  240.0    3402   114800   2254632   47213      0 44226   4 59.0 159.4   79
+c S  300.1    3402   114800   2635632   93231      0 44226   3 59.2 161.9  131
+c S  600.1    3402   114800   4299218   97531      0 44226   2 64.6 174.6  143
+c S  900.1    3402   114800   5755460  126483      0 44226   3 66.7 180.8  154

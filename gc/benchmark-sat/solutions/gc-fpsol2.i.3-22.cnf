@@ -1,0 +1,39 @@
+c Lingeling SAT Solver
+c 
+c Version azf 92032848c138b2f33629ad24394d60a3787a1046
+c 
+c Copyright (C) 2010-2014 Armin Biere JKU Linz Austria.
+c All rights reserved.
+c 
+c released Don Mai 22 22:08:00 CEST 2014
+c compiled Mon Oct  6 05:55:43 PDT 2014
+c 
+c gcc (Ubuntu 4.8.2-19ubuntu1) 4.8.2
+c -Wall -O3 -DNDBLSCR -DNLGLOG -DNDEBUG -DNCHKSOL -DNLGLPICOSAT -DNLGLDRUPLIG
+c -DNLGLYALSAT
+c Linux ubuntu 3.13.0-32-generic x86_64
+c 
+c reading input file benchmark-sat/translations/gc-fpsol2.i.3-22.cnf
+c no embedded options
+c found 'p cnf 9350 289736' header
+c read 9350 variables, 289736 clauses, 587972 literals in 0.00 seconds
+c 
+c  seconds         irredundant          redundant clauses agility   height
+c          variables clauses conflicts large ternary binary    glue         MB
+c 
+c S    0.0    9350   289736         0       0      0     0   0  0.0   0.0    9
+c P    1.0    7651   191164      1001     906      0 76818   1 21.4 1284.6    9
+c P    2.0    7651   191164      1001     906      0 76818   1 21.4 1284.6   11
+c P    5.0    7651   191164      1001     906      0 76818   1 21.4 1284.6   11
+c S   10.0    7644   191157     29885    6750      0 76671   1 29.5 205.8   12
+c S   20.0    7644   191157    121973   12297      0 76671   1 44.0 137.8   21
+c S   30.0    7644   191157    199538   24524      0 76671   1 43.6 126.1   42
+c S   40.0    7644   191157    293882   22218      0 76671   1 42.6 124.0   30
+c S   50.0    7638   191151    363802   32906      0 76545   1 42.8 119.8   36
+c S   60.0    7638   191151    449282   36434      0 76545   1 42.7 116.7   51
+c S  120.0    7638   191151    942377   39691      0 76545   1 44.4 111.1   60
+c S  180.0    7638   191151   1424750   42902      0 76545   1 49.1 110.6   48
+c S  240.0    7638   191151   1869176   55507      0 76545   1 49.4 110.1   47
+c S  300.0    7638   191151   2265134   65088      0 76545   1 49.9 109.2   63
+c S  600.0    7638   191151   4146661   85909      0 76545   1 54.0 109.2  103
+c S  900.0    7623   191136   6140915   99975      0 76230   1 58.9 108.2   75

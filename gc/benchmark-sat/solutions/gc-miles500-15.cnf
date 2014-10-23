@@ -1,0 +1,39 @@
+c Lingeling SAT Solver
+c 
+c Version azf 92032848c138b2f33629ad24394d60a3787a1046
+c 
+c Copyright (C) 2010-2014 Armin Biere JKU Linz Austria.
+c All rights reserved.
+c 
+c released Don Mai 22 22:08:00 CEST 2014
+c compiled Mon Oct  6 05:55:43 PDT 2014
+c 
+c gcc (Ubuntu 4.8.2-19ubuntu1) 4.8.2
+c -Wall -O3 -DNDBLSCR -DNLGLOG -DNDEBUG -DNCHKSOL -DNLGLPICOSAT -DNLGLDRUPLIG
+c -DNLGLYALSAT
+c Linux ubuntu 3.13.0-32-generic x86_64
+c 
+c reading input file benchmark-sat/translations/gc-miles500-15.cnf
+c no embedded options
+c found 'p cnf 1920 48668' header
+c read 1920 variables, 48668 clauses, 99000 literals in 0.00 seconds
+c 
+c  seconds         irredundant          redundant clauses agility   height
+c          variables clauses conflicts large ternary binary    glue         MB
+c 
+c S    0.0    1920    48668         0       0      0     0   0  0.0   0.0    1
+c S    1.0    1731    17418     12675    5541      0 11219  11 19.6  45.0    3
+c S    2.0    1731    17418     41025    9740      0 11219  11 20.8  43.7    6
+c P    5.0    1731    17418    121503   17407      0 11219   8 23.7  44.1   11
+c S   10.0    1731    17418    247028   17219      0 11219   8 24.0  44.5   10
+c S   20.0    1731    17418    479955   23579      0 11219  12 24.7  45.0   12
+c S   30.0    1731    17412    699998   39661      0 11219  10 26.7  45.8   20
+c S   40.1    1731    17412    915168   36909      0 11219   8 29.0  46.1   21
+c S   50.1    1731    17412   1044540   50236      0 11219   8 31.0  46.9   31
+c S   60.3    1731    17412   1173166   55427      0 11219   9 31.7  47.7   45
+c S  120.1    1731    17412   2095868   60651      0 11219   8 36.6  50.5   46
+c S  180.0    1731    17412   2903064   50872      0 11219   8 40.9  56.2   35
+c S  240.1    1731    17412   3689145   52280      0 11219   7 41.9  59.7   52
+c S  300.0    1731    17412   4430676   89025      0 11219   7 43.0  62.0   75
+c S  600.2    1731    17412   7785077  126225      0 11219   8 44.6  62.3   97
+c S  900.0    1731    17412  10641679  130615      0 11219   8 44.6  61.8   75

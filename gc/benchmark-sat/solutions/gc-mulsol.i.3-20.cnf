@@ -1,0 +1,39 @@
+c Lingeling SAT Solver
+c 
+c Version azf 92032848c138b2f33629ad24394d60a3787a1046
+c 
+c Copyright (C) 2010-2014 Armin Biere JKU Linz Austria.
+c All rights reserved.
+c 
+c released Don Mai 22 22:08:00 CEST 2014
+c compiled Mon Oct  6 05:55:43 PDT 2014
+c 
+c gcc (Ubuntu 4.8.2-19ubuntu1) 4.8.2
+c -Wall -O3 -DNDBLSCR -DNLGLOG -DNDEBUG -DNCHKSOL -DNLGLPICOSAT -DNLGLDRUPLIG
+c -DNLGLYALSAT
+c Linux ubuntu 3.13.0-32-generic x86_64
+c 
+c reading input file benchmark-sat/translations/gc-mulsol.i.3-20.cnf
+c no embedded options
+c found 'p cnf 3680 113464' header
+c read 3680 variables, 113464 clauses, 230240 literals in 0.00 seconds
+c 
+c  seconds         irredundant          redundant clauses agility   height
+c          variables clauses conflicts large ternary binary    glue         MB
+c 
+c S    0.0    3680   113464         0       0      0     0   0  0.0   0.0    2
+c P    1.0    3328    78342      1000     942      0 30172   5 21.3 335.4    5
+c P    2.0    3328    78342      1000     942      0 30172   5 21.3 335.4    5
+c P    5.0    3306    78320      3000    1859      0 29754   5 21.7 198.9    5
+c S   10.0    3306    78320     66930    9354      0 29754   5 21.2  80.7   10
+c S   20.0    3306    78320    214885   15670      0 29754   5 24.7  74.8   14
+c S   30.0    3306    78320    356951   32492      0 29754   4 26.1  74.8   25
+c S   40.0    3306    78320    499573   27568      0 29754   6 27.6  74.5   25
+c S   50.0    3306    78320    626584   42797      0 29754   5 29.9  75.6   33
+c S   60.0    3306    78320    769409   45364      0 29754   4 30.3  75.1   31
+c S  120.0    3306    78320   1490305   52486      0 29754   3 36.7  80.3   42
+c S  180.0    3306    78320   2053052   59809      0 29754   4 40.1  84.6   45
+c S  240.0    3306    78320   2581197   45334      0 29754   3 44.3  87.1   48
+c S  300.0    3306    78320   3016387   59699      0 29754   3 45.1  88.8   53
+c S  600.1    3306    78320   4695479   94787      0 29754   3 48.2  94.4   79
+c S  900.1    3306    78320   6292762  101668      0 29754   2 53.8  97.3   99

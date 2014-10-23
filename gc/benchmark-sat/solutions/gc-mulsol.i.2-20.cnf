@@ -1,0 +1,39 @@
+c Lingeling SAT Solver
+c 
+c Version azf 92032848c138b2f33629ad24394d60a3787a1046
+c 
+c Copyright (C) 2010-2014 Armin Biere JKU Linz Austria.
+c All rights reserved.
+c 
+c released Don Mai 22 22:08:00 CEST 2014
+c compiled Mon Oct  6 05:55:43 PDT 2014
+c 
+c gcc (Ubuntu 4.8.2-19ubuntu1) 4.8.2
+c -Wall -O3 -DNDBLSCR -DNLGLOG -DNDEBUG -DNCHKSOL -DNLGLPICOSAT -DNLGLDRUPLIG
+c -DNLGLYALSAT
+c Linux ubuntu 3.13.0-32-generic x86_64
+c 
+c reading input file benchmark-sat/translations/gc-mulsol.i.2-20.cnf
+c no embedded options
+c found 'p cnf 3760 113608' header
+c read 3760 variables, 113608 clauses, 230600 literals in 0.00 seconds
+c 
+c  seconds         irredundant          redundant clauses agility   height
+c          variables clauses conflicts large ternary binary    glue         MB
+c 
+c S    0.0    3760   113608         0       0      0     0   0  0.0   0.0    2
+c P    1.0    3309    77722      1000     927      0 30001   5 18.9 342.5    5
+c P    2.0    3309    77722      1000     927      0 30001   5 18.9 342.5    5
+c S    5.0    3287    77700      4239    3489      0 29583   7 22.5 163.1    5
+c S   10.0    3287    77700     71291   11482      0 29583   6 29.8  84.0   14
+c S   20.0    3287    77700    218263   16310      0 29583   6 29.6  80.1   17
+c S   30.0    3287    77700    360851   33893      0 29583   5 32.5  81.2   26
+c S   40.0    3287    77700    495832   21393      0 29583   6 33.5  81.5   22
+c S   50.0    3287    77700    630515   34320      0 29583   5 36.0  82.2   33
+c S   60.0    3287    77700    756499   47335      0 29583   4 36.8  82.7   36
+c S  120.0    3287    77700   1450772   45335      0 29583   4 38.0  85.7   39
+c S  180.0    3287    77700   2024193   54989      0 29583   4 41.1  87.6   50
+c S  240.0    3287    77700   2605871   88523      0 29583   2 47.9  89.4  100
+c S  300.0    3287    77700   3043916   71619      0 29583   3 48.8  90.5   56
+c S  600.1    3287    77700   4920796   90379      0 29583   3 52.8  94.0   74
+c S  900.0    3287    77700   7487292  127835      0 29583   3 60.3  95.4  153

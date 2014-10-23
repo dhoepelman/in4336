@@ -1,0 +1,43 @@
+c Lingeling SAT Solver
+c 
+c Version azf 92032848c138b2f33629ad24394d60a3787a1046
+c 
+c Copyright (C) 2010-2014 Armin Biere JKU Linz Austria.
+c All rights reserved.
+c 
+c released Don Mai 22 22:08:00 CEST 2014
+c compiled Mon Oct  6 05:55:43 PDT 2014
+c 
+c gcc (Ubuntu 4.8.2-19ubuntu1) 4.8.2
+c -Wall -O3 -DNDBLSCR -DNLGLOG -DNDEBUG -DNCHKSOL -DNLGLPICOSAT -DNLGLDRUPLIG
+c -DNLGLYALSAT
+c Linux ubuntu 3.13.0-32-generic x86_64
+c 
+c reading input file benchmark-sat/translations/gc-anna-9.cnf
+c no embedded options
+c found 'p cnf 1242 13980' header
+c read 1242 variables, 13980 clauses, 28926 literals in 0.00 seconds
+c 
+c  seconds         irredundant          redundant clauses agility   height
+c          variables clauses conflicts large ternary binary    glue         MB
+c 
+c S    0.0    1242    13980         0       0      0     0   0  0.0   0.0    0
+c S    1.0     535     3304     35617    5544      0  1840  10 12.1  17.5    2
+c S    2.0     535     3304     66804    4671      1  1842  10 14.7  21.5    2
+c S    5.0     534     3303    165655    5112     18  1852   9 14.2  19.7    3
+c S   10.0     530     3167    320392    7923      5  1829  10 13.7  18.5    6
+c 
+c  seconds         irredundant          redundant clauses agility   height
+c          variables clauses conflicts large ternary binary    glue         MB
+c 
+s UNSATISFIABLE
+c
+c    1.311  11% simplifying
+c   10.784  89% search
+c ==================================
+c   12.095 100% all
+c 
+c 398529 decisions, 32949.4 decisions/sec
+c 362393 conflicts, 29961.7 conflicts/sec
+c 11799776 propagations, 1.0 megaprops/sec
+c 12.1 seconds, 10.1 MB

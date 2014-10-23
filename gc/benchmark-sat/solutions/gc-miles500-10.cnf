@@ -1,0 +1,50 @@
+c Lingeling SAT Solver
+c 
+c Version azf 92032848c138b2f33629ad24394d60a3787a1046
+c 
+c Copyright (C) 2010-2014 Armin Biere JKU Linz Austria.
+c All rights reserved.
+c 
+c released Don Mai 22 22:08:00 CEST 2014
+c compiled Mon Oct  6 05:55:43 PDT 2014
+c 
+c gcc (Ubuntu 4.8.2-19ubuntu1) 4.8.2
+c -Wall -O3 -DNDBLSCR -DNLGLOG -DNDEBUG -DNCHKSOL -DNLGLPICOSAT -DNLGLDRUPLIG
+c -DNLGLYALSAT
+c Linux ubuntu 3.13.0-32-generic x86_64
+c 
+c reading input file benchmark-sat/translations/gc-miles500-10.cnf
+c no embedded options
+c found 'p cnf 1280 29288' header
+c read 1280 variables, 29288 clauses, 59600 literals in 0.00 seconds
+c 
+c  seconds         irredundant          redundant clauses agility   height
+c          variables clauses conflicts large ternary binary    glue         MB
+c 
+c S    0.0    1280    29288         0       0      0     0   0  0.0   0.0    1
+c S    1.0    1113    11602     16773    4817      0  4440   9 16.4  24.7    3
+c P    2.0    1113    11602     41691    8243      2  4440   8 15.1  21.7    2
+c S    5.0    1113    11602    117968   13823      2  4440   7 19.0  28.2    6
+c S   10.0    1113    11602    212881   14598      2  4440   8 19.0  28.0    9
+c S   20.0    1113    11602    373020   25840      2  4440   8 18.2  26.4   16
+c S   30.0    1113    11602    497754   34597      4  4440   9 17.7  25.1   18
+c S   40.1    1113    11602    672999   34751     11  4443   8 18.1  25.6   17
+c S   50.0    1113    11602    820647   43689     10  4444   9 17.7  24.8   22
+c S   60.0    1112    11602    957229   51659     14  4446   8 17.5  24.2   29
+c S  120.0    1111    11530   1674047   37276      9  4425   8 18.1  25.0   35
+c S  180.3    1111    11530   2348913   70786      9  4425   7 18.1  25.6   36
+c 
+c  seconds         irredundant          redundant clauses agility   height
+c          variables clauses conflicts large ternary binary    glue         MB
+c 
+s UNSATISFIABLE
+c
+c    2.536   1% simplifying
+c  201.982  99% search
+c ==================================
+c  204.518 100% all
+c 
+c 2856426 decisions, 13966.6 decisions/sec
+c 2548002 conflicts, 12458.6 conflicts/sec
+c 93783112 propagations, 0.5 megaprops/sec
+c 204.5 seconds, 47.2 MB

@@ -1,0 +1,39 @@
+c Lingeling SAT Solver
+c 
+c Version azf 92032848c138b2f33629ad24394d60a3787a1046
+c 
+c Copyright (C) 2010-2014 Armin Biere JKU Linz Austria.
+c All rights reserved.
+c 
+c released Don Mai 22 22:08:00 CEST 2014
+c compiled Mon Oct  6 05:55:43 PDT 2014
+c 
+c gcc (Ubuntu 4.8.2-19ubuntu1) 4.8.2
+c -Wall -O3 -DNDBLSCR -DNLGLOG -DNDEBUG -DNCHKSOL -DNLGLPICOSAT -DNLGLDRUPLIG
+c -DNLGLYALSAT
+c Linux ubuntu 3.13.0-32-generic x86_64
+c 
+c reading input file benchmark-sat/translations/gc-fpsol2.i.2-22.cnf
+c no embedded options
+c found 'p cnf 9922 295834' header
+c read 9922 variables, 295834 clauses, 600688 literals in 0.00 seconds
+c 
+c  seconds         irredundant          redundant clauses agility   height
+c          variables clauses conflicts large ternary binary    glue         MB
+c 
+c S    0.0    9922   295834         0       0      0     0   0  0.0   0.0    9
+c P    1.0    7650   191229      1000     896      0 76797   1 22.3 1262.4    9
+c P    2.0    7650   191229      1000     896      0 76797   1 22.3 1262.4   11
+c P    5.0    7650   191229      1000     896      0 76797   1 22.3 1262.4   11
+c S   10.0    7645   191224     28681    4835      0 76692   1 31.2 220.4   12
+c S   20.0    7645   191224    118916   10722      0 76692   1 39.8 142.4   20
+c S   30.0    7645   191224    198500   24512      0 76692   1 43.9 129.2   23
+c S   40.0    7645   191224    285475   15114      0 76692   1 43.9 126.6   27
+c S   50.0    7638   191217    352568   22141      0 76545   1 43.7 121.7   28
+c S   60.0    7638   191217    436772   24970      0 76545   1 43.9 118.1   31
+c S  120.0    7638   191217    933869   41496      0 76545   1 42.7 112.5   42
+c S  180.0    7623   191202   1434980   52679      0 76230   1 41.8 109.1   38
+c S  240.0    7623   191202   2009267   52857      0 76230   1 40.1 102.4   54
+c S  300.0    7623   191202   2533275   59142      0 76230   1 39.6 100.6   90
+c S  600.0    7623   191202   5203581  102447      0 76230   1 40.2  93.8  124
+c S  900.0    7623   191202   7662223  132060      0 76230   1 40.0  92.4  104

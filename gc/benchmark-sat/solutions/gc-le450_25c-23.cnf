@@ -1,0 +1,39 @@
+c Lingeling SAT Solver
+c 
+c Version azf 92032848c138b2f33629ad24394d60a3787a1046
+c 
+c Copyright (C) 2010-2014 Armin Biere JKU Linz Austria.
+c All rights reserved.
+c 
+c released Don Mai 22 22:08:00 CEST 2014
+c compiled Mon Oct  6 05:55:43 PDT 2014
+c 
+c gcc (Ubuntu 4.8.2-19ubuntu1) 4.8.2
+c -Wall -O3 -DNDBLSCR -DNLGLOG -DNDEBUG -DNCHKSOL -DNLGLPICOSAT -DNLGLDRUPLIG
+c -DNLGLYALSAT
+c Linux ubuntu 3.13.0-32-generic x86_64
+c 
+c reading input file benchmark-sat/translations/gc-le450_25c-23.cnf
+c no embedded options
+c found 'p cnf 10350 513189' header
+c read 10350 variables, 513189 clauses, 1035828 literals in 0.00 seconds
+c 
+c  seconds         irredundant          redundant clauses agility   height
+c          variables clauses conflicts large ternary binary    glue         MB
+c 
+c S    0.0   10350   513189         0       0      0     0   0  0.0   0.0   17
+c S    1.0   10119   507876      5323    2669      0     0   3 24.1 162.3   15
+c P    2.0   10119   405509      6666    3863      0 102367   2 24.1 146.3   17
+c P    5.0   10119   399108      6666    3863      0 108768   2 24.1 146.3   21
+c P   10.0    9900   398889      8667    2267      0 103950   2 24.3 134.9   18
+c S   20.0    9900   398889     90692    8821      0 103950   2 28.6  95.7   24
+c S   30.0    9900   398889    211985   16929      0 103950   2 29.5  92.9   27
+c S   40.0    9900   398889    341951   23095      0 103950   2 31.7  92.9   43
+c S   50.0    9900   398889    460826   37186      0 103950   3 30.8  92.5   38
+c S   60.0    9900   398889    593111   22118      0 103950   3 32.0  94.2   44
+c S  120.0    9900   398889   1262411   43862      0 103950   2 30.8  93.5   91
+c S  180.0    9900   398889   1957269   56542      0 103950   3 31.5  93.0   63
+c S  240.1    9900   398889   2617959   91835      0 103950   3 33.4  95.2   94
+c S  300.0    9900   398889   3258182   94628      0 103950   2 33.3  94.8  100
+c S  600.0    9900   398889   6099341  123247      0 103950   3 37.9  95.8  155
+c S  900.0    9900   398889   8977961  107938      0 103950   3 40.5  95.3  112

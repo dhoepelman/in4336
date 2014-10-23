@@ -1,0 +1,39 @@
+c Lingeling SAT Solver
+c 
+c Version azf 92032848c138b2f33629ad24394d60a3787a1046
+c 
+c Copyright (C) 2010-2014 Armin Biere JKU Linz Austria.
+c All rights reserved.
+c 
+c released Don Mai 22 22:08:00 CEST 2014
+c compiled Mon Oct  6 05:55:43 PDT 2014
+c 
+c gcc (Ubuntu 4.8.2-19ubuntu1) 4.8.2
+c -Wall -O3 -DNDBLSCR -DNLGLOG -DNDEBUG -DNCHKSOL -DNLGLPICOSAT -DNLGLDRUPLIG
+c -DNLGLYALSAT
+c Linux ubuntu 3.13.0-32-generic x86_64
+c 
+c reading input file benchmark-sat/translations/gc-qg.order40-20.cnf
+c no embedded options
+c found 'p cnf 32000 1553600' header
+c read 32000 variables, 1553600 clauses, 3136000 literals in 0.00 seconds
+c 
+c  seconds         irredundant          redundant clauses agility   height
+c          variables clauses conflicts large ternary binary    glue         MB
+c 
+c S    0.0   32000  1553600         0       0      0     0   0  0.0   0.0   35
+c P    1.0   32000  1553600         0       0      0     0   0  0.0   0.0   20
+c S    2.0   31216  1537920      3411    3199      0     0   5 22.4  86.4   42
+c P    5.0   31216  1293628     13332    4533      0 244292   5 27.1  87.1   47
+c P   10.0   31216  1248816     13332    4533      0 289104   5 27.1  87.1   45
+c P   20.1   30400  1248000     17333    4414      0 273600   6 27.2  84.6   51
+c S   30.0   30400  1248000    109153   10982      0 273600   5 27.3  77.1   57
+c S   40.0   30400  1248000    189805   15912      0 273600   7 29.0  77.3   60
+c S   50.0   30400  1248000    307757   20132      0 273600   7 29.3  77.9   64
+c S   60.0   30400  1248000    410641   23222      0 273600   6 30.2  78.6   67
+c S  120.0   30400  1248000   1000903   29017      0 273600   4 33.8  82.9  110
+c S  180.0   30400  1248000   1479492   64999      0 273600   2 37.5  90.2  197
+c S  240.0   30400  1248000   1838501   46197      0 273600   3 42.6  96.7  202
+c S  300.1   30400  1248000   2133441   76264      0 273600   3 43.6  99.7  357
+c S  600.1   30400  1248000   3555532   71150      0 273600   2 50.2 106.3  217
+c S  900.1   30400  1248000   4611047  101354      0 273600   2 51.3 108.8  686

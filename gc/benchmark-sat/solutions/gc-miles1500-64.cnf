@@ -1,0 +1,39 @@
+c Lingeling SAT Solver
+c 
+c Version azf 92032848c138b2f33629ad24394d60a3787a1046
+c 
+c Copyright (C) 2010-2014 Armin Biere JKU Linz Austria.
+c All rights reserved.
+c 
+c released Don Mai 22 22:08:00 CEST 2014
+c compiled Mon Oct  6 05:55:43 PDT 2014
+c 
+c gcc (Ubuntu 4.8.2-19ubuntu1) 4.8.2
+c -Wall -O3 -DNDBLSCR -DNLGLOG -DNDEBUG -DNCHKSOL -DNLGLPICOSAT -DNLGLDRUPLIG
+c -DNLGLYALSAT
+c Linux ubuntu 3.13.0-32-generic x86_64
+c 
+c reading input file benchmark-sat/translations/gc-miles1500-64.cnf
+c no embedded options
+c found 'p cnf 8192 923520' header
+c read 8192 variables, 923520 clauses, 1854976 literals in 0.00 seconds
+c 
+c  seconds         irredundant          redundant clauses agility   height
+c          variables clauses conflicts large ternary binary    glue         MB
+c 
+c S    0.0    8192   923520         0       0      0     0   0  0.0   0.0   33
+c P    1.1    8176   589824      1001     925      0     0   5 78.8 1066.0   17
+c P    2.0    8176   390313      1001     925      0 199511   5 78.8 1066.0   21
+c S    5.0    8064   332672      1001       0      0 249984   5 78.8 1066.0   21
+c S   10.0    8064   332672      8847    2585      0 249984   3 150.3 829.4   26
+c S   20.0    8064   332672     52725    9198      0 249984   5 187.8 816.6   38
+c S   30.0    8064   332672     98528   11698      0 249984   3 191.6 821.3   42
+c S   40.0    8064   332672    139110   17143      0 249984   3 193.4 826.3   55
+c S   50.1    8064   332672    184689   23681      0 249984   3 199.0 830.6   89
+c S   60.0    8064   332672    223927   21059      0 249984   3 199.9 833.6   69
+c S  120.0    8064   332672    487081   33038      0 249984   3 210.2 836.7   73
+c S  180.0    8064   332672    749698   31645      0 249984   3 211.9 838.4   76
+c S  240.1    8064   332672    988156   51332      0 249984   3 218.3 842.3  130
+c P  300.0    8064   332672   1243006   48561      0 249984   2 250.3 843.4   88
+c S  600.0    8064   332672   2405165   86276      0 249984   6 238.7 842.3  300
+c S  900.1    8064   332672   3479749  105696      0 249984   3 244.6 845.8  299

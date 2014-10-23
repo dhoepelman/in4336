@@ -1,0 +1,39 @@
+c Lingeling SAT Solver
+c 
+c Version azf 92032848c138b2f33629ad24394d60a3787a1046
+c 
+c Copyright (C) 2010-2014 Armin Biere JKU Linz Austria.
+c All rights reserved.
+c 
+c released Don Mai 22 22:08:00 CEST 2014
+c compiled Mon Oct  6 05:55:43 PDT 2014
+c 
+c gcc (Ubuntu 4.8.2-19ubuntu1) 4.8.2
+c -Wall -O3 -DNDBLSCR -DNLGLOG -DNDEBUG -DNCHKSOL -DNLGLPICOSAT -DNLGLDRUPLIG
+c -DNLGLYALSAT
+c Linux ubuntu 3.13.0-32-generic x86_64
+c 
+c reading input file benchmark-sat/translations/gc-qg.order60-30.cnf
+c no embedded options
+c found 'p cnf 108000 7941600' header
+c read 108000 variables, 7941600 clauses, 15984000 literals in 0.00 seconds
+c 
+c  seconds         irredundant          redundant clauses agility   height
+c          variables clauses conflicts large ternary binary    glue         MB
+c 
+c S    0.0  108000  7941600         0       0      0     0   0  0.0   0.0  266
+c S    1.1  108000  7941600         0       0      0     0   0  0.0   0.0  116
+c P    2.6  108000  7941600         0       0      0     0   0  0.0   0.0  122
+c S    6.2  108000  7941600        34      34      0     0  13 27.3 187.5  221
+c S   10.0  108000  7941600     38779    9025      0     0   6 43.7 213.0  228
+c S   20.0  108000  7112208     69052   10211      0 829392   7 45.9 214.3  241
+c S   30.0  107689  7029010     91712   12887      0 903260   6 49.8 213.6  247
+c S   40.9  107388  7028709    149333   12880      0 894531   6 49.4 212.6  254
+c S   50.0  107388  7028709    211099   20260      0 894531   7 49.9 210.6  259
+c S   60.4  107388  7028709    280000   22509      0 894531   5 52.2 212.3  147
+c S  120.0  105562  6916916    557308   35854      0 951544   2 57.2 209.4  306
+c S  180.0  104400  6479466    837316   42603      0 1354134   3 54.2 199.4  332
+c S  240.0  104400  6479466   1242810   54180      0 1354134   2 48.7 191.6  385
+c S  300.0  104400  6479466   1671595   63520      0 1354134   8 45.3 182.7  352
+c S  600.0  104400  6372000   3654926   82385      0 1461600   6 44.2 171.8  401
+c S  900.0  104400  6372000   5498665  119057      0 1461600   2 44.3 169.7  456

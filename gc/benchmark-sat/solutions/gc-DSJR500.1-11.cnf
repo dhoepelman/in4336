@@ -1,0 +1,39 @@
+c Lingeling SAT Solver
+c 
+c Version azf 92032848c138b2f33629ad24394d60a3787a1046
+c 
+c Copyright (C) 2010-2014 Armin Biere JKU Linz Austria.
+c All rights reserved.
+c 
+c released Don Mai 22 22:08:00 CEST 2014
+c compiled Mon Oct  6 05:55:43 PDT 2014
+c 
+c gcc (Ubuntu 4.8.2-19ubuntu1) 4.8.2
+c -Wall -O3 -DNDBLSCR -DNLGLOG -DNDEBUG -DNCHKSOL -DNLGLPICOSAT -DNLGLDRUPLIG
+c -DNLGLYALSAT
+c Linux ubuntu 3.13.0-32-generic x86_64
+c 
+c reading input file benchmark-sat/translations/gc-DSJR500.1-11.cnf
+c no embedded options
+c found 'p cnf 5500 67105' header
+c read 5500 variables, 67105 clauses, 138710 literals in 0.00 seconds
+c 
+c  seconds         irredundant          redundant clauses agility   height
+c          variables clauses conflicts large ternary binary    glue         MB
+c 
+c S    0.0    5500    67105         0       0      0     0   0  0.0   0.0    3
+c S    1.0    4999    39109      5368    2529      0 22491  10 16.5 122.9    3
+c S    2.0    4999    39109     29237    5175      0 22491  11 17.2  49.5    4
+c S    5.0    4999    39109    124968    9944      0 22491  12 19.2  34.4    7
+c S   10.0    4999    39109    263710   16004      0 22491  11 19.8  32.0    8
+c S   20.0    4999    39109    475646   21983      0 22491  12 20.0  30.6   11
+c S   30.1    4999    39109    667779   27297      0 22491  12 20.3  30.8   12
+c S   40.1    4999    39109    848895   30257      0 22491  12 20.6  31.0   18
+c S   50.0    4999    39109   1054176   29188      0 22491  13 21.2  31.8   18
+c S   60.0    4999    39109   1253875   44134      0 22491  13 21.3  31.9   21
+c S  120.2    4999    39109   2353658   81870      0 22491  11 23.0  32.9   36
+c S  180.1    4999    39109   3175207   55445      0 22491  12 22.5  31.7   31
+c S  240.0    4999    39109   4017125  110776      0 22491  13 23.3  32.9   46
+c S  300.1    4999    39109   4822451   62732      0 22491  12 23.3  32.9   48
+c S  600.1    4999    39109   8193716   96362      0 22491  13 23.2  32.3   59
+c S  900.0    4999    39109  11164837  156485      0 22491  12 22.8  31.4   68

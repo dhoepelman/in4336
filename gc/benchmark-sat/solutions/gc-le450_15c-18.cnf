@@ -1,0 +1,39 @@
+c Lingeling SAT Solver
+c 
+c Version azf 92032848c138b2f33629ad24394d60a3787a1046
+c 
+c Copyright (C) 2010-2014 Armin Biere JKU Linz Austria.
+c All rights reserved.
+c 
+c released Don Mai 22 22:08:00 CEST 2014
+c compiled Mon Oct  6 05:55:43 PDT 2014
+c 
+c gcc (Ubuntu 4.8.2-19ubuntu1) 4.8.2
+c -Wall -O3 -DNDBLSCR -DNLGLOG -DNDEBUG -DNCHKSOL -DNLGLPICOSAT -DNLGLDRUPLIG
+c -DNLGLYALSAT
+c Linux ubuntu 3.13.0-32-generic x86_64
+c 
+c reading input file benchmark-sat/translations/gc-le450_15c-18.cnf
+c no embedded options
+c found 'p cnf 8100 369540' header
+c read 8100 variables, 369540 clauses, 746280 literals in 0.00 seconds
+c 
+c  seconds         irredundant          redundant clauses agility   height
+c          variables clauses conflicts large ternary binary    glue         MB
+c 
+c S    0.0    8100   369540         0       0      0     0   0  0.0   0.0    9
+c S    1.0    7801   364158      2873    2778      0     0   2 74.3 279.5   14
+c P    2.0    7801   300391      4001    3878      0 63767   3 72.6 274.1   14
+c P    5.0    7801   300391      4001    3878      0 63767   3 72.6 274.1   18
+c S   10.0    7650   300240     11436    4936      0 61200   5 95.4 247.0   17
+c S   20.0    7650   300240     65623   12069      0 61200   3 112.7 220.5   22
+c S   30.0    7650   300240    117573   15836      0 61200   5 118.4 217.4   29
+c S   40.0    7650   300240    172421   11721      0 61200   3 119.0 216.0   17
+c S   50.0    7650   300240    226961   21867      0 61200   3 120.1 215.4   28
+c S   60.0    7650   300240    305834   23569      0 61200   5 137.7 221.0   38
+c S  120.0    7650   300240    700625   42545      0 61200   5 178.2 242.1   76
+c S  180.0    7650   300240   1075186   45670      0 61200   5 176.0 242.0   72
+c S  240.0    7650   300240   1433976   52183      0 61200   5 174.6 240.1   80
+c S  300.0    7650   300240   1788876   55076      0 61200   4 178.1 243.5   90
+c S  600.0    7650   300240   3310090   69422      0 61200   5 188.3 256.3  106
+c S  900.0    7650   300240   4711515   65810      0 61200   5 188.0 257.2   76

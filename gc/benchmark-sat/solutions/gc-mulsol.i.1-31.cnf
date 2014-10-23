@@ -1,0 +1,39 @@
+c Lingeling SAT Solver
+c 
+c Version azf 92032848c138b2f33629ad24394d60a3787a1046
+c 
+c Copyright (C) 2010-2014 Armin Biere JKU Linz Austria.
+c All rights reserved.
+c 
+c released Don Mai 22 22:08:00 CEST 2014
+c compiled Mon Oct  6 05:55:43 PDT 2014
+c 
+c gcc (Ubuntu 4.8.2-19ubuntu1) 4.8.2
+c -Wall -O3 -DNDBLSCR -DNLGLOG -DNDEBUG -DNCHKSOL -DNLGLPICOSAT -DNLGLDRUPLIG
+c -DNLGLYALSAT
+c Linux ubuntu 3.13.0-32-generic x86_64
+c 
+c reading input file benchmark-sat/translations/gc-mulsol.i.1-31.cnf
+c no embedded options
+c found 'p cnf 6107 213477' header
+c read 6107 variables, 213477 clauses, 432667 literals in 0.00 seconds
+c 
+c  seconds         irredundant          redundant clauses agility   height
+c          variables clauses conflicts large ternary binary    glue         MB
+c 
+c S    0.0    6107   213477         0       0      0     0   0  0.0   0.0    5
+c P    1.0    4177   122090      1000     923      0 60762   7 33.7 386.5    6
+c P    2.0    4177   121712      1000     923      0 61140   7 33.7 386.5    7
+c P    5.0    4177   121712      1000     923      0 61140   7 33.7 386.5    7
+c S   10.0    4140   121675     38497    9802      0 60030   6 41.2 185.6   15
+c P   20.0    4140   121675    143003   15239      0 60030   6 46.3 180.5   14
+c S   30.1    4140   121675    249158   21805      0 60030   5 48.5 181.2   34
+c S   40.0    4140   121675    350137   30167      0 60030   7 57.0 182.4   41
+c S   50.0    4140   121675    458459   36661      0 60030   8 55.0 182.3   54
+c S   60.0    4140   121675    588311   34597      0 60030   9 61.0 184.0   66
+c S  120.0    4140   121675   1155163   58670      0 60030   4 62.5 186.2   97
+c S  180.0    4140   121675   1678714   68756      0 60030   5 61.8 188.7  107
+c S  240.0    4140   121675   2188574   76611      0 60030   6 61.9 190.0  122
+c S  300.0    4140   121675   2633040   84928      0 60030   5 64.2 192.3  173
+c S  600.0    4140   121675   4672058   99000      0 60030   7 67.9 195.5  162
+c S  900.0    4140   121675   6473011   75267      0 60030   8 68.1 199.5  161

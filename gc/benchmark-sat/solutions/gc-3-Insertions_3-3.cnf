@@ -1,0 +1,39 @@
+c Lingeling SAT Solver
+c 
+c Version azf 92032848c138b2f33629ad24394d60a3787a1046
+c 
+c Copyright (C) 2010-2014 Armin Biere JKU Linz Austria.
+c All rights reserved.
+c 
+c released Don Mai 22 22:08:00 CEST 2014
+c compiled Mon Oct  6 05:55:43 PDT 2014
+c 
+c gcc (Ubuntu 4.8.2-19ubuntu1) 4.8.2
+c -Wall -O3 -DNDBLSCR -DNLGLOG -DNDEBUG -DNCHKSOL -DNLGLPICOSAT -DNLGLDRUPLIG
+c -DNLGLYALSAT
+c Linux ubuntu 3.13.0-32-generic x86_64
+c 
+c reading input file benchmark-sat/translations/gc-3-Insertions_3-3.cnf
+c no embedded options
+c found 'p cnf 168 554' header
+c read 168 variables, 554 clauses, 1164 literals in 0.00 seconds
+c 
+c  seconds         irredundant          redundant clauses agility   height
+c          variables clauses conflicts large ternary binary    glue         MB
+c 
+c S    0.0     168      554         0       0      0     0   0  0.0   0.0    0
+c 
+c  seconds         irredundant          redundant clauses agility   height
+c          variables clauses conflicts large ternary binary    glue         MB
+c 
+s UNSATISFIABLE
+c
+c    0.030  31% simplifying
+c    0.067  69% search
+c ==================================
+c    0.097 100% all
+c 
+c 5704 decisions, 58824.1 decisions/sec
+c 3994 conflicts, 41189.3 conflicts/sec
+c 99167 propagations, 1.0 megaprops/sec
+c 0.1 seconds, 0.5 MB
