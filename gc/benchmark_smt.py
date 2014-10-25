@@ -9,6 +9,7 @@ import math
 import os
 import subprocess
 import time
+import json
 import collections
 from gc_to_smt_functions import *
 from gc_approximation import Color_Greedy
@@ -52,7 +53,7 @@ with open(instancefn) as instancef:
 (N,M,E) = read_DIGRAPH(instance)
 V = xrange(1,N+1)
 max_k = maximum_k(V,E)
-upper_bound = max_k
+#upper_bound = max_k
 
 (greedy,_) = Color_Greedy(to_dictgraph(V,E))
 
@@ -116,8 +117,8 @@ try:
 
             # Reading the solution file 'solutions.txt' which contains 'sat' or 'unsat'
             # solution_sat_unsat = ""
-            with open(resultfn, 'r') as resultf:
-               solution_sat_unsat = resultf.readline()
+            #with open(resultfn, 'r') as resultf:
+            #		solution_sat_unsat = resultf.readline()
 
             # Delete the translation file, since it can become several gigs
             if os.path.isfile(translationfn):
@@ -131,6 +132,7 @@ try:
         trace[guess]['this'] = time_this_translation+time_this_solving
         trace[guess]['total'] = time_spent_solving+time_spent_translating
 
+	#if solution_sat_unsat == 'unsat'
         if solverresult != 0:
             # Satisfiable
             upper_bound = guess
@@ -168,7 +170,7 @@ if not os.path.isfile(resultfile):
     output += "Instance,N,M,Solution,LB,UB,Highest Degree,Greedy,Translation Time,Solving Time,Total Time,Time Limit,Trace\n"
 
 time_spent_total = time.time() - totaltimestart
-output += "%s,%d,%d,%d,%d,%d,%d,%.2f,%.2f,%.2f,%d,%s" %\
+output += "%s,%d,%d,%d,%d,%d,%d,%d,%.2f,%.2f,%.2f,%d,%s" %\
         (instancename,
          N,
          M,
