@@ -9,7 +9,6 @@ import math
 import os
 import subprocess
 import time
-import json
 import collections
 from gc_to_smt_functions import *
 from gc_approximation import Color_Greedy
