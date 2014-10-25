@@ -117,8 +117,8 @@ try:
 
             # Reading the solution file 'solutions.txt' which contains 'sat' or 'unsat'
             # solution_sat_unsat = ""
-            # with open(resultfn, 'r') as resultf:
-            #   solution_sat_unsat = resultf.readline()
+            #with open(resultfn, 'r') as resultf:
+            #		solution_sat_unsat = resultf.readline()
 
             # Delete the translation file, since it can become several gigs
             if os.path.isfile(translationfn):
