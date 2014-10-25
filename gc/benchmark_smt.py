@@ -12,6 +12,7 @@ import time
 import json
 import collections
 from gc_to_smt_functions import *
+from gc_approximation import Color_Greedy
 
 totaltimestart = time.time()
 
@@ -97,7 +98,7 @@ try:
 
         try:
             #with open("%s/%s.smt" % (solutiondir, id), 'wb') as solutionf:
-            solverresult = subprocess.call("z3 -m -smt2 " + translationfn + " > " + resultfn, shell=True)
+            solverresult = subprocess.call("./../smt/lab2/z3/bin/z3 -m -smt2 " + translationfn + " > " + resultfn, shell=True)
             #solverprocess = subprocess.Popen("z3 -m -smt2 " + translationfn, shell=True, stdout=solutionf)
             #procs.append(solverprocess.pid)
             #solverresult = solverprocess.wait()
@@ -111,7 +112,7 @@ try:
                 pass
 
             # Reading the solution file 'solutions.txt' which contains 'sat' or 'unsat'
-            solution_sat_unsat = ""
+            # solution_sat_unsat = ""
             with open(resultfn, 'r') as resultf:
                solution_sat_unsat = resultf.readline()
 
