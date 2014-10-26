@@ -12,6 +12,7 @@ import time
 import json
 import collections
 from gc_to_smt_functions import *
+from gc_to_sat_functions import *
 from gc_approximation import Color_Greedy
 
 totaltimestart = time.time()
@@ -87,7 +88,7 @@ try:
         translationfn = "%s/%s.cnf" % (translationdir, id)
         resultfn = "%s/solutions.txt" % (outputdir)
 
-        gc_string_to_smt_file(instance, translationfn, guess)
+        gc_string_to_sat_file(instance, translationfn, guess)
 
         time_this_translation = time.time() - starttime
         trace[guess]['trans'] = time_this_translation
