@@ -1,0 +1,10 @@
+(declare-const a Bool)
+(declare-const b Bool)
+(declare-const c Bool)
+(define-fun conjecture () Bool
+    (=> (and (and (or (or (not a) b) c)
+        (or (or a b) c))
+        (and (or (or (not a) (not b)) (not c))
+        (or (or a (not b)) c))))
+(assert (not conjecture))
+(check-sat)
