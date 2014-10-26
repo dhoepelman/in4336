@@ -12,12 +12,13 @@ import time
 import json
 import collections
 from gc_to_smt_functions import *
+from gc_to_sat_functions import *
 from gc_approximation import Color_Greedy
 
 totaltimestart = time.time()
 
 # Folder to keep results in
-outputdir = "benchmark-smt"
+outputdir = "benchmark-smt-cnf"
 # Solution folder
 solutiondir = outputdir+"/solutions"
 translationdir = outputdir+"/translations"
@@ -53,7 +54,6 @@ with open(instancefn) as instancef:
 (N,M,E) = read_DIGRAPH(instance)
 V = xrange(1,N+1)
 max_k = maximum_k(V,E)
-#upper_bound = max_k
 
 (greedy,_) = Color_Greedy(to_dictgraph(V,E))
 
@@ -70,14 +70,11 @@ print("Starting to solve %s with N=%d,M=%d" % (instancename, N, M))
 procs = []
 
 try:
-    # To use Z3, set the path of z3 with the 'setpath' script
-    # subprocess.call("source setpath.sh", shell=True)
-
     while solution == -1:
         try:
             subprocess.call("killall z3")
         except:
-            # Might be still Z3 processes
+            # Might be atill z3 processes
             pass
 
         # Binary search for the solution
@@ -88,10 +85,10 @@ try:
         starttime = time.time()
 
         id = "gc-%s-%d" % (instancename, guess)
-        translationfn = "%s/%s.smt" % (translationdir, id)
+        translationfn = "%s/%s.cnf" % (translationdir, id)
         resultfn = "%s/solutions.txt" % (outputdir)
 
-        gc_string_to_smt_file(instance, translationfn, guess)
+        gc_string_to_sat_file(instance, translationfn, guess)
 
         time_this_translation = time.time() - starttime
         trace[guess]['trans'] = time_this_translation
@@ -102,7 +99,7 @@ try:
 
         try:
             #with open("%s/%s.smt" % (solutiondir, id), 'wb') as solutionf:
-            solverresult = subprocess.call("./../smt/lab2/z3/bin/z3 -m -smt2 " + translationfn + " > " + resultfn, shell=True)
+            solverresult = subprocess.call("./../smt/lab2/z3/bin/z3 -m -dimacs " + translationfn + " > " + resultfn, shell=True)
             #solverprocess = subprocess.Popen("z3 -m -smt2 " + translationfn, shell=True, stdout=solutionf)
             #procs.append(solverprocess.pid)
             #solverresult = solverprocess.wait()
@@ -114,12 +111,12 @@ try:
                 subprocess.call("killall z3")
             except:
                 pass
-
+                
             # Reading the solution file 'solutions.txt' which contains 'sat' or 'unsat'
             # solution_sat_unsat = ""
             #with open(resultfn, 'r') as resultf:
             #		solution_sat_unsat = resultf.readline()
-
+            
             # Delete the translation file, since it can become several gigs
             if os.path.isfile(translationfn):
                 os.remove(translationfn)
@@ -132,13 +129,13 @@ try:
         trace[guess]['this'] = time_this_translation+time_this_solving
         trace[guess]['total'] = time_spent_solving+time_spent_translating
 
-        # if solutions_sat_unsat == 'sat':
         if solverresult != 0:
             # Satisfiable
             upper_bound = guess
         elif solverresult == 0:
             # Unsatisfiable
             lower_bound = guess
+
         if lower_bound == upper_bound-1:
             # We've found the smallest k! It's the upper bound
             solution = upper_bound

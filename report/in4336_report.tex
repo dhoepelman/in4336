@@ -24,7 +24,7 @@ solvers}
 David Hoepelman\\
        \affaddr{1521969}\\
 \alignauthor
-Luis Garcia\\
+Luis Garcia Rosario\\
        \affaddr{4062949}
 }
 
@@ -76,8 +76,10 @@ The satisfiability problem is informally defined as given a boolean formula in c
 A SAT solver will find either a valid assignment for the given formula, or will report that it is unsatisfiable.
 
 \subsubsection*{Integer Linear Programming (ILP)}
+An Integer Linear Program (ILP) is a linear program that has the additional contraint that all variables take integer values. An ILP solver is used to solve a combinatorial optimization problem.
 
 \subsubsection*{Satisfiability Modulo Theories (SMT)}
+The Satisfiability Modulo Theories problems are Boolean Satisfiability (SAT) problems at a higher level of abstraction. Beside boolean formulas SMT solvers support integers and bit-vector logic that allows a more compact encoding of a problem \cite{wille2008using}.
 
 \section{Encodings}
 
@@ -97,7 +99,7 @@ Graph coloring exists in several variants, but they are all easily reducible to 
 
 \subsubsection{SAT}
 \subsubsection{ILP}
-The combinatorial problem of graph coloring can also be formulated in 0-1 ILP. An advantage of using ILP is that it can solve optimization problems. We adopted the formulation from \cite{faigle2002mathprogramming}. The formulation of the graph coloring problem in 0-1 ILP can be done by taking the set of nodes V = {1,...,\emph{n}} and the number of colors \emph{k} = |V| = \emph{n}. Then, each color is represented by a binary variable \emph{$y_k$}, with \emph{k} = 1,...,\emph{n}, that indicatate whether color \emph{k} is used (\emph{$y_k$} = 1) or not (\emph{$y_k$} = 0). An objective function is formed by adding up these variables ($\sum\limits_{k=1}^n \emph{$y_k$}$) to obtain the minimum number of these variable equal to zero. Furthermore, a binary variable \emph{$x_{i_k}$} is used for each node-color combination to indicate whether node \emph{i} has received a color \emph{k} (\emph{$x_{ik}$} = 1) or not (\emph{$x_{ik}$} = 0). The resulting 0-1 ILP in formal description:
+The combinatorial problem of graph coloring can also be formulated as an 0-1 ILP. An advantage of using ILP is that it can solve optimization problems. The 0-1 ILP formulation of the graph coloring problem, which is a NP-hard minimization problem, can be done by taking the set of nodes V = {1,...,\emph{n}} of the graph $G = (V,E)$ and the number of colors \emph{k} = |V| = \emph{n}. Then, each color is represented by a binary variable \emph{$y_k$}, with \emph{k} = 1,...,\emph{n}, that indicatates whether color \emph{k} is used (\emph{$y_k$} = 1) or not (\emph{$y_k$} = 0). An objective function is formed by adding up these variables ($\sum\limits_{k=1}^n \emph{$y_k$}$) with the goal to obtain the minimum sum with the minimum number of the variables \emph{$y_k$} that are equal to 1. Furthermore, a binary variable \emph{$x_{ik}$} is used for each node-color combination to indicate whether node \emph{i} has received a color \emph{k} (\emph{$x_{ik}$} = 1) or not (\emph{$x_{ik}$} = 0). In the resulting 0-1 ILP in formal description listed below, adopted from \cite{faigle2002mathprogramming}, contraint (1) guarantees that each node is colored, (2) node \emph{i} receives color \emph{k} only if color \emph{k} has been used, (3) adjecent nodes should have different colors :
 \begin{subequations}
 \begin{align*}
         & min \sum\limits_{k=1}^n \emph{$y_k$} & \emph{s.t.} & & (1) & & \sum\limits_{k=1}^n \emph{$x_{ik}$} = 1 & & \emph{i} = 1,...,\emph{n} \\
