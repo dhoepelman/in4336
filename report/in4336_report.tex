@@ -56,7 +56,7 @@ With this we want to see if encodings can be viably done in smaller easier steps
 We formulated the following research question for this project:
 
 \begin{enumerate}
-\item[RQ1]{Is there a speed difference between formalisms when solving an identical problem instance?}
+\item[RQ1]{Is there a speed difference between different target problems when solving an identical translated problem instance?}
 \item[RQ2]{Are intermediate transformations viable?}
 	\begin{enumerate}
 	\item[RQ2.1]{Does an intermediate transformation significantly decrease the speed with which problem instances can be solved?}
@@ -72,18 +72,32 @@ As problems to encode we took \emph{Resource Constrained Project Scheduling Prob
 
 \subsubsection*{Satisfiability (SAT)}
 
-The satisfiability problem is informally defined as given a boolean formula in conjunctive normal form (CNF), find an assignment that makes the formula true. A formula is in CNF if it is a conjunction of clauses ($C_1 \wedge C_2 \wedge \ldots \wedge C_n$) where each clause is a disjunction of literals ($l_1 \lor l_2 \lor \ldots \lor l_n$) where each literal is a variable or the negation of a variable ($p$ or $\neg p$). All propositional formulas can be converted to CNF.
+The satisfiability problem is informally defined as given a boolean formula in conjunctive normal form (CNF), find an assignment that makes the formula true.
+A formula is in CNF if it is a conjunction of clauses ($C_1 \wedge C_2 \wedge \ldots \wedge C_n$) where each clause is a disjunction of literals ($l_1 \lor l_2 \lor \ldots \lor l_n$) where each literal is a variable or the negation of a variable ($p$ or $\neg p$).
+All propositional formulas can be converted to CNF.
 A SAT solver will find either a valid assignment for the given formula, or will report that it is unsatisfiable.
 
-\subsubsection*{Integer Linear Programming (ILP)}
-An Integer Linear Program is a linear program that has the additional contraint that all variables take integer values. An ILP problem is an optimization problem.
-
 \subsubsection*{Satisfiability Modulo Theories (SMT)}
-The Satisfiability Modulo Theories problems are Boolean Satisfiability (SAT) problems at a higher level of abstraction. Beside boolean formulas SMT solvers support integers and bit-vector logic that allows a more compact encoding of a problem \cite{wille2008using}.
 
-\section{Encodings}
+Satisfiability Modulo Theories is a generalization of satisfiability.
+A SMT problem instance is still a given formula, and the problem is to find out if it is satisfiable.
+However, a variable can now be a predicate, a function which evaluates to a boolean, over non-boolean variables and operators.
+Commonly SMT solvers support integer, real, integer array and bitvector variables and linear or non-linear arithmatic, but other extensions are possible.
 
-\subsection{Graph Coloring}
+The concrete advantage of this is that certain constraints which are hard to specifiy in a pure boolean formula can now be specified in a more natural language.
+
+\subsubsection*{Integer Linear Programming (ILP)}
+
+An Integer Linear Program is a linear program (LP) that has the additional contraint that all variables must take an integer value. 
+An ILP problem is an optimization problem where the objective is to maximize or minimize some value. 
+The encoding of an optimization problem into ILP starts by composing an objective function in order to find the optimal objective value.
+Then, the objective function is subjected to one or more constraints functions. Each function representing a different constraint.
+The variables used in these functions may be bounded, e.g. in 0-1 ILP encoding variables can take a value of 0 or 1.
+Finally, one last constraint in ILP is the integrallity constraint, meaning that all variables must take integers.
+
+\section{Solving optimization problems with decidability solvers}
+
+\section{Graph Coloring}
 
 The graph coloring problem is one of the Karp's 21 original NP-Complete problems \cite{karp1972reducibility}.
 Graph coloring exists in several variants, but they are all easily reducible to the vertex coloring problem. We chose the optimization variant of the vertex coloring problem which is informally defined as given an undirected graph $G = (V,E)$, find the minimal number of colors $k$ needed to color each vertex so that no adjacent vertex shares a color. More formally:
@@ -91,28 +105,13 @@ Graph coloring exists in several variants, but they are all easily reducible to 
 \begin{align*}
         & G = (V,E) & E \subseteq V^2\\
         & map : V \rightarrow [1,k] & k \in \mathbb{N} \\
-        & map(v) \neq map(w) & (v,w) \in E \\
+        & \text{with } map(v) \neq map(w) & (v,w) \in E \\
         & VC = min\{k | map : V \rightarrow [1,k]\}
 \end{align*}
 \end{subequations}
 
 
-\subsubsection{SAT}
-\subsubsection{ILP}
-The combinatorial problem of graph coloring can also be formulated as an 0-1 ILP. An advantage of using ILP is that it can solve optimization problems. The 0-1 ILP formulation of the graph coloring problem, which is a NP-hard minimization problem, can be done by taking the set of nodes V = {1,...,\emph{n}} of the graph $G = (V,E)$ and the number of colors \emph{k} = |V| = \emph{n}. Then, each color is represented by a binary variable \emph{$y_k$}, with \emph{k} = 1,...,\emph{n}, that indicatates whether color \emph{k} is used (\emph{$y_k$} = 1) or not (\emph{$y_k$} = 0). An objective function is formed by adding up these variables ($\sum\limits_{k=1}^n \emph{$y_k$}$) with the goal to obtain the minimum sum with the minimum number of the variables \emph{$y_k$} that are equal to 1. Furthermore, a binary variable \emph{$x_{ik}$} is used for each node-color combination to indicate whether node \emph{i} has received a color \emph{k} (\emph{$x_{ik}$} = 1) or not (\emph{$x_{ik}$} = 0). In the resulting 0-1 ILP in formal description listed below, adopted from \cite{faigle2002mathprogramming}, contraint (1) guarantees that each node is colored, (2) node \emph{i} receives color \emph{k} only if color \emph{k} has been used, (3) adjecent nodes should have different colors :
-\begin{subequations}
-\begin{align*}
-        & min \sum\limits_{k=1}^n \emph{$y_k$} & \emph{s.t.} & & (1) & & \sum\limits_{k=1}^n \emph{$x_{ik}$} = 1 & & \emph{i} = 1,...,\emph{n} \\
-        &  & & & (2) & & \emph{$x_{ik}$} - \emph{$y_k$} \leq 0 & & \emph{i,k} = 1,...,\emph{n} \\
-        &  & & & (3) & &  \emph{$x_{ik}$} + \emph{$x_{jk}$} \leq 1 & & (i,j) \in E, \emph{k} = 1,...,\emph{n} \\
-        &  & & & (4) & & 0 \leq \emph{$x_{ik}$}, \emph{$y_k$} \leq 1 & & \\
-        &  & & & (5) & & \emph{$x_{ik}$}, \emph{$y_k$} \in \mathbb{Z} & &
-\end{align*}
-\end{subequations}
-
-\subsubsection{SMT}
-
-\subsubsection*{SAT}
+\subsection{SAT}
 
 Satisfiability is a decision problem. This makes it impossible to directly encode the decision version of GC. Our approaches to get around this are detailed in section \ref{subsec:OptToDec}. For now it means that when encoding GC in SAT $k$ is a parameter of the translation.
 
@@ -133,21 +132,32 @@ This encoding has $O(|V| k)$ variables and $O(|E|+|V| k^2)$ clauses.
 
 There is an alternative encoding defined in TODO. . We did not have time to implement and test this encoding.
 
-\subsubsection*{ILP}
-\subsubsection*{SMT}
+\subsection{SMT}
 
+\subsection{ILP}
+The combinatorial problem of graph coloring can also be formulated as an 0-1 ILP. An advantage of using ILP is that it can solve optimization problems. The 0-1 ILP formulation of the graph coloring problem, which is a NP-hard minimization problem, can be done by taking the set of nodes V = {1,...,\emph{n}} of the graph $G = (V,E)$ and the number of colors \emph{k} = |V| = \emph{n}. Then, each color is represented by a binary variable \emph{$y_k$}, with \emph{k} = 1,...,\emph{n}, that indicatates whether color \emph{k} is used (\emph{$y_k$} = 1) or not (\emph{$y_k$} = 0). An objective function is formed by adding up these variables ($\sum\limits_{k=1}^n \emph{$y_k$}$) with the goal to obtain the minimum sum with the minimum number of the variables \emph{$y_k$} that are equal to 1. Furthermore, a binary variable \emph{$x_{ik}$} is used for each node-color combination to indicate whether node \emph{i} has received a color \emph{k} (\emph{$x_{ik}$} = 1) or not (\emph{$x_{ik}$} = 0). In the resulting 0-1 ILP in formal description listed below, adopted from \cite{faigle2002mathprogramming}, contraint (1) guarantees that each node is colored, (2) node \emph{i} receives color \emph{k} only if color \emph{k} has been used, (3) adjecent nodes should have different colors :
+\begin{subequations}
+\begin{align*}
+        & & & min \sum\limits_{k=1}^n \emph{$y_k$} & & \\
+        &  (1) & & \sum\limits_{k=1}^n \emph{$x_{ik}$} = 1 & & \emph{i} = 1,...,\emph{n} \\
+        &  (2) & & \emph{$x_{ik}$} - \emph{$y_k$} \leq 0 & & \emph{i,k} = 1,...,\emph{n} \\
+        &  (3) & &  \emph{$x_{ik}$} + \emph{$x_{jk}$} \leq 1 & & (i,j) \in E, \emph{k} = 1,...,\emph{n} \\
+        &  (4) & & 0 \leq \emph{$x_{ik}$}, \emph{$y_k$} \leq 1 & & \\
+        &  (5) & & \emph{$x_{ik}$}, \emph{$y_k$} \in \mathbb{Z} & &
+\end{align*}
+\end{subequations}
 
-\subsection{RCPSP}
+\section{RCPSP}
 
-\subsubsection*{Bounds}
+\subsection{Bounds}
 
 Both encodings need upper and lower bounds.
 
-\subsubsection*{SAT}
-\subsubsection*{ILP}
+\subsection{SAT}
 
-\subsection{Optimization problems with decision solvers}
-\label{subsec:OptToDec}
+\subsection{SMT}
+
+\subsection{ILP}
 
 \section{Experimental Setup}
 
