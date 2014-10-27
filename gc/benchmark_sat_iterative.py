@@ -11,20 +11,20 @@ import subprocess
 import time
 import json
 import collections
-from gc_to_smt_functions import *
+from gc_to_sat_functions import *
 from gc_approximation import Color_Greedy
 
 totaltimestart = time.time()
 
 # Folder to keep results in
-outputdir = "benchmark-smt"
+outputdir = "benchmark-sat-iterative"
 # Solution folder
 solutiondir = outputdir+"/solutions"
 translationdir = outputdir+"/translations"
-resultfile = outputdir+"/results_smt.csv"
+resultfile = outputdir+"/results_sat.csv"
 tracedir = outputdir+"/trace"
 
-# Timeout in seconds for the SMT solver
+# Timeout in seconds for the SAT solver
 timeout = 1800
 
 # Statistics we would like to keep
@@ -33,7 +33,6 @@ time_spent_translating = 0
 time_spent_solving = 0
 solution = -1
 lower_bound = 0             # Smallest k we know is unsatisfiable
-upper_bound = float("inf")  # Smallest k we know is satisfialble
 
 class TimeoutException(Exception):
     pass
@@ -51,13 +50,6 @@ with open(instancefn) as instancef:
     instance = instancef.readlines()
 
 (N,M,E) = read_DIGRAPH(instance)
-V = xrange(1,N+1)
-max_k = maximum_k(V,E)
-#upper_bound = max_k
-
-(greedy,_) = Color_Greedy(to_dictgraph(V,E))
-
-upper_bound = greedy
 
 trace = collections.OrderedDict()
 
@@ -70,28 +62,24 @@ print("Starting to solve %s with N=%d,M=%d" % (instancename, N, M))
 procs = []
 
 try:
-    # To use Z3, set the path of z3 with the 'setpath' script
-    # subprocess.call("source setpath.sh", shell=True)
-
     while solution == -1:
         try:
-            subprocess.call("killall z3")
+            subprocess.call("killall lingeling")
         except:
-            # Might be still Z3 processes
+            # Might be nog lingeling processes
             pass
 
         # Binary search for the solution
-        guess = int(math.ceil((upper_bound-lower_bound)/2.0)+lower_bound)
+        guess = lower_bound + 1
         trace[guess] = {}
 
-        print("Now guessing %d within (%d,%.0f]" % (guess, lower_bound,upper_bound))
+        print("Now guessing %d" % (guess))
         starttime = time.time()
 
         id = "gc-%s-%d" % (instancename, guess)
-        translationfn = "%s/%s.smt" % (translationdir, id)
-        resultfn = "%s/solutions.txt" % (outputdir)
+        translationfn = "%s/%s.cnf" % (translationdir, id)
 
-        gc_string_to_smt_file(instance, translationfn, guess)
+        gc_string_to_sat_file(instance, translationfn, guess)
 
         time_this_translation = time.time() - starttime
         trace[guess]['trans'] = time_this_translation
@@ -101,25 +89,18 @@ try:
         starttime = time.time()
 
         try:
-            #with open("%s/%s.smt" % (solutiondir, id), 'wb') as solutionf:
-            solverresult = subprocess.check_output("z3 -m -smt2 " + translationfn, shell=True).split("\n")
-            #solverprocess = subprocess.Popen("z3 -m -smt2 " + translationfn, shell=True, stdout=solutionf)
-            #procs.append(solverprocess.pid)
-            #solverresult = solverprocess.wait()
+            with open("%s/%s.cnf" % (solutiondir, id), 'wb') as solutionf:
+                #solverresult = subprocess.call("lingeling " + translationfn, shell=True, stdout=solutionf)
+                solverprocess = subprocess.Popen("lingeling " + translationfn, shell=True, stdout=solutionf)
+                procs.append(solverprocess.pid)
+                solverresult = solverprocess.wait()
         finally:
             # We might be here because of TimeoutException/Keyboardinterrupt, kill the child process if it still lives
             # Polling doesn't seem to work to check if alive... Fuck it just catch the exception if it's already killed
             try:
-                #solverprocess.terminate()
-                subprocess.call("killall z3")
+                solverprocess.terminate()
             except:
                 pass
-
-            # Reading the solution file 'solutions.txt' which contains 'sat' or 'unsat'
-            # solution_sat_unsat = ""
-            #with open(resultfn, 'r') as resultf:
-            #		solution_sat_unsat = resultf.readline()
-
             # Delete the translation file, since it can become several gigs
             if os.path.isfile(translationfn):
                 os.remove(translationfn)
@@ -132,26 +113,20 @@ try:
         trace[guess]['this'] = time_this_translation+time_this_solving
         trace[guess]['total'] = time_spent_solving+time_spent_translating
 
-        # if solutions_sat_unsat == 'sat':
-        if solverresult[0] == "sat":
+        if solverresult == 10:
             # Satisfiable
-            upper_bound = guess
-        elif solverresult[0] == "unsat":
-            # Unsatisfiable
-            lower_bound = guess
-        if lower_bound == upper_bound-1:
-            # We've found the smallest k! It's the upper bound
-            solution = upper_bound
+            solution = guess
+
+        if solution != -1:
             print("Found solution: %d" % solution)
         else:
-            print("New bounds: (%d,%.0f) guess was %d" % (lower_bound, upper_bound, guess))
+            lower_bound = guess
+            print("k > %d" % (guess))
 except KeyboardInterrupt:
     # User wants to cancel
-    solution = -1
     pass
 except TimeoutException:
     # MEEH, Time's up!
-    solution = -1
     pass
 
 # Done!
@@ -159,7 +134,7 @@ except TimeoutException:
 signal.alarm(0)
 
 
-# killall z3
+# killall lingeling
 
 # Report in addition: N
 
@@ -167,7 +142,7 @@ output = ""
 if not os.path.isfile(resultfile):
     # So excel knows what separator to use
     output = "sep=,\n"
-    output += "Instance,N,M,Solution,LB,UB,Highest Degree,Greedy,Translation Time,Solving Time,Total Time,Time Limit,Trace\n"
+    output += "Instance,N,M,Solution,Lower_Bound,Translation Time,Solving Time,Total Time,Trace\n"
 
 time_spent_total = time.time() - totaltimestart
 output += "%s,%d,%d,%d,%d,%d,%d,%d,%.2f,%.2f,%.2f,%d,%s" %\
@@ -176,13 +151,9 @@ output += "%s,%d,%d,%d,%d,%d,%d,%d,%.2f,%.2f,%.2f,%d,%s" %\
          M,
          solution,
          lower_bound,
-         upper_bound,
-         max_k,
-         greedy,
          time_spent_translating,
          time_spent_solving,
          time_spent_total,
-         timeout,
          "\"%s\"" % ",".join([str(x) for x in trace.keys()])
         )
 
@@ -195,12 +166,15 @@ if solution != -1:
 else:
     print("Timeout")
 
+with open("%s/%s.json" % (tracedir, instancename),'wb') as tracef:
+    print(json.dumps(trace, indent=4), file=tracef)
+
 try:
-	subprocess.call("killall z3")
+	subprocess.call("killall lingeling")
 except:
 	pass
 try:
-	subprocess.call("pkill z3")
+	subprocess.call("pkill lingeling")
 except:
 	pass
 
