@@ -1,12 +1,18 @@
+% !TeX spellcheck = en_US
 \documentclass{sig-alternate}
 
 \usepackage[ampersand]{easylist}
 \usepackage{amsmath}
 
+\usepackage{algpseudocode} 
+\usepackage{algorithm}
+
 \usepackage{etoolbox}
 \makeatletter
 \def\@copyrightspace{\relax}
 \makeatother
+
+\newcommand{\mli}[1]{\mathit{#1}}
 
 %\numberwithin{equation}{subsection}
 
@@ -92,6 +98,57 @@ An Integer Linear Program (ILP) is a linear program that has the additional cont
 
 \section{Solving optimization problems with decidability solvers}
 
+A decidability solver finds a feasible solution to a problem instance.
+In practice one does often not only which to find \emph{a} feasible solution, but one wants to find \emph{the best} feasible solution out of all feasible solutions.
+This is called an optimization problem.
+
+ILP is an optimization problem and can thus naturally be used as a target for optimization problems.
+To use decidability solvers for an optimization problem one can formulate the optimization problem as a sequence of decision problems $P$ with cost $c \in \mathbb{N}$.
+In each step the solver looks for a solution to $P_c$.
+
+We independently though of two ways to go through this sequence, but they are identical too the approaches described by Wille et. Al \cite{wille2008using}.
+We will use their terminology.
+
+The first approach called the \emph{iterative approach} starts at the lower bound of the possible costs $c = \mli{LB}$, usually $\mli{LB} = 0$.
+While the solver can find no solution for $P_c$, $c$ is incremented.
+In pseudocode:
+
+\begin{algorithmic}
+\State $c \gets \mli{UB}$
+\While {not $solvable$}
+	\State $P \gets encode(instance, c)$
+	\State $solvable \gets solve(P)$
+	\If {not $solvable$}
+		\State $c++$
+	\EndIf
+\EndWhile
+\State $\mli{OPT} \gets c$
+\end{algorithmic}
+
+The disadvantages of this problem are clearly visible.
+$\mli{OPT}-\mli{LB}$ iterations are need which is especially problematic if $\mli{OPT}$ is large
+
+An alternative approach is too determine increasingly better lower and upper bounds for the cost.
+If $P_c$ is determined feasible, one can look for a solution to $P_{c'}$ with $c' < c$. Likewise if $P_c$ is unfeasible, one can look for a solution to $P_{c'}$ with $c' > c$.
+The minimal cost $OPT$ is found when $P_{OPT-1}$ is unfeasible, and $P_{\mli{OPT}$ is feasible. This is called to approximation approach.
+In pseudocode:
+
+\begin{algorithmic}
+\While {$\mli{LB} \neq \mli{UB} - 1$}
+	\State $c = \mli{LB} + \lceil \frac{\mli{UB} - \mli{LB}}{2} \rceil$
+	\State $P \gets encode(instance, c)$
+	\State $solvable \gets solve(P)$
+	\If {$solvable$}
+		\State $\mli{UB} \gets c$
+	\Else
+		\State $\mli{LB} \gets c$
+	\EndIf
+\EndWhile
+\State $\mli{OPT} \gets \mli{UB}$
+\end{algorithmic}
+
+By performing a binary search over all possible $c$, we set the maximum number of iterations to $\lceil log_2(\mli{UB}-\mli{LB}) \rceil$
+
 \section{Graph Coloring}
 
 The graph coloring problem is one of the Karp's 21 original NP-Complete problems \cite{karp1972reducibility}.
@@ -101,7 +158,7 @@ Graph coloring exists in several variants, but they are all easily reducible to 
         & G = (V,E) & E \subseteq V^2\\
         & map : V \rightarrow [1,k] & k \in \mathbb{N} \\
         & \text{with } map(v) \neq map(w) & (v,w) \in E \\
-        & VC = min\{k | map : V \rightarrow [1,k]\}
+        & VC = min\{k \ | \  map : V \rightarrow [1,k]\}
 \end{align*}
 \end{subequations}
 
