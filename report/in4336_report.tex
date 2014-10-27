@@ -88,12 +88,12 @@ The concrete advantage of this is that certain constraints which are hard to spe
 
 \subsubsection*{Integer Linear Programming (ILP)}
 
-An Integer Linear Program is a linear program (LP) that has the additional contraint that all variables must take an integer value. 
+An Integer Linear Program is a linear program (LP) that has the additional contraint that all variables must be integers. 
 An ILP problem is an optimization problem where the objective is to maximize or minimize some value. 
 The encoding of an optimization problem into ILP starts by composing an objective function in order to find the optimal objective value.
-Then, the objective function is subjected to one or more constraints functions. Each function representing a different constraint.
+Then, the objective function is subjected to one or more constraints functions. Each function listed representing a different constraint.
 The variables used in these functions may be bounded, e.g. in 0-1 ILP encoding variables can take a value of 0 or 1.
-Finally, one last constraint in ILP is the integrallity constraint, meaning that all variables must take integers.
+Finally, the last constraint in ILP is the integrallity constraint, meaning that all variables must take integers.
 
 \section{Solving optimization problems with decidability solvers}
 
