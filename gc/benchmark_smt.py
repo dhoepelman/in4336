@@ -102,7 +102,7 @@ try:
 
         try:
             #with open("%s/%s.smt" % (solutiondir, id), 'wb') as solutionf:
-            solverresult = subprocess.call("./../smt/lab2/z3/bin/z3 -m -smt2 " + translationfn + " > " + resultfn, shell=True)
+            solverresult = subprocess.check_output("z3 -m -smt2 " + translationfn, shell=True).split("\n")
             #solverprocess = subprocess.Popen("z3 -m -smt2 " + translationfn, shell=True, stdout=solutionf)
             #procs.append(solverprocess.pid)
             #solverresult = solverprocess.wait()
@@ -132,11 +132,13 @@ try:
         trace[guess]['this'] = time_this_translation+time_this_solving
         trace[guess]['total'] = time_spent_solving+time_spent_translating
 
+	print(solverresult)
+
         # if solutions_sat_unsat == 'sat':
-        if solverresult != 0:
+        if solverresult[0] == "sat":
             # Satisfiable
             upper_bound = guess
-        elif solverresult == 0:
+        elif solverresult[0] == "unsat":
             # Unsatisfiable
             lower_bound = guess
         if lower_bound == upper_bound-1:
