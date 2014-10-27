@@ -56,7 +56,7 @@ With this we want to see if encodings can be viably done in smaller easier steps
 We formulated the following research question for this project:
 
 \begin{enumerate}
-\item[RQ1]{Is there a speed difference between formalisms when solving an identical problem instance?}
+\item[RQ1]{Is there a speed difference between different proble when solving an identical translated problem instance?}
 \item[RQ2]{Are intermediate transformations viable?}
 	\begin{enumerate}
 	\item[RQ2.1]{Does an intermediate transformation significantly decrease the speed with which problem instances can be solved?}
@@ -81,6 +81,8 @@ An Integer Linear Program (ILP) is a linear program that has the additional cont
 \subsubsection*{Satisfiability Modulo Theories (SMT)}
 The Satisfiability Modulo Theories problems are Boolean Satisfiability (SAT) problems at a higher level of abstraction. Beside boolean formulas SMT solvers support integers and bit-vector logic that allows a more compact encoding of a problem \cite{wille2008using}.
 
+\section{Decidability vs Optimization problems}
+
 \section{Encodings}
 
 \subsection{Graph Coloring}
@@ -91,7 +93,7 @@ Graph coloring exists in several variants, but they are all easily reducible to 
 \begin{align*}
         & G = (V,E) & E \subseteq V^2\\
         & map : V \rightarrow [1,k] & k \in \mathbb{N} \\
-        & map(v) \neq map(w) & (v,w) \in E \\
+        & \text{with } map(v) \neq map(w) & (v,w) \in E \\
         & VC = min\{k | map : V \rightarrow [1,k]\}
 \end{align*}
 \end{subequations}
@@ -145,9 +147,6 @@ Both encodings need upper and lower bounds.
 
 \subsubsection*{SAT}
 \subsubsection*{ILP}
-
-\subsection{Optimization problems with decision solvers}
-\label{subsec:OptToDec}
 
 \section{Experimental Setup}
 
