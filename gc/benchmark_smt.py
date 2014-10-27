@@ -132,7 +132,7 @@ try:
         trace[guess]['this'] = time_this_translation+time_this_solving
         trace[guess]['total'] = time_spent_solving+time_spent_translating
 
-        # if solutions_sat_unsat == 'sat':
+        # if solutions_sat_unsat == "sat":
         if solverresult != 0:
             # Satisfiable
             upper_bound = guess
