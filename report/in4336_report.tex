@@ -94,7 +94,12 @@ The concrete advantage of this is that certain constraints which are hard to spe
 
 \subsubsection*{Integer Linear Programming (ILP)}
 
-An Integer Linear Program (ILP) is a linear program that has the additional contraint that all variables take integer values. An ILP solver is used to solve a combinatorial optimization problem.
+An Integer Linear Program is a linear program (LP) that has the additional contraint that all variables must be integers. 
+An ILP problem is an optimization problem where the objective is to maximize or minimize some value. 
+The encoding of an optimization problem into ILP starts by composing an objective function in order to find the optimal objective value.
+Then, the objective function is subjected to one or more constraints functions. Each function listed representing a different constraint.
+The variables used in these functions may be bounded, e.g. in 0-1 ILP encoding variables can take a value of 0 or 1.
+Finally, the last constraint in ILP is the integrallity constraint, meaning that all variables must take integers.
 
 \section{Solving optimization problems with decidability solvers}
 
@@ -190,11 +195,12 @@ There is an alternative encoding defined in TODO. . We did not have time to impl
 The combinatorial problem of graph coloring can also be formulated as an 0-1 ILP. An advantage of using ILP is that it can solve optimization problems. The 0-1 ILP formulation of the graph coloring problem, which is a NP-hard minimization problem, can be done by taking the set of nodes V = {1,...,\emph{n}} of the graph $G = (V,E)$ and the number of colors \emph{k} = |V| = \emph{n}. Then, each color is represented by a binary variable \emph{$y_k$}, with \emph{k} = 1,...,\emph{n}, that indicatates whether color \emph{k} is used (\emph{$y_k$} = 1) or not (\emph{$y_k$} = 0). An objective function is formed by adding up these variables ($\sum\limits_{k=1}^n \emph{$y_k$}$) with the goal to obtain the minimum sum with the minimum number of the variables \emph{$y_k$} that are equal to 1. Furthermore, a binary variable \emph{$x_{ik}$} is used for each node-color combination to indicate whether node \emph{i} has received a color \emph{k} (\emph{$x_{ik}$} = 1) or not (\emph{$x_{ik}$} = 0). In the resulting 0-1 ILP in formal description listed below, adopted from \cite{faigle2002mathprogramming}, contraint (1) guarantees that each node is colored, (2) node \emph{i} receives color \emph{k} only if color \emph{k} has been used, (3) adjecent nodes should have different colors :
 \begin{subequations}
 \begin{align*}
-        & min \sum\limits_{k=1}^n \emph{$y_k$} & \emph{s.t.} & & (1) & & \sum\limits_{k=1}^n \emph{$x_{ik}$} = 1 & & \emph{i} = 1,...,\emph{n} \\
-        &  & & & (2) & & \emph{$x_{ik}$} - \emph{$y_k$} \leq 0 & & \emph{i,k} = 1,...,\emph{n} \\
-        &  & & & (3) & &  \emph{$x_{ik}$} + \emph{$x_{jk}$} \leq 1 & & (i,j) \in E, \emph{k} = 1,...,\emph{n} \\
-        &  & & & (4) & & 0 \leq \emph{$x_{ik}$}, \emph{$y_k$} \leq 1 & & \\
-        &  & & & (5) & & \emph{$x_{ik}$}, \emph{$y_k$} \in \mathbb{Z} & &
+        & & & min \sum\limits_{k=1}^n \emph{$y_k$} & & \\
+        &  (1) & & \sum\limits_{k=1}^n \emph{$x_{ik}$} = 1 & & \emph{i} = 1,...,\emph{n} \\
+        &  (2) & & \emph{$x_{ik}$} - \emph{$y_k$} \leq 0 & & \emph{i,k} = 1,...,\emph{n} \\
+        &  (3) & &  \emph{$x_{ik}$} + \emph{$x_{jk}$} \leq 1 & & (i,j) \in E, \emph{k} = 1,...,\emph{n} \\
+        &  (4) & & 0 \leq \emph{$x_{ik}$}, \emph{$y_k$} \leq 1 & & \\
+        &  (5) & & \emph{$x_{ik}$}, \emph{$y_k$} \in \mathbb{Z} & &
 \end{align*}
 \end{subequations}
 
