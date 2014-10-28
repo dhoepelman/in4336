@@ -21,7 +21,7 @@ outputdir = "benchmark-smt"
 # Solution folder
 solutiondir = outputdir+"/solutions"
 translationdir = outputdir+"/translations"
-resultfile = outputdir+"/results_smt.csv"
+resultfile = outputdir+"/results_smt_unknown.csv"
 tracedir = outputdir+"/trace"
 
 # Timeout in seconds for the SMT solver
@@ -131,8 +131,6 @@ try:
         trace[guess]['solve'] = time_this_solving
         trace[guess]['this'] = time_this_translation+time_this_solving
         trace[guess]['total'] = time_spent_solving+time_spent_translating
-
-	print(solverresult)
 
         # if solutions_sat_unsat == 'sat':
         if solverresult[0] == "sat":
