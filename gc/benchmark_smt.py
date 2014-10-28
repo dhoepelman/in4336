@@ -21,7 +21,7 @@ outputdir = "benchmark-smt"
 # Solution folder
 solutiondir = outputdir+"/solutions"
 translationdir = outputdir+"/translations"
-resultfile = outputdir+"/results_smt.csv"
+resultfile = outputdir+"/results_smt_unknown.csv"
 tracedir = outputdir+"/trace"
 
 # Timeout in seconds for the SMT solver
