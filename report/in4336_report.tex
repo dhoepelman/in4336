@@ -190,19 +190,20 @@ This encoding has $O(|V| k)$ variables and $O(|E|+|V| k^2)$ clauses.
 There is an alternative encoding defined in TODO. . We did not have time to implement and test this encoding.
 
 \subsection{SMT}
-
+As SMT is a generalization to SAT, it can also solve decision problems. 
+The problem formulation of GC into SMT using propositional logic has also been adopted from \cite{cs395tGCtoSAT}.
 
 \subsection{ILP}
 The combinatorial problem of graph coloring can also be formulated as an 0-1 ILP in which the variables are binary variables. 
 An advantage of using ILP is that unlike SAT and SMT, it can solve optimization problems. 
 The 0-1 ILP formulation of the graph coloring problem,
 can be done by taking the set of nodes V = {1,...,\emph{n}} of the graph G and the number of 
-colors is 1 \leq \emph{k} \leq |V|. By observing that a graph cannot use more colors than it's maximum 
+colors is $1 \leq \emph{k} \leq |V|$. By observing that a graph cannot use more colors than it's maximum 
 degree, we put the upper bound for color \emph{k} as the highest degree of G.
 Then, each color is represented by a binary variable \emph{$y_k$}, 
 with \emph{k} = 1,...,\emph{n}, that indicatates whether color \emph{k} is used (\emph{$y_k$} = 1) or 
 not (\emph{$y_k$} = 0). An objective function is formed by adding up these variables 
-($\sum\limits_{k=1}^n \emph{$y_k$}$) to obtain the minimum sum. That is, the minimum number 
+($\sum\limits_{k=1}^n \emph{$y_k$}$) to obtain the minimum sum. That is, we want the minimum number 
 of the variables \emph{$y_k$} that are equal to 1. Furthermore, a binary variable \emph{$x_{ik}$} is 
 used for each node-color combination to indicate whether node \emph{i} has received a color \emph{k} 
 (\emph{$x_{ik}$} = 1) or not (\emph{$x_{ik}$} = 0). In the resulting 0-1 ILP in formal description 
@@ -230,6 +231,7 @@ Both encodings need upper and lower bounds.
 \subsection{SMT}
 
 \subsection{ILP}
+
 
 \section{Experimental Setup}
 
