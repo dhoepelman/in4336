@@ -17,7 +17,7 @@ from gc_approximation import Color_Greedy
 totaltimestart = time.time()
 
 # Folder to keep results in
-outputdir = "benchmark-sat-iterative"
+outputdir = "benchmark-sat"
 # Solution folder
 solutiondir = outputdir+"/solutions"
 translationdir = outputdir+"/translations"
