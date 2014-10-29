@@ -145,7 +145,7 @@ if not os.path.isfile(resultfile):
     output += "Instance,N,M,Solution,Lower_Bound,Translation Time,Solving Time,Total Time,Trace\n"
 
 time_spent_total = time.time() - totaltimestart
-output += "%s,%d,%d,%d,%d,%d,%d,%d,%.2f,%.2f,%.2f,%d,%s" %\
+output += "%s,%d,%d,%d,%d,%%.2f,%.2f,%.2f,%d,%s" %\
         (instancename,
          N,
          M,
