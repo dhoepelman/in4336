@@ -17,7 +17,7 @@ from gc_approximation import Color_Greedy
 totaltimestart = time.time()
 
 # Folder to keep results in
-outputdir = "benchmark-sat-iterative"
+outputdir = "benchmark-sat"
 # Solution folder
 solutiondir = outputdir+"/solutions"
 translationdir = outputdir+"/translations"
@@ -145,7 +145,7 @@ if not os.path.isfile(resultfile):
     output += "Instance,N,M,Solution,Lower_Bound,Translation Time,Solving Time,Total Time,Trace\n"
 
 time_spent_total = time.time() - totaltimestart
-output += "%s,%d,%d,%d,%d,%d,%d,%d,%.2f,%.2f,%.2f,%d,%s" %\
+output += "%s,%d,%d,%d,%d,%%.2f,%.2f,%.2f,%d,%s" %\
         (instancename,
          N,
          M,
