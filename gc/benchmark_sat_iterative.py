@@ -21,7 +21,7 @@ outputdir = "benchmark-sat-iterative"
 # Solution folder
 solutiondir = outputdir+"/solutions"
 translationdir = outputdir+"/translations"
-resultfile = outputdir+"/results_sat.csv"
+resultfile = outputdir+"/results_sat_iterative.csv"
 tracedir = outputdir+"/trace"
 
 # Timeout in seconds for the SAT solver
