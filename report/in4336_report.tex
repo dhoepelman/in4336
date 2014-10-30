@@ -252,10 +252,17 @@ Given a project $P$ with:
 \item Job resource consumptions $r_i,j$ for each job $i \in V$ and resource $j \in R$
 \end{itemize}
 
-define
+Define:
 \begin{itemize}
-\item The start time $s_i$ of job $i$ in a schedule
-\item The in-progess 
+\item The start time $s_i \in \mathbb{N}$ of job $i$ in the schedule
+\item The finish time $f_i = s_i + d_i$ of job $i$
+\item The in-progess status $u_{i,t} \in \{0,1\}$ of job $i$ at time $t$ in the schedule
+\end{itemize}
+
+Find the minimal makespan $T = \max_{i \in V}\{f_i\}$ subject to:
+\begin{itemize}
+\item Dependencies: \\ $f_i \leq s_j$ for every $(i,j) \in prec$
+\item Resource constraints: \\ $\sum_{i \in V}{u_{i,t} \cdot r_{i,j}} \leq R_j$ for every $j \in R, t \in [0,T]$
 \end{itemize}
 
 \subsection{Bounds}
