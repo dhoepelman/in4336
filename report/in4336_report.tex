@@ -135,7 +135,7 @@ $\mli{OPT}-\mli{LB}$ iterations are need which is especially problematic if $\ml
 
 An alternative approach is too determine increasingly better lower and upper bounds for the cost.
 If $P_c$ is determined feasible, one can look for a solution to $P_{c'}$ with $c' < c$. Likewise if $P_c$ is unfeasible, one can look for a solution to $P_{c'}$ with $c' > c$.
-The minimal cost $OPT$ is found when $P_{OPT-1}$ is unfeasible, and $P_{\mli{OPT}$ is feasible. This is called to approximation approach.
+The minimal cost $OPT$ is found when $P_{OPT-1}$ is unfeasible, and $P_{\mli{OPT}}$ is feasible. This is called to approximation approach.
 In pseudocode:
 
 \begin{algorithmic}
@@ -208,7 +208,7 @@ of the variables \emph{$y_k$} that are equal to 1. Furthermore, a binary variabl
 used for each node-color combination to indicate whether node \emph{i} has received a color \emph{k} 
 (\emph{$x_{ik}$} = 1) or not (\emph{$x_{ik}$} = 0). In the resulting 0-1 ILP in formal description 
 listed below, adopted from \cite{faigle2002mathprogramming}, contraint (1) guarantees that each node 
-is colored, (2) node \emph{i} receives color \emph{k} only if color \emph{k} has been used, (3) adjecent nodes should have different colors :
+is colored, (2) node \emph{i} receives color \emph{k} only if color \emph{k} has been used, (3) adjecent nodes should have different colors:
 \begin{subequations}
 \begin{align*}
         & & & min \sum\limits_{k=1}^n \emph{$y_k$} & & \\
@@ -221,7 +221,9 @@ is colored, (2) node \emph{i} receives color \emph{k} only if color \emph{k} has
 \end{subequations}
 
 \section{RCPSP}
-
+The Resource Constraint Project Scheduling Problem (RCPSP) is the problem of finding a schedule for a 
+set of n jobs \emph{V} = {1,...,n} that have precedence and resource contraints with the goal to 
+minimize the project completion time (makespan).
 \subsection{Bounds}
 
 Both encodings need upper and lower bounds.
@@ -231,13 +233,37 @@ Both encodings need upper and lower bounds.
 \subsection{SMT}
 
 \subsection{ILP}
-
+The 0-1 ILP model for RCPSP is formulated as in \cite{horbach2010boolean} and in 
+$\cite{mingozzi1998exact}. For each activity (job) \emph{i} \in \emph{V} and for each period \emph{t} \in \emph{$es_i,...,ls_i$} a binary variable \emph{$x_{it}$} indicates wether an activity \emph{i} starts at period \emph{t} (\emph{$x_{it}$} = 1) or not (\emph{$x_{it}$} = 0). \emph{Same as with SAT, we determine for each activity \emph{i} its earliest (\emph{$es_i$}) and its latest (\emph{$ls_i$}) start $
+$times, its earliest (\emph{$ef_i$}) and its latest (\emph{$lf_i$}) finish times, using the critical-path $
+$method by Floyd-Warshall algorithm}. With the variables \emph{$u_{it}$} we can indicate for each activity $
+$\emph{i} if it is executing at period \emph{t} (\emph{$u_{it}$} = 1) or not executing (\emph{$u_{it}$} = 0).$
+$The resulting 0-1 ILP project makespan optimization in formal description listed below.$
+\begin{subequations}
+\begin{align*}
+        & & & min \emph{x_{n+1},T} & & \emph{i} \in \emph{V} \\
+        &  (1) & & \sum\limits_{\emph{t}\in\emph{es_i,...,ls_i}} \emph{x_{it}} = 1 & & \emph{i} \in \emph{V}, \emph{t} \in \emph{es_i,...,ls_i}, \emph{t} \in \emph{es_i,...,ls_i} + \emph{d_i} - 1 \\
+        &  (2) & & \sum\limits_{\emph{l}\in\emph{es_j,...,t-d_j}} \emph{x_{jl}} \geq \emph{x_{it}} & & \emph{(j,i)} \in \emph{E}, \emph{t} \in \emph{es_i,...,ls_i} \\
+        &  (3) & & \sum\limits_{\emph{i}\in\emph{V,}\emph{es_i}\leq\emph{t}\leq\emph{ls_i}} \emph{r_{ik}}\emph{u_{it}} \leq \emph{R_k} & & \emph{t} \in {0,1,...,\emph{T}}, \emph{k} \in \emph{R} \\
+        &  (4) & & \emph{x_{ik}} + \emph{x_{jk}} \leq 1 & & (i,j) \in E, \emph{k} = 1,...,\emph{n} \\
+        &  (5) & & \emph{x_{00}} = 1 & & \\
+        &  (6) & & \emph{x_{it}} \in {0, 1} & & \\
+        &  (7) & & \emph{u_{it}}, \emph{x_{it}} \in \mathbb{Z} & &
+\end{align*}
+\end{subequations}
 
 \section{Experimental Setup}
 
 \section{Results}
 
 \section{Related and Future Work}
+Besides the main focus of our research, solving the graph coloring problem, we would have liked to include
+the RCPSP problem.
+%TODO: However we couldn't get to solve the SAT encoding of RCPSP, due to...
+We implemented an ILP encoding of the RCPSP problem to compare the solving time with the SAT encoding, 
+but we didn't have the SAT solving times to compare with. 
+It can be usefull to explore the SMT encoding of RCPSP, as it can work with among others integer, 
+integer array and bitvector variables, and use its solving times and compare it with the ILP encoding.
 
 %TODO: Deze referenties in de tekst verwerken of anders onzichtbaar opnemen in de 
 \cite{alves2013resource}
