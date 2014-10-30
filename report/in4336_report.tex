@@ -72,7 +72,7 @@ We formulated the following research question for this project:
 
 In answering our research questions we will focus on solvers for \emph{Integer Linear Programming} (ILP), \emph{Satisfiability} (SAT) and \emph{Satisfiability Modulo Theories} (SMT).
 
-As problems to encode we took \emph{Resource Constrained Project Scheduling Problem} (RCPSP) and \emph{Graph Coloring} (GC).
+As problems to encode we will focus on the \emph{Resource Constrained Project Scheduling Problem} (RCPSP) and \emph{Graph Coloring} (GC).
 
 \section {Target problems}
 
@@ -102,6 +102,7 @@ The variables used in these functions may be bounded, e.g. in 0-1 ILP encoding v
 Finally, the last constraint in ILP is the integrallity constraint, meaning that all variables must take integers.
 
 \section{Solving optimization problems with decidability solvers}
+\label{sec:OptWithDec}
 
 A decidability solver finds a feasible solution to a problem instance.
 In practice one does often not only which to find \emph{a} feasible solution, but one wants to find \emph{the best} feasible solution out of all feasible solutions.
@@ -130,12 +131,11 @@ In pseudocode:
 \State $\mli{OPT} \gets c$
 \end{algorithmic}
 
-The disadvantages of this problem are clearly visible.
-$\mli{OPT}-\mli{LB}$ iterations are need which is especially problematic if $\mli{OPT}$ is large
+This approach has the obvious disadvantage that $\mli{OPT}-\mli{LB}$ iterations are needed which is especially problematic if $\mli{OPT}$ is large
 
-An alternative approach is too determine increasingly better lower and upper bounds for the cost.
+An alternative approach is too determine increasingly better lower and upper bounds.
 If $P_c$ is determined feasible, one can look for a solution to $P_{c'}$ with $c' < c$. Likewise if $P_c$ is unfeasible, one can look for a solution to $P_{c'}$ with $c' > c$.
-The minimal cost $OPT$ is found when $P_{OPT-1}$ is unfeasible, and $P_{\mli{OPT}$ is feasible. This is called to approximation approach.
+The minimal cost $OPT$ is found when $P_{OPT-1}$ is unfeasible, and $P_{\mli{OPT}}$ is feasible. This is called to approximation approach.
 In pseudocode:
 
 \begin{algorithmic}
@@ -152,12 +152,18 @@ In pseudocode:
 \State $\mli{OPT} \gets \mli{UB}$
 \end{algorithmic}
 
-By performing a binary search over all possible $c$, we set the maximum number of iterations to $\lceil log_2(\mli{UB}-\mli{LB}) \rceil$
+By performing a binary search over all possible $c$, we set the maximum number of iterations to $\lceil log_2(\mli{UB}-\mli{LB}) \rceil$.
+
+During our experiments we encountered the problem that the first problem $P_{\frac{1}{2}\mli{UB}}$ took a long time to encode, even though it usually was satisfiable.
+To get around this better upper bounds were needed, for which we tested both theoretical upper bounds and approximation algorithms.
+
 
 \section{Graph Coloring}
 
 The graph coloring problem is one of the Karp's 21 original NP-Complete problems \cite{karp1972reducibility}.
-Graph coloring exists in several variants, but they are all easily reducible to the vertex coloring problem. We chose the optimization variant of the vertex coloring problem which is informally defined as given an undirected graph $G = (V,E)$, find the minimal number of colors $k$ needed to color each vertex so that no adjacent vertex shares a color. More formally:
+Graph coloring exists in several variants, but they are all reducible to the vertex coloring problem.
+We chose the optimization variant of the vertex coloring problem which is informally defined as given an undirected graph $G = (V,E)$, find the minimal number of colors $k$ needed to color each vertex so that no adjacent vertex shares a color.
+More formally:
 \begin{subequations}
 \begin{align*}
         & G = (V,E) & E \subseteq V^2\\
@@ -167,12 +173,24 @@ Graph coloring exists in several variants, but they are all easily reducible to 
 \end{align*}
 \end{subequations}
 
+\subsection{Bounds}
 
-\subsection{SAT}
+The possible values of $k$ have clearly defined bounds.
+All graphs except the empty graph will need at least $1$ color, and all graphs with an edge will need at least $2$ colors.
+We stuck with an lower bound of $0$ for the approximation approach and $1$ for the iteration approach.
 
-Satisfiability is a decision problem. This makes it impossible to directly encode the decision version of GC. Our approaches to get around this are detailed in section \ref{subsec:OptToDec}. For now it means that when encoding GC in SAT $k$ is a parameter of the translation.
+The trivial upper bound for a graph is $|V|$ colors, as every vertex can have its own unique color in that case.
+Another useful upper bound is $max(degree(v))+1 \text{ for } v \in V$, the degree being the number of neighbors or edges of a node.
+This u
 
-We adopted the encoding from \cite{cs395tGCtoSAT}. We define a variable for every node and color combination $p_{vi} (v \in V, i \in [1,k])$. If node $v$ has color $i$ then $p_{vi}$, otherwise $\neg p_{vi}$. The following clauses ensure that the assignment will be valid for the GC instance:
+\subsection{SAT encoding}
+
+As satisfiability is a decision problem $k$ needs to be a parameter of the transformation, see section \ref{sec:OptWithDec} for how we determined $k$.
+
+We adopted the encoding from \cite{cs395tGCtoSAT}.
+We define a variable for every node and color combination $p_{vi} (v \in V, i \in [1,k])$.
+If node $v$ has color $i$ then $p_{vi}$, otherwise $\neg p_{vi}$.
+The following clauses ensure that the assignment will be valid for the GC instance:
 
 \setcounter{equation}{1}
 \begin{subequations}
@@ -184,30 +202,31 @@ We adopted the encoding from \cite{cs395tGCtoSAT}. We define a variable for ever
 \end{subequations}
 
 Clauses of type 2a ensures that every node has one or more colors. Clauses of type 2b ensures every node has at most one color. Clauses of type 2c ensure that nodes that share an edge do not have the same color.
+The encoding uses $O(|V| k)$ variables and $O(|E|+|V| \cdot k^2)$ clauses.
 
-This encoding has $O(|V| k)$ variables and $O(|E|+|V| k^2)$ clauses.
+There is another possible encoding which uses $O(|V| \cdot \lceil{log_2{k}\rceil})$ variables and $O(2^{\lceil{log_2k}\rceil} \cdot |E|+(2^{\lceil{log_2k\rceil}}-k) \cdot |V|)$ clauses which shows promising results in \cite{wille2008using}.
+Unfortunately we did not have time to implement and test this encoding, we refer to section \ref{relatedandfuture}.
 
-There is an alternative encoding defined in TODO. . We did not have time to implement and test this encoding.
+\subsection{SMT encoding}
+Our SMT encoding is identical to our SAT encoding.
+There are several candidate encodings which do use this additional expressive power, which are detailed in the future work section.
 
-\subsection{SMT}
-
-
-\subsection{ILP}
+\subsection{ILP encoding}
 The combinatorial problem of graph coloring can also be formulated as an 0-1 ILP in which the variables are binary variables. 
 An advantage of using ILP is that unlike SAT and SMT, it can solve optimization problems. 
 The 0-1 ILP formulation of the graph coloring problem,
 can be done by taking the set of nodes V = {1,...,\emph{n}} of the graph G and the number of 
-colors is 1 \leq \emph{k} \leq |V|. By observing that a graph cannot use more colors than it's maximum 
+colors is $1 \leq \emph{k} \leq |V|$. By observing that a graph cannot use more colors than it's maximum 
 degree, we put the upper bound for color \emph{k} as the highest degree of G.
 Then, each color is represented by a binary variable \emph{$y_k$}, 
 with \emph{k} = 1,...,\emph{n}, that indicatates whether color \emph{k} is used (\emph{$y_k$} = 1) or 
 not (\emph{$y_k$} = 0). An objective function is formed by adding up these variables 
-($\sum\limits_{k=1}^n \emph{$y_k$}$) to obtain the minimum sum. That is, the minimum number 
+($\sum\limits_{k=1}^n \emph{$y_k$}$) to obtain the minimum sum. That is, we want the minimum number 
 of the variables \emph{$y_k$} that are equal to 1. Furthermore, a binary variable \emph{$x_{ik}$} is 
 used for each node-color combination to indicate whether node \emph{i} has received a color \emph{k} 
 (\emph{$x_{ik}$} = 1) or not (\emph{$x_{ik}$} = 0). In the resulting 0-1 ILP in formal description 
 listed below, adopted from \cite{faigle2002mathprogramming}, contraint (1) guarantees that each node 
-is colored, (2) node \emph{i} receives color \emph{k} only if color \emph{k} has been used, (3) adjecent nodes should have different colors :
+is colored, (2) node \emph{i} receives color \emph{k} only if color \emph{k} has been used, (3) adjecent nodes should have different colors:
 \begin{subequations}
 \begin{align*}
         & & & min \sum\limits_{k=1}^n \emph{$y_k$} & & \\
@@ -220,7 +239,9 @@ is colored, (2) node \emph{i} receives color \emph{k} only if color \emph{k} has
 \end{subequations}
 
 \section{RCPSP}
-
+The Resource Constraint Project Scheduling Problem (RCPSP) is the problem of finding a schedule for a 
+set of n jobs \emph{V} = {1,...,n} that have precedence and resource contraints with the goal to 
+minimize the project completion time (makespan).
 \subsection{Bounds}
 
 Both encodings need upper and lower bounds.
@@ -230,12 +251,36 @@ Both encodings need upper and lower bounds.
 \subsection{SMT}
 
 \subsection{ILP}
+The 0-1 ILP model for RCPSP is formulated as in \cite{horbach2010boolean} and in \cite{mingozzi1998exact}.
+For each activity (job) $i \in V$ and for each period $t \in \{es_i,...,ls_i\}$ a binary variable $x_{it}$ indicates whether an activity $\emph{i}$ starts at period $t (x_{it} = 1) or not (x_{it} = 0)$.
+Same as with SAT, we determine for each activity \emph{i} its earliest ($es_i$) and its latest ($ls_i$) start times, its earliest ($ef_i$) and its latest ($lf_i$) finish times, using the critical-path method by Floyd-Warshall algorithm.
+With the variables $u_{it}$ we can indicate for each activity $i$ if it is executing at period $t$ ($u_{it} = 1$) or not executing ($u_{it} = 0$).
+The resulting 0-1 ILP project makespan optimization in formal description listed below.
+\begin{subequations}
+\begin{align*}
+        & & & min\{x_{n+1},T\} & & {i} \in {V} \\
+        &  (1) & & \sum\limits_{{t}\in{es_i,...,ls_i}} {x_{it}} = 1 & & {i} \in {V}, {t} \in {es_i,...,ls_i}, {t} \in {es_i,...,ls_i} + {d_i} - 1 \\
+        &  (2) & & \sum\limits_{{l}\in{es_j,...,t-d_j}} {x_{jl}} \geq {x_{it}} & & {(j,i)} \in {E}, {t} \in {es_i,...,ls_i} \\
+        &  (3) & & \sum\limits_{{i}\in{V,}{es_i}\leq{t}\leq{ls_i}} {r_{ik}}{u_{it}} \leq {R_k} & & {t} \in {0,1,...,{T}}, {k} \in {R} \\
+        &  (4) & & {x_{ik}} + {x_{jk}} \leq 1 & & (i,j) \in E, {k} = 1,...,{n} \\
+        &  (5) & & {x_{00}} = 1 & & \\
+        &  (6) & & {x_{it}} \in {0, 1} & & \\
+        &  (7) & & {u_{it}}, {x_{it}} \in \mathbb{Z} & &
+\end{align*}
+\end{subequations}
 
 \section{Experimental Setup}
 
 \section{Results}
 
-\section{Related and Future Work}
+\section{relatedandfuture}
+Besides the main focus of our research, solving the graph coloring problem, we would have liked to include
+the RCPSP problem.
+%TODO: However we couldn't get to solve the SAT encoding of RCPSP, due to...
+We implemented an ILP encoding of the RCPSP problem to compare the solving time with the SAT encoding, 
+but we didn't have the SAT solving times to compare with. 
+It can be usefull to explore the SMT encoding of RCPSP, as it can work with among others integer, 
+integer array and bitvector variables, and use its solving times and compare it with the ILP encoding.
 
 %TODO: Deze referenties in de tekst verwerken of anders onzichtbaar opnemen in de 
 \cite{alves2013resource}
