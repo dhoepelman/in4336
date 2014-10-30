@@ -19,17 +19,22 @@ if(len(sys.argv) < 3):
 else:
     files = sys.argv[2]
 
+if(len(sys.argv) < 4):
+    k = int(raw_input('k: '))
+else:
+    k = int(sys.argv[3])
+
 for instancefn in glob.glob(files):
     with open(instancefn) as instacef:
         instance = instacef.readlines()
         (N,M,E) = read_DIGRAPH(instance)
         
-        V = xrange(1,N+1)
-        max_k = maximum_k(V,E)
-        upper_bound = max_k
+        #V = xrange(1,N+1)
+        #max_k = maximum_k(V,E)
+        #upper_bound = max_k
         
-        outputfilen = "%s/gc-%s.smt" % (outputdir, os.path.splitext(os.path.basename(instancefn))[0])
+        outputfilen = "%s/gc-%s-%d.smt" % (outputdir, os.path.splitext(os.path.basename(instancefn))[0], k)
         
-        gc_string_to_smt_file(instance,outputfilen,upper_bound)
+        gc_string_to_smt_file(instance,outputfilen,k)
 
         print("Converted %s to %s") % (instancefn, outputfilen)

@@ -11,11 +11,13 @@ import subprocess
 import time
 import collections
 from gc_to_ilp_functions import *
+from gc_to_sat_functions import *
+from gc_approximation import Color_Greedy
 
 totaltimestart = time.time()
 
 # Folder to keep results in
-outputdir = "benchmark-ilp-new"
+outputdir = "benchmark-ilp-greedy"
 # Solution folder
 solutiondir = outputdir+"/solutions"
 translationdir = outputdir+"/translations"
@@ -49,9 +51,12 @@ with open(instancefn) as instancef:
     instance = instancef.readlines()
 
 (N,M,E) = read_DIGRAPH(instance)
+V = xrange(1,N+1)
+#max_k = maximum_k(V,E)
 
-max_k = maximum_k(xrange(1,N+1),E)
-upper_bound = min(N, max_k)
+(greedy,_) = Color_Greedy(to_dictgraph(V,E))
+
+upper_bound = greedy
 
 trace = collections.OrderedDict()
 
@@ -128,7 +133,7 @@ output += "%s,%d,%d,%d,%d,%.2f,%.2f,%.2f,%d" %\
         (instancename,
          N,
          M,
-         max_k,
+         greedy,
          solution,
          time_spent_translating,
          time_spent_solving,
