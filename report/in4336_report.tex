@@ -265,9 +265,28 @@ Find the minimal makespan $T = \max_{i \in V}\{f_i\}$ subject to:
 \item Resource constraints: \\ $\sum_{i \in V}{u_{i,t} \cdot r_{i,j}} \leq R_j$ for every $j \in R, t \in [0,T]$
 \end{itemize}
 
+In addition we define job $0$ and job $N+1$, which are a supersource and supersink.
+Both have duration $0$ and use no resources.
+Alls jobs which have no other dependency depend on job $0$, job $N+1$ depends on all jobs on which no other job depends.
+Thus $s_0 = f_0 = 0$ and $s_{N+1} = f_{N+1} = T$
+
 \subsection{Bounds}
 
-Both encodings need upper and lower bounds.
+All encodings need to use lower and upper bounds for all $s_i$ and $f_i$.
+An upper bound for $T = f_{N+1}$ is given by a sequential schedule, in which no two jobs run concurrently.
+This means that $T \leq \sum_{i \in V}{d_i}$.
+If such a schedule is not possible then no schedule is viable as there is a single job which consumes too much resources so this is a safe upper bound.
+$s_0 = 0$, because otherwise the makespan could be improved by moving each job $s_0$ time steps earlier.
+
+Using this information we can compute the bounds for each $s_i$ and $f_i$ by calculating the critical path bounds  which are based on ignoring the resource constraints and looking at the graph of job dependencies \cite{klein1999computing}.
+
+We can calculate for job $i$ the earliest start $es_i$ and earliest finish $ef_i = es_i + d_i$ by realizing that a job can never start before all its dependencies have finished.
+Because we know $es_0 = ef_0 = 0$ we can now calculate every earliest start:
+$$\mli{es}_j = max\{\mli{ef}_i | (i,j) \in prec\}$$
+
+Similarly we can calculate for job $i$ the latest start $ls_i$ and latest finish $lf_i = ls_i + d_i$ by realizing that a job must finish before all its dependents can start.
+Because we know $ls_{N+1} = lf_{N+1} = \sum_{i \in V}{d_i}$ we can now calculate every latest finish:
+$$\mli{lf}_i = min\{\mli{ls}_j | (i,j) \in prec\}$$
 
 \subsection{SAT}
 
