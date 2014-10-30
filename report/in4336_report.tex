@@ -251,22 +251,21 @@ Both encodings need upper and lower bounds.
 \subsection{SMT}
 
 \subsection{ILP}
-The 0-1 ILP model for RCPSP is formulated as in \cite{horbach2010boolean} and in 
-$\cite{mingozzi1998exact}. For each activity (job) \emph{i} \in \emph{V} and for each period \emph{t} \in \emph{$es_i,...,ls_i$} a binary variable \emph{$x_{it}$} indicates wether an activity \emph{i} starts at period \emph{t} (\emph{$x_{it}$} = 1) or not (\emph{$x_{it}$} = 0). \emph{Same as with SAT, we determine for each activity \emph{i} its earliest (\emph{$es_i$}) and its latest (\emph{$ls_i$}) start $
-$times, its earliest (\emph{$ef_i$}) and its latest (\emph{$lf_i$}) finish times, using the critical-path $
-$method by Floyd-Warshall algorithm}. With the variables \emph{$u_{it}$} we can indicate for each activity $
-$\emph{i} if it is executing at period \emph{t} (\emph{$u_{it}$} = 1) or not executing (\emph{$u_{it}$} = 0).$
-$The resulting 0-1 ILP project makespan optimization in formal description listed below.$
+The 0-1 ILP model for RCPSP is formulated as in \cite{horbach2010boolean} and in \cite{mingozzi1998exact}.
+For each activity (job) $i \in V$ and for each period $t \in \{es_i,...,ls_i\}$ a binary variable $x_{it}$ indicates whether an activity $\emph{i}$ starts at period $t (x_{it} = 1) or not (x_{it} = 0)$.
+Same as with SAT, we determine for each activity \emph{i} its earliest ($es_i$) and its latest ($ls_i$) start times, its earliest ($ef_i$) and its latest ($lf_i$) finish times, using the critical-path method by Floyd-Warshall algorithm.
+With the variables $u_{it}$ we can indicate for each activity $i$ if it is executing at period $t$ ($u_{it} = 1$) or not executing ($u_{it} = 0$).
+The resulting 0-1 ILP project makespan optimization in formal description listed below.
 \begin{subequations}
 \begin{align*}
-        & & & min \emph{x_{n+1},T} & & \emph{i} \in \emph{V} \\
-        &  (1) & & \sum\limits_{\emph{t}\in\emph{es_i,...,ls_i}} \emph{x_{it}} = 1 & & \emph{i} \in \emph{V}, \emph{t} \in \emph{es_i,...,ls_i}, \emph{t} \in \emph{es_i,...,ls_i} + \emph{d_i} - 1 \\
-        &  (2) & & \sum\limits_{\emph{l}\in\emph{es_j,...,t-d_j}} \emph{x_{jl}} \geq \emph{x_{it}} & & \emph{(j,i)} \in \emph{E}, \emph{t} \in \emph{es_i,...,ls_i} \\
-        &  (3) & & \sum\limits_{\emph{i}\in\emph{V,}\emph{es_i}\leq\emph{t}\leq\emph{ls_i}} \emph{r_{ik}}\emph{u_{it}} \leq \emph{R_k} & & \emph{t} \in {0,1,...,\emph{T}}, \emph{k} \in \emph{R} \\
-        &  (4) & & \emph{x_{ik}} + \emph{x_{jk}} \leq 1 & & (i,j) \in E, \emph{k} = 1,...,\emph{n} \\
-        &  (5) & & \emph{x_{00}} = 1 & & \\
-        &  (6) & & \emph{x_{it}} \in {0, 1} & & \\
-        &  (7) & & \emph{u_{it}}, \emph{x_{it}} \in \mathbb{Z} & &
+        & & & min\{x_{n+1},T\} & & {i} \in {V} \\
+        &  (1) & & \sum\limits_{{t}\in{es_i,...,ls_i}} {x_{it}} = 1 & & {i} \in {V}, {t} \in {es_i,...,ls_i}, {t} \in {es_i,...,ls_i} + {d_i} - 1 \\
+        &  (2) & & \sum\limits_{{l}\in{es_j,...,t-d_j}} {x_{jl}} \geq {x_{it}} & & {(j,i)} \in {E}, {t} \in {es_i,...,ls_i} \\
+        &  (3) & & \sum\limits_{{i}\in{V,}{es_i}\leq{t}\leq{ls_i}} {r_{ik}}{u_{it}} \leq {R_k} & & {t} \in {0,1,...,{T}}, {k} \in {R} \\
+        &  (4) & & {x_{ik}} + {x_{jk}} \leq 1 & & (i,j) \in E, {k} = 1,...,{n} \\
+        &  (5) & & {x_{00}} = 1 & & \\
+        &  (6) & & {x_{it}} \in {0, 1} & & \\
+        &  (7) & & {u_{it}}, {x_{it}} \in \mathbb{Z} & &
 \end{align*}
 \end{subequations}
 
