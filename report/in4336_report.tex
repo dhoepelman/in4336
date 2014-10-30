@@ -245,27 +245,27 @@ The Resource Constraint Project Scheduling Problem (RCPSP) is informally defined
 Given a project $P$ with:
 \begin{itemize}
 \item A set of jobs $V = \{1,\ldots,N\}$ 
-\item A set of resources $R = \{1,\ldots,M\}$
-\item Precedence relations $(i,j) \in prec \subset V \times V$ which means job $j$ is dependent upon job $i$
+\item A set of resources $\mathcal{R} = \{1,\ldots,M\}$
+\item Precedence relations $(i,j) \in E \subset V \times V$ in which $(i,j)$ means job $j$ is dependent upon job $i$
 \item Durations $d_i \in \mathbb{N}$ for each job $i \in V$
-\item Resource limits $R_j$ for each $j \in R$
-\item Job resource consumptions $r_i,j$ for each job $i \in V$ and resource $j \in R$
+\item Resource limits $R_j$ for each $j \in \mathcal{R}$
+\item Job resource consumptions $r_i,j$ for each job $i \in V$ and resource $j \in \mathcal{R}$
 \end{itemize}
 
 Define:
 \begin{itemize}
 \item The start time $s_i \in \mathbb{N}$ of job $i$ in the schedule
 \item The finish time $f_i = s_i + d_i$ of job $i$
-\item The in-progess status $u_{i,t} \in \{0,1\}$ of job $i$ at time $t$ in the schedule
+\item The in-progress status $u_{i,t} \in \{0,1\}$ of job $i$ at time $t$ in the schedule
 \end{itemize}
 
-Find the minimal makespan $T = \max_{i \in V}\{f_i\}$ subject to:
+Find the minimal make-span $T = \max_{i \in V}\{f_i\}$ subject to:
 \begin{itemize}
 \item Dependencies: \\ $f_i \leq s_j$ for every $(i,j) \in prec$
 \item Resource constraints: \\ $\sum_{i \in V}{u_{i,t} \cdot r_{i,j}} \leq R_j$ for every $j \in R, t \in [0,T]$
 \end{itemize}
 
-In addition we define job $0$ and job $N+1$, which are a supersource and supersink.
+In addition we define job $0$ and job $N+1$, which are a super-source and super-sink.
 Both have duration $0$ and use no resources.
 Alls jobs which have no other dependency depend on job $0$, job $N+1$ depends on all jobs on which no other job depends.
 Thus $s_0 = f_0 = 0$ and $s_{N+1} = f_{N+1} = T$
@@ -282,15 +282,59 @@ Using this information we can compute the bounds for each $s_i$ and $f_i$ by cal
 
 We can calculate for job $i$ the earliest start $es_i$ and earliest finish $ef_i = es_i + d_i$ by realizing that a job can never start before all its dependencies have finished.
 Because we know $es_0 = ef_0 = 0$ we can now calculate every earliest start:
-$$\mli{es}_j = max\{\mli{ef}_i | (i,j) \in prec\}$$
+$$\mli{es}_j = max\{\mli{ef}_i | (i,j) \in E\}$$
 
 Similarly we can calculate for job $i$ the latest start $ls_i$ and latest finish $lf_i = ls_i + d_i$ by realizing that a job must finish before all its dependents can start.
 Because we know $ls_{N+1} = lf_{N+1} = \sum_{i \in V}{d_i}$ we can now calculate every latest finish:
-$$\mli{lf}_i = min\{\mli{ls}_j | (i,j) \in prec\}$$
+$$\mli{lf}_i = min\{\mli{ls}_j | (i,j) \in E\}$$
+
+These bounds can be calculated in $O(n^2 \log n)$ time, or $O(n^3)$ time using the Floyd-Warshall algorithm \cite{horbach2010boolean}.
 
 \subsection{SAT}
 
+Our encoding is based on Horbach \cite{horbach2010boolean}.
+To encode RCPSP into SAT we define two types of variables.
+
+Firstly we define a variable for every start time and job combination:
+\[s_{it} \text{ for } i \in V, t \in [\mli{es_i},\mli{ls_i}]\]
+Secondly we define a variable for every time in which a project can be active:
+$$u_{it} \text{ for } i \in V, t \in [\mli{es_i},\mli{lf_i}]$$
+
+We then need some consistency clauses:
+
+\begin{subequations}
+\begin{align}
+        & \bigvee_{t \in [\mli{es_i},\mli{ls_i}]} s_{it}& i \in V\\
+        & s_{it} \implies u_{il} & i \in V, t \in [\mli{es_i},\mli{ls_i}], l \in [t,t+d_i)  \\
+        & \neg s_{jt} \bigvee_{l \in [\mli{es_i}, \mli{es_j}-d_i]} s_{il} & (i,j) \in E, t \in [\mli{es_j},\mli{ls_j}]
+\end{align}
+\end{subequations}
+
+4a ensures that every job starts.
+4b ensures that if job $i$ starts at time $t$, that it then is in progress during $[t,t+d_i]$.
+4c ensures that if job $j$ depends on job $i$, that job $j$ will not start before all of its dependencies have had time to complete.
+
+For the last set of clauses we need to define a \emph{cover}.
+$C \subset V$ is called a cover for any resource $j \in \mathcal{R}$ $\sum_{i \in C}{r_{ij}} > R_j$ or in other words $C$ is a cover if its jobs exceed a resource limit. A cover C is minimal if you cannot remove any job while remaining a cover.
+
+The following clauses ensure that the jobs in progress at one time will never be a cover
+
+$$\bigvee_{i \in C} \neg u_{it} \text{ } t \in [0,T], C \text{ is a minimal cover}$$
+
+Unfortunately the number of minimal covers can be exponential, so this encoding is exponential without further tricks.
+We will come back to this in the experiments section.
+Currently no polynomial SAT encoding of RCPSP is known \cite{abdolshah2014review}.
+
 \subsection{SMT}
+
+The SMT encoding or RCPSP is identical to the SAT encoding, but instead of a clause for every minimal cover the following constraint is added:
+
+\[
+\sum_{i \in V, {es_i}\leq{t}\leq{lf_i}}{u_{it} \cdot r_{ij} \leq R_j} \text{ with } t \in [0,T], j \in \mathcal{R}
+\]
+
+This ensures that a no point the resource usage of all in progress jobs exceeds the limit for one of the resources.
+Because these a polynomial number of clauses with polynomial size, the SMT encoding is polynomial.
 
 \subsection{ILP}
 The 0-1 ILP model for RCPSP is formulated as in \cite{horbach2010boolean} and in \cite{mingozzi1998exact}.
@@ -303,7 +347,7 @@ The resulting 0-1 ILP project makespan optimization in formal description listed
         & & & min\{x_{n+1},T\} & & {i} \in {V} \\
         &  (1) & & \sum\limits_{{t}\in{es_i,...,ls_i}} {x_{it}} = 1 & & {i} \in {V}, {t} \in {es_i,...,ls_i}, {t} \in {es_i,...,ls_i} + {d_i} - 1 \\
         &  (2) & & \sum\limits_{{l}\in{es_j,...,t-d_j}} {x_{jl}} \geq {x_{it}} & & {(j,i)} \in {E}, {t} \in {es_i,...,ls_i} \\
-        &  (3) & & \sum\limits_{{i}\in{V,}{es_i}\leq{t}\leq{ls_i}} {r_{ik}}{u_{it}} \leq {R_k} & & {t} \in {0,1,...,{T}}, {k} \in {R} \\
+        &  (3) & & \sum\limits_{{i}\in{V,}{es_i}\leq{t}\leq{lf_i}} {r_{ik}}{u_{it}} \leq {R_k} & & {t} \in {0,1,...,{T}}, {k} \in {R} \\
         &  (4) & & {x_{ik}} + {x_{jk}} \leq 1 & & (i,j) \in E, {k} = 1,...,{n} \\
         &  (5) & & {x_{00}} = 1 & & \\
         &  (6) & & {x_{it}} \in {0, 1} & & \\
@@ -314,6 +358,10 @@ The resulting 0-1 ILP project makespan optimization in formal description listed
 \section{Experimental Setup}
 
 \section{Results}
+
+\section{Conclusion}
+
+\section{Discussion}
 
 \section{relatedandfuture}
 Besides the main focus of our research, solving the graph coloring problem, we would have liked to include
@@ -338,8 +386,6 @@ integer array and bitvector variables, and use its solving times and compare it 
 \cite{wille2008using}
 \cite{malaguti2010survey}
 \cite{cs395tGCtoSAT}
-
-\section{Conclusion}
 
 \bibliographystyle{acm}
 \bibliography{in4336_report}
