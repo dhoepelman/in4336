@@ -239,9 +239,25 @@ is colored, (2) node \emph{i} receives color \emph{k} only if color \emph{k} has
 \end{subequations}
 
 \section{RCPSP}
-The Resource Constraint Project Scheduling Problem (RCPSP) is the problem of finding a schedule for a 
-set of n jobs \emph{V} = {1,...,n} that have precedence and resource contraints with the goal to 
-minimize the project completion time (makespan).
+The Resource Constraint Project Scheduling Problem (RCPSP) is informally defined as given a project with resource limits, jobs with dependencies and resource consumption of jobs, find an optimal schedule so that at no time too much resources are consumed and the project is completed at the earliest time possible.
+
+\subsection{Formal definition and notation}
+Given a project $P$ with:
+\begin{itemize}
+\item A set of jobs $V = \{1,\ldots,N\}$ 
+\item A set of resources $R = \{1,\ldots,M\}$
+\item Precedence relations $(i,j) \in prec \subset V \times V$ which means job $j$ is dependent upon job $i$
+\item Durations $d_i \in \mathbb{N}$ for each job $i \in V$
+\item Resource limits $R_j$ for each $j \in R$
+\item Job resource consumptions $r_i,j$ for each job $i \in V$ and resource $j \in R$
+\end{itemize}
+
+define
+\begin{itemize}
+\item The start time $s_i$ of job $i$ in a schedule
+\item The in-progess 
+\end{itemize}
+
 \subsection{Bounds}
 
 Both encodings need upper and lower bounds.
