@@ -159,6 +159,7 @@ To get around this better upper bounds were needed, for which we tested both the
 
 
 \section{Graph Coloring}
+\label{sec:graph_coloring}
 
 The graph coloring problem is one of the Karp's 21 original NP-Complete problems \cite{karp1972reducibility}.
 Graph coloring exists in several variants, but they are all reducible to the vertex coloring problem.
@@ -239,6 +240,7 @@ is colored, (2) node \emph{i} receives color \emph{k} only if color \emph{k} has
 \end{subequations}
 
 \section{RCPSP}
+\label{sec:RCPSP}
 The Resource Constraint Project Scheduling Problem (RCPSP) is informally defined as given a project with resource limits, jobs with dependencies and resource consumption of jobs, find an optimal schedule so that at no time too much resources are consumed and the project is completed at the earliest time possible.
 
 \subsection{Formal definition and notation}
@@ -357,6 +359,72 @@ The resulting 0-1 ILP project makespan optimization in formal description listed
 
 \section{Experimental Setup}
 
+We performed our experiments on a VMware VM running Ubuntu Linux server 14.04LTS x86\_64  running under a Windows 7 x64 installation.
+One core of an Intel Core i5-2500K 3.3Ghz, 4 GB DDR3-1600Mhz and 50GB of a SSD were available to the VM.
+
+\subsection{Solvers}
+
+For our SAT solver we used a solver called Lingeling \cite{solverLingeling} because it performed well in a wide number of categories in the SAT Competition 2014 \cite{comp2014sat} and is freely available for research.
+It accepts the common DIMARCS CNF format \cite{challenge1993satisfiability} as an encoding for SAT instances in which we stored our translated instances.
+
+As a SMT solver we chose Z3 \cite{de2008z3} because it is freely available and supports a wide range of operators.
+Z3 accepts a variant of the SMT-LIB version 2 \cite{barrett2010smt} language which we used to store our translated instances.
+
+As an ILP solver we used the commercial Gurobi optimizer \cite{gurobi} because it accepts a wide variety of LP-related models and input formats, because it is freely available for academic purposes and because it is one of the best-performing ILP solvers available at the moment \cite{meindl2012analysis}.
+Gurobi accepts a wide variety of input formats.
+We used the proprietary but human-readable Gurobi LP format to store our translated instances.
+
+\subsection{Graph Coloring}
+
+For graph coloring we used the instances from COLOR02/03/04 \cite{color04}.
+These instances have several different and contain both generated and real-world instances of graph coloring problem.
+
+We wrote python scripts to translate the graph coloring instances from their source format into the target format using the encodings detailed in section \ref{sec:graph_coloring}.
+While python is not a very fast language, we did not expect to translations to take a significant amount of time thus justifying the use of a higher level language.
+We then created a benchmark wrapper around the solvers, which would call the translation script and the solver for each instance while measuring time taken for each action and stopping the solver at a specified timeout.
+This benchmark wrapper also took care of the iterations needed to solve optimization problem with decidability solvers as detailed in section \ref{sec:OptWithDec}. All scripts and instances are available on our GitHub source repository.
+
+The solver, bound and approach combinations tested can be found in Table \ref{table:gccombinations}.
+We did not test the SMT-highest degree upper bouund because the greedy approximation algorithm gives a strictly better bound.
+We did not test the SMT-iterative approach because the experiments could not be completed in time.
+
+\begin{table}
+\begin{tabular}{ |l|l|l| }
+\hline
+Solver & Upper bound & Approach \\
+\hline
+SAT & Highest degree & Approximation \\
+\hline
+SAT & Greedy & Approximation \\
+\hline
+SAT & - & Iterative \\
+\hline
+SMT & Greedy & Approximation \\
+\hline
+ILP & Highest degree & - \\
+\hline
+ILP & Greedy & - \\
+\hline
+\end{tabular}
+\caption{Combinations tested for graph coloring}
+\label{table:gccombinations}
+\end{table}
+
+\subsection{RCPSP}
+
+For RCPSP we were planning to use the instances from PSPLIB \cite{kolisch1997psplib}.
+We wrote python scripts to translate the graph coloring instances from their source format into the target format using the encodings detailed in section \ref{sec:RCPSP}.
+
+While testing our SAT translation we found that even with small instances with 30 jobs our script quickly ran out of memory while generating the minimal set covers.
+While we already knew that the SAT translation was exponential, the authors of the translation reported success with very small problem instances. We did not manage to replicate this success.
+The authors of the encoding circumvented this problem by modifying a SAT solver and dynamically adding clauses when necessary.
+We deemed such modifications outside of the scope of this project.
+
+We decided to focus the rest of our experiments on graph coloring and did not pursue RCPSP any further.
+We refer to the related and future work section \ref{sec:relatedandfuture}
+
+
+
 \section{Results}
 \begin{tabular}{ |l|l|l|l|l|l| }
   \hline
@@ -392,7 +460,8 @@ The resulting 0-1 ILP project makespan optimization in formal description listed
 
 \section{Discussion}
 
-\section{relatedandfuture}
+\section{Related and Future work}
+\label{sec:relatedandfuture}
 Besides the main focus of our research, solving the graph coloring problem, we would have liked to include
 the RCPSP problem.
 %TODO: However we couldn't get to solve the SAT encoding of RCPSP, due to...
