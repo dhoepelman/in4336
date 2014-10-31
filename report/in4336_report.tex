@@ -7,6 +7,8 @@
 \usepackage{algpseudocode} 
 \usepackage{algorithm}
 
+\usepackage{graphicx}
+
 \usepackage{etoolbox}
 \makeatletter
 \def\@copyrightspace{\relax}
@@ -393,6 +395,8 @@ We did not test the SMT-iterative approach because the experiments could not be 
 \hline
 Solver & Upper bound & Approach \\
 \hline
+SAT & $|N$ & Approximation \\
+\hline
 SAT & Highest degree & Approximation \\
 \hline
 SAT & Greedy & Approximation \\
@@ -426,35 +430,8 @@ We refer to the related and future work section \ref{sec:relatedandfuture}
 
 
 \section{Results}
-\begin{tabular}{ |l|l|l|l|l|l| }
-  \hline
-  \multicolumn{2}{|c|}{ILP} & \multicolumn{1}{c|}{SMT} & \multicolumn{3}{c|}{SAT} \\
-  \hline
-  Degree & Greedy & Greedy & Degree & Greedy & Iterative \\
-  \hline
-  100.00\% & 100.00\% & 12.85\% & 11.14\% & 8.12\% & 9.52\% \\
-100.00\% & 192.47\% & 3.00\% & 0.31\% & 0.12\% & 0.18\% \\
-100.00\% & 280.46\% & 0.14\% & 0.23\% & 0.17\% & 0.20\% \\
-100.00\% & 107.72\% & 0.06\% & 0.11\% & 0.10\% & 0.12\% \\
-100.00\% & 126.80\% & 1398.46\% & 1267.24\% & 1962.63\% & 2123.54\% \\
-100.00\% & 101.47\% & 4289.71\% & 10435.78\% & 9832.35\% & 11117.16\% \\
-100.00\% & 119.00\% & 3.26\% & 3.63\% & 2.52\% & 2.68\% \\
-100.00\% & 87.88\% & 15327.27\% & 23572.73\% & 25353.03\% & 25392.42\% \\
-100.00\% & 85.56\% & 808.89\% & 2036.67\% & 845.56\% & 490.00\% \\
-100.00\% & 77.65\% & 2.87\% & 5.93\% & 2.87\% & 3.17\% \\
-100.00\% & 168.42\% & 0.02\% & 0.02\% & 0.02\% & 0.02\% \\
-100.00\% & 201.06\% & 0.02\% & 0.02\% & 0.01\% & 0.02\% \\
-100.00\% & 185.43\% & 0.09\% & 0.09\% & 0.06\% & 0.06\% \\
-100.00\% & 185.66\% & 0.06\% & 0.06\% & 0.04\% & 0.04\% \\
-100.00\% & 69.23\% & 15.38\% & 15.38\% & 7.69\% & 7.69\% \\
-100.00\% & 143.18\% & 1.42\% & 1.70\% & 1.14\% & 1.42\% \\
-100.00\% & 237.09\% & 68.21\% & 13.82\% & 16.47\% & 16.29\% \\
-100.00\% & 64.29\% & 25.00\% & 32.14\% & 14.29\% & 7.14\% \\
-100.00\% & 93.16\% & 2.04\% & 1.78\% & 1.12\% & 0.66\% \\
-  \hline
-100\% & 138\% & 1156\% & 1968\% & 2003\% & 2062\% \\
-  \hline
-\end{tabular}
+
+Our raw result data is listed in Table \ref{table:resultsGCSolveTime} in the appendix. 
 
 \section{Conclusion}
 
@@ -487,5 +464,106 @@ integer array and bitvector variables, and use its solving times and compare it 
 
 \bibliographystyle{acm}
 \bibliography{in4336_report}
+
+
+
+\appendix
+
+\section*{}
+\begin{table*}[b]
+\caption{Solve time in seconds for all GC instances}
+\label{table:resultsGCSolveTime}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lllllllllllll}
+\textbf{Instance} & \textbf{Type} & \textbf{N} & \textbf{M} & \textbf{OPT} & \textbf{Deg + 1} & \textbf{Greedy} & \textbf{\begin{tabular}[c]{@{}l@{}}SAT\\     Deg.\end{tabular}} & \textbf{\begin{tabular}[c]{@{}l@{}}SAT\\     Greedy\end{tabular}} & \textbf{\begin{tabular}[c]{@{}l@{}}SAT\\     It.\end{tabular}} & \textbf{SMT} & \textbf{\begin{tabular}[c]{@{}l@{}}ILP\\     Deg.\end{tabular}} & \textbf{\begin{tabular}[c]{@{}l@{}}ILP\\     Greedy\end{tabular}} \\
+1-Insertions\_4 & CAR & 67 & 232 & 4 & 23 & 5 & 83,72 & 61,05 & 71,57 & 96,56 & 751,44 & 751,44 \\
+2-Insertions\_3 & CAR & 37 & 72 & 4 & 10 & 4 & 0,05 & 0,02 & 0,03 & 0,03 & 16,34 & 31,47 \\
+2-Insertions\_4 & CAR & 149 & 541 & 4 & 38 & 5 &  &  &  &  &  &  \\
+3-Insertions\_3 & CAR & 56 & 110 & 4 & 12 & 4 & 0,18 & 0,13 & 0,15 & 0,11 & 76,67 & 215,06 \\
+3-Insertions\_4 & CAR & 281 & 1046 &  & 57 & 5 &  &  &  &  &  &  \\
+4-Insertions\_3 & CAR & 79 & 156 & 3 & 14 & 4 & 0,77 & 0,76 & 0,88 & 0,45 & 732,79 & 789,4 \\
+4-Insertions\_4 & CAR & 475 & 1795 &  & 80 & 5 &  &  &  &  &  &  \\
+DSJC125.1 & DSJ & 125 & 736 & 5 & 24 & 8 & 0,23 & 0,18 & 0,18 & 0,15 &  &  \\
+DSJC125.5 & DSJ & 125 & 3891 &  & 76 & 26 &  &  &  &  &  &  \\
+DSJC125.9 & DSJ & 125 & 6961 &  & 121 & 56 &  &  &  &  &  &  \\
+DSJR500.1 & DSJ & 500 & 3555 & 12 & 26 & 15 &  & 716,01 & 951,31 &  &  &  \\
+qg.order30 & GOM & 900 & 26100 & 30 & 59 & 32 &  &  &  &  &  &  \\
+qg.order40 & GOM & 1600 & 62400 & 40 & 79 & 64 &  &  &  &  &  &  \\
+qg.order60 & GOM & 3600 & 212400 & 60 & 119 & 64 &  &  &  &  &  &  \\
+qg.order100 & GOM & 10000 & 990000 & 100 & 199 & 128 &  &  &  &  &  &  \\
+le450\_5a & LEI & 450 & 5714 & 5 & 43 & 14 & 9,98 & 10,49 & 0,56 & 25,69 &  &  \\
+le450\_5b & LEI & 450 & 5734 & 5 & 43 & 13 & 29,54 & 78,76 & 1,29 & 270,02 &  &  \\
+le450\_5c & LEI & 450 & 9803 & 5 & 67 & 17 & 3,74 & 1,18 & 0,82 & 4,75 &  &  \\
+le450\_5d & LEI & 450 & 9757 & 5 & 69 & 18 & 9 & 1,22 & 0,79 & 5,02 &  &  \\
+le450\_15a & LEI & 450 & 8168 & 15 & 100 & 22 &  &  &  &  &  &  \\
+le450\_15b & LEI & 450 & 8169 & 15 & 95 & 22 &  &  &  &  &  &  \\
+le450\_15c & LEI & 450 & 16680 & 15 & 140 & 30 &  &  &  &  &  &  \\
+le450\_15d & LEI & 450 & 16750 & 15 & 139 & 31 &  &  &  &  &  &  \\
+le450\_25a & LEI & 450 & 8260 & 25 & 129 & 28 &  &  &  &  &  &  \\
+le450\_25b & LEI & 450 & 8263 & 25 & 112 & 27 &  &  &  &  &  &  \\
+le450\_25c & LEI & 450 & 17343 & 25 & 180 & 37 &  &  &  &  &  &  \\
+le450\_25d & LEI & 450 & 17425 & 25 & 158 & 35 &  &  &  &  &  &  \\
+mug100\_1 & MIZ & 100 & 166 & 4 & 5 & 4 & 0,03 & 0,02 & 0,04 & 0,03 & 121,41 & 204,57 \\
+mug100\_25 & MIZ & 100 & 166 & 4 & 5 & 4 & 0,03 & 0,02 & 0,04 & 0,03 & 189,6 & 381,3 \\
+mug88\_1 & MIZ & 88 & 146 & 4 & 5 & 4 & 0,03 & 0,02 & 0,03 & 0,03 & 33,16 & 61,55 \\
+mug88\_25 & MIZ & 88 & 146 & 4 & 5 & 4 & 0,03 & 0,02 & 0,03 & 0,03 & 51,95 & 96,52 \\
+myciel3 & MYC & 11 & 20 & 4 & 6 & 4 & 0,02 & 0,01 & 0,01 & 0,02 & 0,13 & 0,09 \\
+myciel4 & MYC & 23 & 71 & 5 & 12 & 5 & 0,06 & 0,04 & 0,05 & 0,05 & 3,52 & 5,05 \\
+myciel5 & MYC & 47 & 236 & 6 & 24 & 6 & 26,34 & 31,39 & 31,06 & 130,04 & 190,64 & 452,03 \\
+myciel6 & MYC & 95 & 755 & 7 & 48 & 7 &  &  &  &  &  &  \\
+myciel7 & MYC & 191 & 2360 & 8 & 96 & 8 &  &  &  &  &  &  \\
+fpsol2.i.1 & REG & 496 & 11654 & 65 & 253 & 65 &  &  &  &  &  &  \\
+fpsol2.i.2 & REG & 451 & 8691 & 30 & 347 & 30 &  &  &  &  & 1607,03 & 1661,68 \\
+fpsol2.i.3 & REG & 425 & 8688 & 30 & 347 & 30 &  &  &  &  & 1390,73 & 1639,06 \\
+inithx.i.1 & REG & 864 & 18707 & 54 & 503 & 54 &  &  &  &  &  &  \\
+inithx.i.2 & REG & 645 & 13979 & 31 & 542 & 31 &  &  &  &  &  &  \\
+inithx.i.3 & REG & 621 & 13969 & 31 & 543 & 31 &  &  &  &  &  &  \\
+mulsol.i.1 & REG & 197 & 3925 & 49 & 122 & 49 &  &  &  &  & 52,14 & 65,53 \\
+mulsol.i.2 & REG & 188 & 3885 & 31 & 157 & 31 &  &  &  &  & 59,02 & 66,69 \\
+mulsol.i.3 & REG & 184 & 3916 & 31 & 158 & 31 &  &  &  &  & 61,67 & 65,3 \\
+mulsol.i.4 & REG & 185 & 3946 & 31 & 159 & 31 &  &  &  &  & 68,68 & 94,96 \\
+mulsol.i.5 & REG & 186 & 3973 & 31 & 160 & 31 &  &  &  &  & 71,37 & 87,64 \\
+zeroin.i.1 & REG & 211 & 4100 & 49 & 112 & 49 &  &  &  &  & 246,82 & 299,98 \\
+zeroin.i.2 & REG & 211 & 3541 & 30 & 141 & 30 &  &  &  &  & 93,04 & 135,51 \\
+zeroin.i.3 & REG & 206 & 3540 & 30 & 141 & 30 &  &  &  &  & 75,35 & 119,95 \\
+anna & SGB-B & 138 & 986 & 11 & 72 & 12 & 131,92 & 204,31 & 221,23 & 145,58 & 10,41 & 13,62 \\
+david & SGB-B & 87 & 812 & 11 & 83 & 12 & 212,89 & 200,58 & 226,91 & 87,51 & 2,04 & 2,28 \\
+huck & SGB-B & 74 & 602 & 11 & 54 & 11 & 155,58 & 167,33 & 167,67 & 101,16 & 0,66 & 0,7 \\
+jean & SGB-B & 80 & 508 & 10 & 37 & 10 & 18,33 & 7,61 & 4,48 & 7,28 & 0,9 & 0,91 \\
+games120 & SGB-G & 120 & 1276 & 9 & 14 & 9 & 1,18 & 0,82 & 0,98 & 1,06 & 32,52 & 39,14 \\
+miles250 & SGB-S & 128 & 774 & 8 & 17 & 9 & 0,6 & 0,29 & 0,38 & 0,29 & 10,11 & 8,16 \\
+miles500 & SGB-S & 128 & 2340 & 20 & 39 & 22 &  &  &  &  & 18,16 & 18 \\
+miles750 & SGB-S & 128 & 4226 & 31 & 65 & 34 &  &  &  &  & 40,76 & 49,02 \\
+miles1000 & SGB-S & 128 & 6432 & 42 & 87 & 44 &  &  &  &  & 749,51 & 615,09 \\
+miles1500 & SGB-S & 128 & 10396 & 73 & 107 & 76 &  &  &  &  & 212,36 & 397,84 \\
+queen5\_5 & SGB-Q & 25 & 320 & 5 & 17 & 8 & 0,09 & 0,04 & 0,03 & 0,07 & 0,28 & 0,21 \\
+queen6\_6 & SGB-Q & 36 & 580 & 7 & 20 & 11 & 1,33 & 1,19 & 1,15 & 1,45 &  &  \\
+queen7\_7 & SGB-Q & 49 & 952 & 7 & 25 & 10 & 0,27 & 0,17 & 0,15 & 0,31 & 15,2 & 14,28 \\
+queen8\_12 & SGB-Q & 96 & 2736 & 12 & 33 & 15 &  &  &  &  & 79,55 & 74,84 \\
+queen8\_8 & SGB-Q & 64 & 1456 & 9 & 28 & 13 &  &  &  &  &  &  \\
+queen9\_9 & SGB-Q & 81 & 2112 & 10 & 33 & 16 &  &  &  &  &  & 
+\end{tabular}
+}
+\end{table*}
+
+\section*{}
+\begin{table}
+\caption{Graph coloring instance types}
+\label{my-label}
+\begin{tabular}{ll}
+\textbf{Type} & \textbf{Description} \\
+\textbf{CAR}   & Based on MYC graphs with added nodes with identical density                                                    \\
+\textbf{DSJ}   & Random graphs made by Johnson et al. {[}13{]}.                                                                 \\
+\textbf{GOM}   & Latin squares                                                                                                  \\
+\textbf{LEI}   & Leighton Graphs, these have specic kinds of asymmetry                                                          \\
+\textbf{MIZ}   & No information was available about this type                                                                   \\
+\textbf{MYC}   & Graphs made from Mycielski transformations, which ensures graphs without triangles                             \\
+\textbf{REG}   & Graphs made from register allocation instances from specic programs                                           \\
+\textbf{SGB-B} & Graphs based on character interactions within books                                                            \\
+\textbf{SGB-G} & Graphs based on footballs teams playing against each other                                                     \\
+\textbf{SGB-M} & Geometric graphs of cities connected if they are close enough                                                  \\
+\textbf{SGB-Q} & Queen graphs, giving the number of queens that can be placed on an NxN graph without them attacking each other
+\end{tabular}
+\end{table}
 
 \end{document}
