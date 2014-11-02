@@ -434,18 +434,21 @@ We refer to the related and future work section \ref{sec:relatedandfuture}
 Our raw result data is listed in Table \ref{table:resultsGCSolveTime} in the appendix. 
 
 \section{Conclusion}
-%TODO:Vertaling naar andere formalism.
+%TODO:Vertaling naar andere formalism: CSP (Constraint Satisfaction Problem), SAT, SMT, ILP en EA (Evolutionary Algorithms)
 %TODO:RCPSP naar SAT is niet polynomiaal. We weten dat er één bestaat maar konden hem niet vinden.
-%TODO:
-
+In this paper, we managed to compare the performance of different types of solvers/algorithms such as SAT, SMT, ILP and greedy for the graph-coloring problem.
+%With SAT solver we were able to find the minimum k for the graph-coloring problem by exploiting the upper/lower bounds using greedy and binary search for guessing color k.
+We couldn't find our way around with the RCPSP to SAT encoding. Even for small problem intances it was taking too long and there was memory overflow. We know that such a polynomial formulation of the RCPSP as a SAT exist, but we couldn't find it.
 \section{Discussion}
 
 \section{Related and Future work}
 \label{sec:relatedandfuture}
 %TODO:Beschrijven wat andere mensen hebben gedaan en waarom dat relevant is.
+In \cite{horbach2010boolean} they adapted a satisfiability solver for there specific domain of the problem. They were able to close several medium and large size benchmark instances from the PSLIB of the RCPSP that have never been closed before by providing tighter lower bounds and by finding bether feasible solutions.
+In \cite{klein1999computing} they 
 %TODO:we hadden graag SMT en RCPSP getest.
-%TODO:We hadden graag de truckjes in de paper van Horbash kunnen gebruiken
-%TODO:Wat SMT interessant maakt i.p.v. is de 'Lazy clauses generation'.
+%TODO:We hadden graag de truckjes in de paper van Horbach kunnen gebruiken
+%TODO:Wat SMT interessant maakt i.p.v. SAT is de 'Lazy clauses generation'.
 Besides the main focus of our research, solving the graph coloring problem, we would have liked to include
 the RCPSP problem.
 %TODO: However we couldn't get to solve the SAT encoding of RCPSP, due to...
@@ -565,7 +568,7 @@ queen9\_9 & SGB-Q & 81 & 2112 & 10 & 33 & 16 &  &  &  &  &  &
 \textbf{LEI}   & Leighton Graphs, these have specic kinds of asymmetry                                                          \\
 \textbf{MIZ}   & No information was available about this type                                                                   \\
 \textbf{MYC}   & Graphs made from Mycielski transformations, which ensures graphs without triangles                             \\
-\textbf{REG}   & Graphs made from register allocation instances from specic programs                                           \\
+\textbf{REG}   & Graphs made from register allocation instances from specic programs                                           \\
 \textbf{SGB-B} & Graphs based on character interactions within books                                                            \\
 \textbf{SGB-G} & Graphs based on footballs teams playing against each other                                                     \\
 \textbf{SGB-M} & Geometric graphs of cities connected if they are close enough                                                  \\
