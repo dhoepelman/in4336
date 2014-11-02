@@ -49,6 +49,16 @@ Luis Garcia Rosario\\
 
 \begin{abstract}
 
+In this paper we perform a comparison of solvers for the Satisfiability (SAT), Satisfiability Modulo Theories (SMT) and Integer Linear Programming (ILP) problems by translating instances of the Graph Coloring (GC) and the Resource Constrained Project Scheduling Problem (RCPSP) problems into encoding which these solvers can handle.
+
+Because we used the optimization versions of GC and RCPSP we could not directly use the decision SAT and SMT solvers.
+We formulated two approaches to iterative over the candidate optimal solutions and compared them against each other.
+
+GC was successfully encoded for all solvers, but the SAT and SMT version suffered from having quadratic complexity in the value of the optimal solution.
+We were not able to successfully encode and test RCPSP to SAT, because the only known translation has exponential complexity.
+
+In our GC tests ILP was able to solve more instances, but SAT and SMT were several magnitudes fasted on small problem instances.
+
 \end{abstract}
 
 % Lingeling was chosen because it performed well in a large number of categories in the recent SAT Competition 2014 (http://www.satcompetition.org/2014/) contest
