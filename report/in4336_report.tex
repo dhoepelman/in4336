@@ -541,15 +541,15 @@ Specifically we've seen that for graph coloring ILP is able to solve a broader s
 \section{Related and Future work}
 \label{sec:relatedandfuture}
 %TODO:Beschrijven wat andere mensen hebben gedaan en waarom dat relevant is.
-In the literature there is so many interesting previous work on solving graph-coloring and resource constraint project scheduling problem. Here, we will discuss few of them that may have been relevant to our research.
-Our work was based on earlier work done in, among others, \cite{ramani2004breaking}, where they solve hard problems (graph coloring as case study) by the reducing these to generic problems such as SAT and 0-1 ILP. They used a technique called symmetry breaking in an attempt to improve the performance of reduction-based methods, which are not competitive with problem-specific methods.
-In \cite{horbach2010boolean} they adapted a satisfiability solver for there specific domain of the (RCPSP) problem. They were able to close several medium and large size benchmark instances from the PSLIB of the RCPSP that have never been closed before by providing tighter lower bounds and by finding bether feasible solutions. They cover the problem of dealing with linear inequalities over Boolean variable that can cause the number of clauses needed for the represention of many combinatorial problems to grow exponentially
-In \cite{klein1999computing} they used methonds and techniques for reducing problem data of RCPSP which can be exploited with the \emph{destructive improvement technique} that restricts a problem by setting a maximal objective function value F and try to contradict the feasibility of this reduced problem. 
+In the literature there are some interesting previous work on solving graph coloring and resource constraint project scheduling problem. Here, we will discuss few of them and their methods that may have been relevant to our research.
+Our work was based on earlier work done simmilar to, among others, \cite{ramani2004breaking}, where they optimally solve hard combinatorial problems (graph coloring as case study) by the reducing these to generic problems such as SAT and 0-1 ILP. They used a technique called symmetry breaking in an attempt to improve the performance of reduction-based methods, which are not competitive with problem-specific methods. This technique may be used together with the academic 0-1 solver PBS II to obtain bether performance results in future work.
 %TODO:we hadden graag SMT en RCPSP getest.
-%TODO:We hadden graag de truckjes in de paper van Horbach kunnen gebruiken
+Besides focusing on solving the graph coloring problem, we would have liked to expand our research on the RCPSP problem encoding to compare the performance of the ILP and SMT solvers.
 %TODO:Wat SMT interessant maakt i.p.v. SAT is de 'Lazy clauses generation'.
-Besides the main focus of our research, solving the graph coloring problem, we would have liked to include
-the RCPSP problem.
+%    :What makes SMT interesting to explore is the lazy clause generation.
+%TODO:We hadden graag de truckjes in de paper van Horbach kunnen gebruiken
+For the RCPSP problem there are a few papers that we found interesting. As in \cite{horbach2010boolean}, they adapted a satisfiability solver for there specific domain of the (RCPSP) problem. They were able to close several medium and large size benchmark instances from the PSLIB of the RCPSP that have never been closed before by providing tighter lower bounds and by finding bether feasible solutions. They cover the problem of dealing with linear inequalities over Boolean variable that can cause the number of clauses needed for the represention of many combinatorial problems to grow exponentially. We find this methods interesting enough to exploit further.
+In \cite{klein1999computing} they used methonds and techniques for reducing problem data of RCPSP which can be exploited with the \emph{destructive improvement technique} that restricts a problem by setting a maximal objective function value F and try to contradict the feasibility of this reduced problem. This too might be interesting to evaluate the performance improvement. 
 %TODO: However we couldn't get to solve the SAT encoding of RCPSP, due to...
 We implemented an ILP encoding of the RCPSP problem to compare the solving time with the SAT encoding, 
 but we didn't have the SAT solving times to compare with. 
