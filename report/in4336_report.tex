@@ -444,6 +444,8 @@ We couldn't find our way around with the RCPSP to SAT encoding. Even for small p
 \section{Related and Future work}
 \label{sec:relatedandfuture}
 %TODO:Beschrijven wat andere mensen hebben gedaan en waarom dat relevant is.
+In the literature there is so many interesting previous work on solving graph-coloring and resource constraint project scheduling problem. Here, we will discuss few of them that may have been relevant to our research.
+Our work was based on earlier work done in, among others, \cite{ramani2004breaking}, where they solve hard problems (graph coloring as case study) by the reducing these to generic problems such as SAT and 0-1 ILP. They used a technique called symmetry breaking in an attempt to improve the performance of reduction-based methods, which are not competitive with problem-specific methods.
 In \cite{horbach2010boolean} they adapted a satisfiability solver for there specific domain of the (RCPSP) problem. They were able to close several medium and large size benchmark instances from the PSLIB of the RCPSP that have never been closed before by providing tighter lower bounds and by finding bether feasible solutions. They cover the problem of dealing with linear inequalities over Boolean variable that can cause the number of clauses needed for the represention of many combinatorial problems to grow exponentially
 In \cite{klein1999computing} they used methonds and techniques for reducing problem data of RCPSP which can be exploited with the \emph{destructive improvement technique} that restricts a problem by setting a maximal objective function value F and try to contradict the feasibility of this reduced problem. 
 %TODO:we hadden graag SMT en RCPSP getest.
