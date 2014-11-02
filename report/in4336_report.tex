@@ -107,6 +107,9 @@ While solving linear programs is in P, solving integer linear programs is NP-Har
 An ILP consists of a number of variables $x_0, \ldots x_n$, a linear function $f$ to maximize or minimize and constraints which all follow the form of $a_0 x_0 + \ldots + a_n x_n \leq b$.
 
 A specialized form of the ILP is the binary integer linear program, where every variable is a binary variable.
+
+\newpage
+
 \section{Solving optimization problems with decidability solvers}
 \label{sec:OptWithDec}
 
@@ -118,7 +121,7 @@ ILP is an optimization problem and can thus naturally be used as a target for op
 To use decidability solvers for an optimization problem one can formulate the optimization problem as a sequence of decision problems $P$ with cost $c \in \mathbb{N}$.
 In each step the solver looks for a solution to $P_c$.
 
-We independently though of two ways to go through this sequence, but they are identical too the approaches described by Wille et. Al \cite{wille2008using}.
+We independently though of two ways to go through this sequence, but they are identical too the approaches described by Wille et. al \cite{wille2008using}.
 We will use their terminology.
 
 The first approach called the \emph{iterative approach} starts at the lower bound of the possible costs $c = \mli{LB}$, usually $\mli{LB} = 0$.
@@ -137,7 +140,7 @@ In pseudocode:
 \State $\mli{OPT} \gets c$
 \end{algorithmic}
 
-This approach has the obvious disadvantage that $\mli{OPT}-\mli{LB}$ iterations are needed which is especially problematic if $\mli{OPT}$ is large
+This approach has the obvious disadvantage that \\ $\mli{OPT}-\mli{LB}$ iterations are needed which is especially problematic if $\mli{OPT}$ is large
 
 An alternative approach is too determine increasingly better lower and upper bounds.
 If $P_c$ is determined feasible, one can look for a solution to $P_{c'}$ with $c' < c$. Likewise if $P_c$ is unfeasible, one can look for a solution to $P_{c'}$ with $c' > c$.
@@ -163,6 +166,7 @@ By performing a binary search over all possible $c$, we set the maximum number o
 During our experiments we encountered the problem that the first problem $P_{\frac{1}{2}\mli{UB}}$ took a long time to encode, even though it usually was satisfiable.
 To get around this better upper bounds were needed, for which we tested both theoretical upper bounds and approximation algorithms.
 
+\newpage
 
 \section{Graph Coloring}
 \label{sec:graph_coloring}
@@ -188,7 +192,8 @@ We stuck with an lower bound of $0$ for the approximation approach and $1$ for t
 
 The trivial upper bound for a graph is $|V|$ colors, as every vertex can have its own unique color in that case.
 Another useful upper bound is $max(degree(v))+1 \text{ for } v \in V$, the degree being the number of neighbors or edges of a node.
-This u
+This is an upper bound because a greedy algorithm can easily color a graph with this many colors by coloring every node using a color which none of its neighbors have.
+As every node is guaranteed to have at most $max(degree(v))$ neighbours at most $max(degree(v))+1$ colors are needed to color the whole graph using a greedy algorithm.
 
 \subsection{SAT encoding}
 
@@ -212,38 +217,35 @@ Clauses of type 2a ensures that every node has one or more colors. Clauses of ty
 The encoding uses $O(|V| k)$ variables and $O(|E|+|V| \cdot k^2)$ clauses.
 
 There is another possible encoding which uses $O(|V| \cdot \lceil{log_2{k}\rceil})$ variables and $O(2^{\lceil{log_2k}\rceil} \cdot |E|+(2^{\lceil{log_2k\rceil}}-k) \cdot |V|)$ clauses which shows promising results in \cite{wille2008using}.
-Unfortunately we did not have time to implement and test this encoding, we refer to section \ref{relatedandfuture}.
+Unfortunately we did not have time to implement and test this encoding and refer to the related and future work section \ref{sec:relatedandfuture}.
 
 \subsection{SMT encoding}
 Our SMT encoding is identical to our SAT encoding.
 There are several candidate encodings which do use this additional expressive power, which are detailed in the future work section.
 
 \subsection{ILP encoding}
-The combinatorial problem of graph coloring can also be formulated as an 0-1 ILP in which the variables are binary variables. 
-An advantage of using ILP is that unlike SAT and SMT, it can solve optimization problems. 
-The 0-1 ILP formulation of the graph coloring problem,
-can be done by taking the set of nodes V = {1,...,\emph{n}} of the graph G and the number of 
-colors is $1 \leq \emph{k} \leq |V|$. By observing that a graph cannot use more colors than it's maximum 
-degree, we put the upper bound for color \emph{k} as the highest degree of G.
-Then, each color is represented by a binary variable \emph{$y_k$}, 
-with \emph{k} = 1,...,\emph{n}, that indicatates whether color \emph{k} is used (\emph{$y_k$} = 1) or 
-not (\emph{$y_k$} = 0). An objective function is formed by adding up these variables 
-($\sum\limits_{k=1}^n \emph{$y_k$}$) to obtain the minimum sum. That is, we want the minimum number 
-of the variables \emph{$y_k$} that are equal to 1. Furthermore, a binary variable \emph{$x_{ik}$} is 
-used for each node-color combination to indicate whether node \emph{i} has received a color \emph{k} 
-(\emph{$x_{ik}$} = 1) or not (\emph{$x_{ik}$} = 0). In the resulting 0-1 ILP in formal description 
-listed below, adopted from \cite{faigle2002mathprogramming}, contraint (1) guarantees that each node 
-is colored, (2) node \emph{i} receives color \emph{k} only if color \emph{k} has been used, (3) adjecent nodes should have different colors:
+
+We adopted the binary ILP encoding for GC from Faigle et al. \cite{faigle2002mathprogramming}. 
+We define the following variables: $x_{ik}$ which is $1$ iff node $i$ has color $k$ and $y_k$ which is $1$ iff color $k$ is used.
+As ILP is an optimization problem and we have an upper bound we can create variables for $k \leq |V|$.
+The objective function $\min \sum\limits_{k=1}^n y_k$ ensures that the minimal number of colors will be used.
+We then define the following constraints:
 \begin{subequations}
-\begin{align*}
-        & & & min \sum\limits_{k=1}^n \emph{$y_k$} & & \\
-        &  (1) & & \sum\limits_{k=1}^n \emph{$x_{ik}$} = 1 & & \emph{i} = 1,...,\emph{n} \\
-        &  (2) & & \emph{$x_{ik}$} - \emph{$y_k$} \leq 0 & & \emph{i,k} = 1,...,\emph{n} \\
-        &  (3) & &  \emph{$x_{ik}$} + \emph{$x_{jk}$} \leq 1 & & (i,j) \in E, \emph{k} = 1,...,\emph{n} \\
-        &  (4) & & 0 \leq \emph{$x_{ik}$}, \emph{$y_k$} \leq 1 & & \\
-        &  (5) & & \emph{$x_{ik}$}, \emph{$y_k$} \in \mathbb{Z} & &
-\end{align*}
+\begin{align}
+& \sum\limits_{k=1}^n \emph{$x_{ik}$} = 1 & & \emph{i} = 1,...,\emph{n} \\
+& \emph{$x_{ik}$} - \emph{$y_k$} \leq 0 & & \emph{i,k} = 1,...,\emph{n} \\
+&  \emph{$x_{ik}$} + \emph{$x_{jk}$} \leq 1 & & (i,j) \in E, \emph{k} = 1,...,\emph{n} \\
+& 0 \leq \emph{$x_{ik}$}, \emph{$y_k$} \leq 1 & & \\
+& \emph{$x_{ik}$}, \emph{$y_k$} \in \mathbb{Z} & &
+\end{align}
 \end{subequations}
+
+3a ensures that every node only has one color.
+3b ensures that whenever a color is assigned to a node, that color is counted as used.
+3c ensures that nodes which share an edge do not have the same color.
+3d and 3e ensure that all variables are binary.
+
+These variables and constraint together ensure that a valid solution to the GC instance can be constructed from the $x_{ik}$ variables.
 
 \section{RCPSP}
 \label{sec:RCPSP}
