@@ -49,6 +49,16 @@ Luis Garcia Rosario\\
 
 \begin{abstract}
 
+In this paper we perform a comparison of solvers for the Satisfiability (SAT), Satisfiability Modulo Theories (SMT) and Integer Linear Programming (ILP) problems by translating instances of the Graph Coloring (GC) and the Resource Constrained Project Scheduling Problem (RCPSP) problems into encoding which these solvers can handle.
+
+Because we used the optimization versions of GC and RCPSP we could not directly use the decision SAT and SMT solvers.
+We formulated two approaches to iterative over the candidate optimal solutions and compared them against each other.
+
+GC was successfully encoded for all solvers, but the SAT and SMT version suffered from having quadratic complexity in the value of the optimal solution.
+We were not able to successfully encode and test RCPSP to SAT, because the only known translation has exponential complexity.
+
+In our GC tests ILP was able to solve more instances, but SAT and SMT were several magnitudes fasted on small problem instances.
+
 \end{abstract}
 
 % Lingeling was chosen because it performed well in a large number of categories in the recent SAT Competition 2014 (http://www.satcompetition.org/2014/) contest
@@ -61,26 +71,17 @@ This possibility makes it feasible to make highly-optimized solving algorithms c
 For most popular problems multiple solvers exists, and benchmarks are available or contests are held to compare them.
 However comparisons between problems are rarer and in this project we will do such a comparison.
 We want to see if some problems are more suitable to encode other problems in or if the choice of problem to encode to makes little impact.
-
-Another question is whether translations into intermediary problems add significant overhead.
-While we know that polynomial transformations do not increase the complexity of a NP-Hard problem, it might still have a practical impact in how fast a problem instance can be solved or what the largest solvable problem instance is.
-With this we want to see if encodings can be viably done in smaller easier steps, or if it is better to encode the problem directly into the target problem.
-
-We formulated the following research question for this project:
+Therefore we formulated the following research question for this project:
 
 \begin{enumerate}
-\item[RQ1]{Is there a speed difference between different target problems when solving an identical translated problem instance?}
-\item[RQ2]{Are intermediate transformations viable?}
-	\begin{enumerate}
-	\item[RQ2.1]{Does an intermediate transformation significantly decrease the speed with which problem instances can be solved?}
-	\item[RQ2.2]{Does an intermediate transformation decrease the size of the largest possible problem instances which can be solved?}
-	\end{enumerate}
+\item[RQ]{Is there a speed difference between different target problems when solving an identical translated problem instance?}
 \end{enumerate}
 
 In answering our research questions we will focus on solvers for \emph{Integer Linear Programming} (ILP), \emph{Satisfiability} (SAT) and \emph{Satisfiability Modulo Theories} (SMT).
 
 As problems to encode we will focus on the \emph{Resource Constrained Project Scheduling Problem} (RCPSP) and \emph{Graph Coloring} (GC).
 
+\newpage 
 \section {Target problems}
 
 \subsubsection*{Satisfiability (SAT)}
@@ -101,13 +102,11 @@ The concrete advantage of this is that certain constraints which are hard to spe
 
 \subsubsection*{Integer Linear Programming (ILP)}
 
-An Integer Linear Program is a linear program (LP) that has the additional contraint that all variables must be integers. 
-An ILP problem is an optimization problem where the objective is to maximize or minimize some value. 
-The encoding of an optimization problem into ILP starts by composing an objective function in order to find the optimal objective value.
-Then, the objective function is subjected to one or more constraints functions. Each function listed representing a different constraint.
-The variables used in these functions may be bounded, e.g. in 0-1 ILP encoding variables can take a value of 0 or 1.
-Finally, the last constraint in ILP is the integrallity constraint, meaning that all variables must take integers.
+An Integer Linear Program is a linear program but which in which additional constraints can be added so variables can only be integers.
+While solving linear programs is in P, solving integer linear programs is NP-Hard.
+An ILP consists of a number of variables $x_0, \ldots x_n$, a linear function $f$ to maximize or minimize and constraints which all follow the form of $a_0 x_0 + \ldots + a_n x_n \leq b$.
 
+A specialized form of the ILP is the binary integer linear program, where every variable is a binary variable.
 \section{Solving optimization problems with decidability solvers}
 \label{sec:OptWithDec}
 
@@ -528,7 +527,6 @@ Specifically we've seen that for graph coloring ILP is able to solve a broader s
 In this paper, we managed to compare the performance of different types of solvers/algorithms such as SAT, SMT, ILP and greedy for the graph-coloring problem.
 %With SAT solver we were able to find the minimum k for the graph-coloring problem by exploiting the upper/lower bounds using procedures for computing color k using greedy and binary search for guessing.
 We couldn't find our way around with the RCPSP to SAT encoding. Even for small problem intances it was taking too long and there was also memory overflow. We know that such a polynomial formulation of the RCPSP as a SAT exist, but we couldn't find it.
-\section{Discussion}
 
 \section{Related and Future work}
 \label{sec:relatedandfuture}
@@ -565,8 +563,6 @@ integer array and bitvector variables, and use its solving times and compare it 
 
 \bibliographystyle{plain}
 \bibliography{in4336_report}
-
-
 
 \appendix
 
@@ -648,7 +644,7 @@ queen9\_9 & SGB-Q & 81 & 2112 & 10 & 33 & 16 &  &  &  &  &  &
 \end{table*}
 
 \section*{}
-\begin{table}
+\begin{table}[h!]
 \caption{Graph coloring instance types}
 \label{my-label}
 \begin{tabular}{ll}
