@@ -538,12 +538,6 @@ Our Graphs Coloring SAT, SMT and ILP comparison gives further insight into this 
 We shown that the specific approach makes relatively little difference and that the choise of solver type is much more important.
 Specifically we've seen that for graph coloring ILP is able to solve a broader set of graph coloring instances and is less susceptible to increased problem size, but does perform worse on smaller instances than SAT and SMT do.
 
-%TODO:Vertaling naar andere formalism: CSP (Constraint Satisfaction Problem), SAT, SMT, ILP en EA (Evolutionary Algorithms)
-%TODO:RCPSP naar SAT is niet polynomiaal. We weten dat er één bestaat maar konden hem niet vinden.
-In this paper, we managed to compare the performance of different types of solvers/algorithms such as SAT, SMT, ILP and greedy for the graph-coloring problem.
-%With SAT solver we were able to find the minimum k for the graph-coloring problem by exploiting the upper/lower bounds using procedures for computing color k using greedy and binary search for guessing.
-We couldn't find our way around with the RCPSP to SAT encoding. Even for small problem intances it was taking too long and there was also memory overflow. We know that such a polynomial formulation of the RCPSP as a SAT exist, but we couldn't find it.
-
 \section{Related and Future work}
 \label{sec:relatedandfuture}
 %TODO:Beschrijven wat andere mensen hebben gedaan en waarom dat relevant is.
@@ -563,22 +557,25 @@ It can be usefull to explore the SMT encoding of RCPSP, as it can work with amon
 integer array and bitvector variables, and use its solving times and compare it with the ILP encoding.
 
 %TODO: Deze referenties in de tekst verwerken of anders onzichtbaar opnemen in de 
-\cite{alves2013resource}
-\cite{abio2014encoding}
-\cite{wu2013exploiting}
-\cite{velev2009exploiting}
-\cite{horbach2010boolean}
-\cite{klein1999computing}
-\cite{mingozzi1998exact}
-\cite{sharma2011polynomial}
-\cite{ramani2004breaking}
-\cite{schutt2011explaining}
-\cite{wille2008using}
-\cite{malaguti2010survey}
-\cite{cs395tGCtoSAT}
+
+\nocite{alves2013resource}
+\nocite{abio2014encoding}
+\nocite{wu2013exploiting}
+\nocite{velev2009exploiting}
+\nocite{horbach2010boolean}
+\nocite{klein1999computing}
+\nocite{mingozzi1998exact}
+\nocite{sharma2011polynomial}
+\nocite{ramani2004breaking}
+\nocite{schutt2011explaining}
+\nocite{wille2008using}
+\nocite{malaguti2010survey}
+\nocite{cs395tGCtoSAT}
 
 \bibliographystyle{plain}
 \bibliography{in4336_report}
+
+\newpage
 
 \appendix
 
