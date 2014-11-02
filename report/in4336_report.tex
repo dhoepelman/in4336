@@ -437,7 +437,15 @@ We refer to the related and future work section \ref{sec:relatedandfuture}
 Our raw result data is listed in Table \ref{table:resultsGCSolveTime} in the appendix.
 We managed to result find optimal solutions for \textbf{44 out of 67} instances tested.
 Our first result is that the all SAT approaches and the SMT solver performed approximately the same.
-SAT iterative and SAT greedy both managed to solve 26 instances, one more than both SAT degree and SMT. 6 instances were solved with SAT which were not solved with ILP.
+SAT iterative and SAT greedy both managed to solve 26 instances, one more than both SAT degree and SMT.
+6 instances were solved with SAT which were not solved with ILP.
+
+We also see that all SAT approaches perform broadly the same and that only SAT greedy outperforms SAT degree because of the better upper bound which means possibly less iterations.
+The reason for this is that $k$'s not close to the optimum are checked very quickly because they are either over-constrained when k is too small or under-constrained when k is too large.
+As such the approximation approach can quickly converge its bounds.
+In our experiments we saw that usually withing one or a few minutes the bounds were narrowed down to $[OPT-1, OPT+1]$ and that most of the time was spend on determining whether $OPT$ was satisfiable.
+There were a few instances though where most of the time was spent on the $OPT-1$ instance.
+We saw that in general the SAT solvers could more quickly determine if an instance was satisfiable rather than determine that it was unsatisfiable.
 
 ILP degree and ILP greedy performed very comparably, both managed to solve exactly the same instances.
 ILP solved a larger amount of instances than SAT and SMT with 34 instances solved, of which 14 were not solved by SAT and SMT.
@@ -455,6 +463,8 @@ It could be that the SAT and SMT solver greatly benefit from this kind of asymme
 The instances solved by ILP but not by SAT all share the property have the highest $OPT$ of all instances solved.
 As the translation for SAT was quadratic in $k$, while the one for ILP was linear in $k$ this is probably the reason
 why ILP could solve these instances and SAT and SMT couldn't.
+Another interesting fact is that all problems ILP could solve but SAT couldn't, the greedy algorithm found either an optimal solution or a very close one.
+For one type of instances it always found an optimal coloring, and for the other type of instances it was less than 10\% above the optimal.
 
 \begin{table}
 \begin{tabular}{ |l|l| }
@@ -495,18 +505,24 @@ The best correlation we found can be seen in figure \ref{fig:nodecolorcombinatio
 The correlation is still weak at best, but for both SAT and ILP a general increase in solving time can be seen as it increases, which was not the case for the other metrics.
 It can be seen that the solving time is much more influenced by it for SAT than for ILP, which is a possible explanation as to why ILP was able to solve a few of the larger instances.
 
-
-
-
 \begin{figure}
   \includegraphics[width=0.5\textwidth]{figures/nodecolor_combinations_in_opt}
   \caption{Solve time plotted against possible node, color combinations $|N|*k$ with $k=OPT$}
   \label{fig:nodecolorcombinations}
 \end{figure}
 
-
-
 \section{Conclusion}
+
+Our testing has not been as extensive as we initially had planned, primarily we can base our conclusion on only four distinct encodings while lots more are possible.
+
+Our first result is that not all solver can be used to solve all problems.
+While we know from theory that there is a polynomial transformation possible from every NP problem to every NP-Hard problem, that transformation is apparently not always known to the scientific community.
+As such we can safely answer our research question with a no: not all solvers types can be used for all problems.
+
+Our Graphs Coloring SAT, SMT and ILP comparison gives further insight into this question.
+We shown that the specific approach makes relatively little difference and that the choise of solver type is much more important.
+Specifically we've seen that for graph coloring ILP is able to solve a broader set of graph coloring instances and is less susceptible to increased problem size, but does perform worse on smaller instances than SAT and SMT do.
+
 %TODO:Vertaling naar andere formalism: CSP (Constraint Satisfaction Problem), SAT, SMT, ILP en EA (Evolutionary Algorithms)
 %TODO:RCPSP naar SAT is niet polynomiaal. We weten dat er één bestaat maar konden hem niet vinden.
 In this paper, we managed to compare the performance of different types of solvers/algorithms such as SAT, SMT, ILP and greedy for the graph-coloring problem.
