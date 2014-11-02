@@ -269,6 +269,8 @@ Define:
 \item The in-progress status $u_{i,t} \in \{0,1\}$ of job $i$ at time $t$ in the schedule
 \end{itemize}
 
+\newpage
+
 Find the minimal make-span $T = \max_{i \in V}\{f_i\}$ subject to:
 \begin{itemize}
 \item Dependencies: \\ $f_i \leq s_j$ for every $(i,j) \in prec$
@@ -347,23 +349,35 @@ This ensures that a no point the resource usage of all in progress jobs exceeds 
 Because these a polynomial number of clauses with polynomial size, the SMT encoding is polynomial.
 
 \subsection{ILP}
-The 0-1 ILP model for RCPSP is formulated as in \cite{horbach2010boolean} and in \cite{mingozzi1998exact}.
-For each activity (job) $i \in V$ and for each period $t \in \{es_i,...,ls_i\}$ a binary variable $x_{it}$ indicates whether an activity $\emph{i}$ starts at period $t (x_{it} = 1) or not (x_{it} = 0)$.
-Same as with SAT, we determine for each activity \emph{i} its earliest ($es_i$) and its latest ($ls_i$) start times, its earliest ($ef_i$) and its latest ($lf_i$) finish times, using the critical-path method by Floyd-Warshall algorithm.
-With the variables $u_{it}$ we can indicate for each activity $i$ if it is executing at period $t$ ($u_{it} = 1$) or not executing ($u_{it} = 0$).
-The resulting 0-1 ILP project makespan optimization in formal description listed below.
+
+For our RCPSP in ILP encoding we adopted the binary ILP models from Horbach \cite{horbach2010boolean} and Mingozzi et al \cite{mingozzi1998exact}.
+For each job $i \in V$ and for each period $t \in \{es_i,...,ls_i\}$ a binary variable $s_{it}$ indicates whether an activity $i$ starts at period $t$.
+Additionally we defined in process variables $u_{it}$ which are $1$ iff job $i$ is in process at time $t$.
+
+Our objective function minimizes the makespan:
+\[\min(\sum\limits_{t=es_{n+1}}^{ls_{n+1}}{t \cdot s_{n+1,t}})\].
+
+Because only 1 $s_{n+1,\_}$ can be $1$ in a feasible solution this is equivalent to $\min{T}$
+
+We then define the following constraints:
+
 \begin{subequations}
-\begin{align*}
-        & & & min\{x_{n+1},T\} & & {i} \in {V} \\
-        &  (1) & & \sum\limits_{{t}\in{es_i,...,ls_i}} {x_{it}} = 1 & & {i} \in {V}, {t} \in {es_i,...,ls_i}, {t} \in {es_i,...,ls_i} + {d_i} - 1 \\
-        &  (2) & & \sum\limits_{{l}\in{es_j,...,t-d_j}} {x_{jl}} \geq {x_{it}} & & {(j,i)} \in {E}, {t} \in {es_i,...,ls_i} \\
-        &  (3) & & \sum\limits_{{i}\in{V,}{es_i}\leq{t}\leq{lf_i}} {r_{ik}}{u_{it}} \leq {R_k} & & {t} \in {0,1,...,{T}}, {k} \in {R} \\
-        &  (4) & & {x_{ik}} + {x_{jk}} \leq 1 & & (i,j) \in E, {k} = 1,...,{n} \\
-        &  (5) & & {x_{00}} = 1 & & \\
-        &  (6) & & {x_{it}} \in {0, 1} & & \\
-        &  (7) & & {u_{it}}, {x_{it}} \in \mathbb{Z} & &
-\end{align*}
+\begin{align}
+& \sum\limits_{{t}\in{[\mli{es}_i,\mli{ls}_i]}} {s_{it}} = 1 & {i} \in {V} \\
+& u_{il} - s_{it} \geq 0 & i \in V, t \in [\mli{es}_i,\mli{ls}_i], l \in [t,t+d_i) \\ 
+& \sum\limits_{{l}\in{[\mli{es}_j,t-d_j]}} {s_{jl}} \geq {s_{it}} & {(j,i)} \in {E}, {t} \in {[\mli{es}_i,\mli{ls}_i]} \\
+& \sum\limits_{{i}\in{V,}{\mli{es}_i}\leq{t}\leq{lf_i}} {r_{ik}}{u_{it}} \leq {R_k} & {t} \in {[0,{T}]}, {k} \in {R} \\
+& {s_{00}} = 1 & \\
+& {s_{it}} \in {0, 1} & \\
+& {u_{it}}, {x_{it}} \in \mathbb{Z} &
+\end{align}
 \end{subequations}
+
+5a ensure that all projects start.
+5b ensures that projects are in process for their duration after they are started.
+5c ensures that all precedence relations are respected.
+5d ensures that at no moment too much resources are used.
+5e, 5f and 5g are some bookkeeping.
 
 \section{Experimental Setup}
 
